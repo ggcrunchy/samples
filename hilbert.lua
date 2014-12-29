@@ -72,6 +72,8 @@ end
 local line, x1, y1
 
 timer.performWithDelay(3, coroutine.wrap(function(event)
+	local source = event.source
+
 	ForEach(6, function(_, x, y, _)
 		local wx, wy = 30 + x * 7, 450 - y * 7
 
@@ -86,5 +88,5 @@ timer.performWithDelay(3, coroutine.wrap(function(event)
 		coroutine.yield()
 	end)
 
-	timer.cancel(event.source)
+	timer.cancel(source)
 end), 0)

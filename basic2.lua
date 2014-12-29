@@ -39,7 +39,7 @@ do
 end
 --]]
 
----[[
+--[[
 do
 	-- Hmm, not very helpful. What if we returned something?
 	print("Let's make another coroutine and try something else")
@@ -54,7 +54,7 @@ do
 end
 --]]
 
----[[
+--[[
 do
 	-- Hmm, it returns values... maybe it takes arguments?
 	print("Let's try passing arguments!")
@@ -68,7 +68,7 @@ do
 end
 --]]
 
----[[
+--[[
 do
 	-- What if it crashes?
 	print("Let's see what happens if there's an error!")
@@ -86,7 +86,7 @@ do
 end
 --]]
 
----[[
+--[[
 do
 	-- Let's see what the status is INSIDE the coroutine.
 	local co -- recursion sugar is not quite enough to capture this, so forward declare
@@ -105,7 +105,7 @@ do
 end
 --]]
 
----[[
+--[[
 do
 	-- Let's round this out and try one coroutine inside another.
 	print("Let's nest some coroutines!")

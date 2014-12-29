@@ -46,12 +46,14 @@ local function AddItems ()
 end
 
 ---[[
+-- Debug with print
 P = print
 
 AddItems()
 --]]
 
 --[[
+-- Debug by stepping through with a coroutine.
 P = coroutine.yield
 
 local co = coroutine.create(AddItems)

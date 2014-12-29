@@ -47,7 +47,7 @@ do
 end
 --]]
 
----[[
+--[[
 do
 	-- What does resume do if we pass arguments through yield?
 	print("Trying something: passing arguments to yield")
@@ -62,7 +62,7 @@ do
 end
 --]]
 
----[[
+--[[
 do
 	-- What if we pass in arguments to resume?
 	print("Trying something else: passing arguments to resume")
@@ -88,7 +88,7 @@ do
 end
 --]]
 
----[[
+--[[
 do
 	-- What does coroutine.wrap() do?
 	print("Let's try wrapping a coroutine!")

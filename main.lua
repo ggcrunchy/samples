@@ -42,7 +42,7 @@ end
 
 print = my_print
 
---[[
+---[[
 require("basic1")
 --]]
 
@@ -60,6 +60,10 @@ require("debugging")
 
 --[[
 require("wait_howto")
+--]]
+
+--[[
+require("state_machine")
 --]]
 
 --[[

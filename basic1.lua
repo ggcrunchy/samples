@@ -31,7 +31,7 @@ end)
 -- Nothing interesting yet:
 print("Status, first check: ", coroutine.status(co))
 
----[[
+--[[
 -- Let's run it once.
 print("Running...")
 
@@ -40,7 +40,7 @@ coroutine.resume(co)
 print("Status after resume: ", coroutine.status(co))
 --]]
 
----[[
+--[[
 -- Hmm, it's dead... can we run it again?
 print("Trying to resume again...")
 
@@ -49,7 +49,7 @@ coroutine.resume(co)
 print("Status after trying to resume again: ", coroutine.status(co)) -- Still dead!
 --]]
 
----[[
+--[[
 -- Does resume tell us anything?
 print("Attempt to resume gives us: ", coroutine.resume(co))
 --]]

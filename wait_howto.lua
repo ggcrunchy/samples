@@ -38,8 +38,8 @@ timer.performWithDelay(20, coroutine.wrap(function(event)
 end), 0)
 --]]
 
----[[
--- Wait in a timer, and do something at the same time.
+--[[
+-- Wait in a timer, doing something at the same time.
 do
 	local rect, color_timer = display.newRect(100, 100, 50, 50)
 
@@ -55,7 +55,7 @@ do
 end
 --]]
 
----[[
+--[[
 -- Wait for something to happen.
 do
 	local rect = display.newRect(100, 100, 50, 50)
@@ -76,23 +76,26 @@ do
 end
 --]]
 
----[[
+--[[
 -- Wait for some property to become true.
+-- For variety, let's use a Runtime listener instead of a timer.
 do
 	local rect = display.newRect(100, 100, 50, 50)
 	local circle = display.newCircle(200, 200, 10)
 
 	circle.isVisible = false
 
-	timer.performWithDelay(20, coroutine.wrap(function(event)
-		local source = event.source
+	local body
 
+	body = coroutine.wrap(function()
 		wait.WaitUntilPropertyTrue(circle, "isVisible")
 
 		print("Circle is visible!")
 
-		timer.cancel(source)
-	end), 0)
+		Runtime:removeEventListener("enterFrame", body)
+	end)
+
+	Runtime:addEventListener("enterFrame", body)
 
 	transition.to(rect, {
 		y = 500, time = 1500,
