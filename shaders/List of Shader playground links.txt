@@ -1,0 +1,47 @@
+Links to some of my playground examples, plus occasional commentary:
+
+* Pie mask: https://goo.gl/hoJkJw
+
+* Energy Beam: http://goo.gl/AWfOtk
+* Another, using some different approaches: https://goo.gl/9XTnCm
+* And a step on the way to decoupling the background: https://goo.gl/4b0Z44
+
+Improvements on the beam are ongoing!
+
+* Cylinder: http://goo.gl/bsOR4S (This is a WIP, which I might develop into an example)
+
+* Wavy ("unfurl"): https://goo.gl/oJVzwb
+
+Inputs:
+
+x, 0-1: left, increase to move the left-hand fringe to the right
+y, 0-1: bottom, increase to move the bottom fringe upward
+z, 0-1: right, decrease to move the right-hand fringe to the left
+w, 0-1: top, decrease to move the top fringe downward
+
+Some details:
+
+The 6.28 values in the code are just approximations of 2 * pi. Everything else in that big soup of numbers at the beginning is a magic constant that gave me results I liked. Originally, the big batches of constants such as "mod(vec4(2.7, 3.9, 4.1, -3.7) * 3.7, 6.28)" had the CoronaTotalTime included, but I moved it out to try to tame the (Corona-side) behavior once it's been running for a while--I should probably file a "shortcoming"-style bug report of some sort--and didn't bother to simplify the expression. There are a few modular arithmetic identities that are good to know (or be able to look up) for stuff like this.
+
+The coefficients used to compute "sum" are arbitrary, but assumed to add up to 0.1 (or whatever your "cushion" is, cf. the next paragraph). In the freak occurrence that s1, s2, and s3 are all -1 or all +1, sum itself will still only be either -0.1 or +0.1, rather than overrunning the bounds.
+
+The "P_UV vec2 pos = .8 * uv + .1;" line puts a 0.1-size cushion on each side and reparametrizes the interval. I just found this a natural way to reason about the boundaries, since it let me use inputs in the range 0-1. The cushion (x2) plus the scale factor should sum to 1.
+
+The "yxyx" construction probably looks weird, but it's just because the left- and right-hand boundaries, for instance, which are of course vertical edges, are parametrized by the vertical texture coordinate, and the top and bottom by the horizontal one.
+
+* Dots ("stipple"): https://goo.gl/ce5T3c
+
+Inputs:
+
+x, 0+: radius, where 0 is empty and 1 would be all the way across horizontally or vertically (as you know, a "proper" full length would be sqrt(2))
+y, arbitrary: random number seed (I called it "epoch" since in many of my playground samples I used this sort of thing with quantized chunks of time)
+
+Some details:
+
+Not too much. I shifted the decimal points a couple places in the constants, from what they were in some of the playground examples, since it was VERY easy to get into troublesome number territory otherwise!
+
+The RNG is just a dumb linear congruential generator with numbers I pulled out of a hat. It's easy to just drop in, though!
+
+* Math functions: https://goo.gl/KccJaS
+
+A mostly up-to-date version of the project with several samples, used on the show: https://www.dropbox.com/s/hnc3wi0bey2d0bx/corona_shader_tests.zip?dl=0#

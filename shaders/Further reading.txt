@@ -1,0 +1,43 @@
+Various links to shader resources, some relevant to GLES, others for deeper investigation.
+
+* GLES 2.0 reference card:
+
+https://www.khronos.org/opengles/sdk/docs/reference_cards/OpenGL-ES-2_0-Reference-card.pdf
+
+* GLES Extensions:
+
+https://www.khronos.org/registry/gles/#otherextspecs
+
+* Articles on floating point:
+
+http://www.cprogramming.com/tutorial/floating_point/understanding_floating_point_representation.html
+http://www.toves.org/books/float/
+http://www.h-schmidt.net/FloatConverter/IEEE754.html
+https://randomascii.wordpress.com/category/floating-point/
+https://stackoverflow.com/questions/5366416/in-opengl-es-2-0-glsl-where-do-you-need-precision-specifiers
+https://stackoverflow.com/questions/30925704/glsl-noise-function-on-devices-with-no-high-precision-fragment-shader
+http://ramisantina.com/blog/2013/06/mediump-vs-highp-precision-on-embedded-gpus/
+http://www.plunk.org/~hatch/rightway.php
+
+* Tutorials or Code Discussions:
+
+http://webstaff.itn.liu.se/~stegu/webglshadertutorial/shadertutorial.html (By the same fellow who did some of the noise stuff)
+http://drilian.com/2007/10/27/jpeg-buoys-amidst-a-sea-of-text/
+http://blogs.love2d.org/content/beginners-guide-shaders (shader language is a very slightly modified GLSL)
+http://blogs.love2d.org/content/let-it-glow-dynamically-adding-outlines-characters
+
+* Books:
+
+http://openglinsights.com
+https://developer.nvidia.com/gpugems
+
+* Research:
+
+http://www.disneyresearch.com
+http://graphics.pixar.com/research/
+http://www.antexel.com/sylefeb/research
+
+* All sorts of graphics resources:
+
+https://github.com/mattdesl/graphics-resources
+https://github.com/reedolph/common-shaders-glsl

@@ -34,6 +34,14 @@ timer.performWithDelay(20, coroutine.wrap(function(event)
 
 	print("Time's up!")
 
+	wait.WaitMS(3000)
+
+	print("Time's up 2!")
+
+	wait.WaitMS(3000)
+
+	print("Time's up 3!")
+
 	timer.cancel(source)
 end), 0)
 --]]
