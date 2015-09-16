@@ -14,6 +14,7 @@ http://www.cprogramming.com/tutorial/floating_point/understanding_floating_point
 http://www.toves.org/books/float/
 http://www.h-schmidt.net/FloatConverter/IEEE754.html
 https://randomascii.wordpress.com/category/floating-point/
+http://floating-point-gui.de
 https://stackoverflow.com/questions/5366416/in-opengl-es-2-0-glsl-where-do-you-need-precision-specifiers
 https://stackoverflow.com/questions/30925704/glsl-noise-function-on-devices-with-no-high-precision-fragment-shader
 http://ramisantina.com/blog/2013/06/mediump-vs-highp-precision-on-embedded-gpus/
