@@ -77,7 +77,7 @@ do
 			P_POSITION float n = p.x + p.y * 57.0;
 
 			return mix(mix(hash(n +  0.0), hash(n +  1.0), f.x),
-					   mix(hash(n + 57.0), hash(n + 58.0), f.x), f.y);
+					    mix(hash(n + 57.0), hash(n + 58.0), f.x), f.y);
 		}
 
 		P_POSITION float Height (P_POSITION vec2 foot, P_POSITION float z)
@@ -90,7 +90,7 @@ do
 			P_POSITION float x = smoothstep(taper_base, .5, abs(foot.x - .5));
 			P_POSITION float y = CoronaVertexUserData.x * (1. - x * x); // x = width
 
-			return y * (.75 + noise(-foot * (1023. * CoronaVertexUserData.z) + vec2(8.9, z * 1.7) * t) * .5); // z = frequency
+			return y * (.875 + noise(-foot * (1023. * CoronaVertexUserData.z) + vec2(8.9, z * 1.7) * t) * .125); // z = frequency
 		}
 
 		P_COLOR vec4 FragmentKernel (P_UV vec2 uv)
@@ -112,7 +112,7 @@ do
 			P_COLOR float white = 1. + pow(max(1. - ratio, 0.), .47);
 			P_COLOR vec3 mixed = mix(vec3(white), color.rgb, 1. - exp(-CoronaVertexUserData.w * ratio) * (1. - h)); // w = falloff
 
-			return vec4(min(mixed, 1.), color.a) * smoothstep(-.031, 0., 1. - ratio);
+			return vec4(min(mixed, 1.), color.a) * smoothstep(-.267, 0., 1. - ratio);
 		}
 	]]
 
