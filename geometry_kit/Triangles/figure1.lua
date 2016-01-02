@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangles, figure 1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,19 +24,24 @@
 --
 
 -- Modules --
---[=[
 local triangle = require("triangle")
 
+-- --
+local CW, CH = display.contentWidth, display.contentHeight
+
+display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+
+--
 local T = triangle.New()
 
-T:SetSideStyle(2, "dashed")
---[[
-T:LabelAngle(1, "a")
-T:LabelAngle(2, "d")
-T:LabelAngle(3, "e")]]
+T:SetVertexPos(1, .1 * CW, .5 * CH)
+T:SetVertexPos(2, .5 * CW, .25 * CH)
+T:SetVertexPos(3, .85 * CW, .65 * CH)
 
-T:MarkAngle(2, 2)
+T:LabelAngle(1, "B")
+T:LabelAngle(2, "A")
+T:LabelAngle(3, "C")
 
-T:MarkSide(2, 7)
-]=]
-require("Triangles.figure2")
+T:LabelSide(1, "c")
+T:LabelSide(2, "b")
+T:LabelSide(3, "a")

@@ -110,6 +110,8 @@ local function RedrawAngleMarks (S, vprev, vcur, vnext, n)
 
 		marks[1] = display.newLine(S.m_mark_group, x1, y1, x2, y2, x3, y3)
 
+		marks[1]:setStrokeColor(0)
+
 		marks[1].strokeWidth = 3
 	else
 		for i = 1, n do
@@ -119,6 +121,8 @@ local function RedrawAngleMarks (S, vprev, vcur, vnext, n)
 			local x2, y2 = frame:GetPosAtParameter(.1)
 
 			marks[i] = display.newLine(S.m_mark_group, x1, y1, x2, y2)
+
+			marks[i]:setStrokeColor(0)
 
 			for j = 2, 10 do -- todo: parametrize
 				marks[i]:append(frame:GetPosAtParameter(j / 10))
@@ -140,6 +144,8 @@ local function RedrawSideMarks (S, vcur, vnext, n)
 		local x, y = side.GetPosOnSide(vcur, vnext, start + (i - 1) * Spacing)
 
 		marks[i] = display.newLine(S.m_mark_group, x - dx * 10, y - dy * 10, x + dx * 10, y + dy * 10)
+
+		marks[i]:setStrokeColor(0)
 
 		marks[i].strokeWidth = 3
 	end
@@ -190,6 +196,8 @@ local function GetOrRemoveLabel (S, index, name, label, opts)
 		if label ~= true then -- true: reuse as is
 			if not cur then
 				cur = display.newText(S.m_mark_group, label, 0, 0, GetSetOpt(v, "font", opts), GetSetOpt(v, "size", opts))
+
+				cur:setFillColor(0)
 
 				v[name] = cur
 			elseif cur.text ~= label then

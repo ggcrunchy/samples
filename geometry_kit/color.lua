@@ -48,7 +48,7 @@ local function GetRGBA (v, key)
 			a, g, b = g, r, r
 		end
 	else
-		r = color or 1
+		r = color or 0
 		g, b = r, r
 	end
 

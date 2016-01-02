@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure 1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,19 +24,5 @@
 --
 
 -- Modules --
---[=[
-local triangle = require("triangle")
 
-local T = triangle.New()
-
-T:SetSideStyle(2, "dashed")
---[[
-T:LabelAngle(1, "a")
-T:LabelAngle(2, "d")
-T:LabelAngle(3, "e")]]
-
-T:MarkAngle(2, 2)
-
-T:MarkSide(2, 7)
-]=]
-require("Triangles.figure2")
+-- STUFF!
