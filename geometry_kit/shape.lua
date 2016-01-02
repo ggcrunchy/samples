@@ -24,6 +24,8 @@
 --
 
 -- Standard library imports --
+local atan2 = math.atan2
+local deg = math.deg
 local setmetatable = setmetatable
 
 -- Modules --
@@ -37,14 +39,37 @@ local math2d = require "plugin.math2d"
 
 -- Corona globals --
 local display = display
+local native = native
 
 -- Exports --
 local M = {}
 
 --
-local Shape = {}
+local Shape = { __metatable = true }
 
 Shape.__index = Shape
+
+--
+local function NextIndex (S, index)
+	return (index % S.m_n) + 1
+end
+
+--
+local function PrevIndex (S, index)
+	local n = S.m_n
+
+	return (index + n - 2) % n + 1
+end
+
+--- DOCME
+function Shape:GetPrev (index)
+	return self[PrevIndex(self, index)]
+end
+
+--- DOCME
+function Shape:GetNext (index)
+	return self[NextIndex(self, index)]
+end
 
 --- Get a vertex's position.
 -- @int vertex
@@ -76,19 +101,31 @@ local function RedrawAngleMarks (S, vprev, vcur, vnext, n)
 
 	frame:SetPosition(vcur.x, vcur.y)
 
-	for i = 1, n do
-		frame:SetRadius((.1 + (i - 1) * Spacing) * len)
+	if frame:IsRight() then -- todo: able to ignore
+		frame:SetRadius(.1 * len)
 
 		local x1, y1 = frame:GetPosAtParameter(0)
-		local x2, y2 = frame:GetPosAtParameter(.1)
+		local x2, y2 = frame:Map(1, 1)
+		local x3, y3 = frame:GetPosAtParameter(1)
 
-		marks[i] = display.newLine(S.m_mark_group, x1, y1, x2, y2)
+		marks[1] = display.newLine(S.m_mark_group, x1, y1, x2, y2, x3, y3)
 
-		for j = 2, 10 do
-			marks[i]:append(frame:GetPosAtParameter(j / 10))
+		marks[1].strokeWidth = 3
+	else
+		for i = 1, n do
+			frame:SetRadius((.1 + (i - 1) * Spacing) * len)
+
+			local x1, y1 = frame:GetPosAtParameter(0)
+			local x2, y2 = frame:GetPosAtParameter(.1)
+
+			marks[i] = display.newLine(S.m_mark_group, x1, y1, x2, y2)
+
+			for j = 2, 10 do -- todo: parametrize
+				marks[i]:append(frame:GetPosAtParameter(j / 10))
+			end
+
+			marks[i].strokeWidth = 3
 		end
-
-		marks[i].strokeWidth = 3
 	end
 
 	vcur.m_angle_marks = marks
@@ -97,7 +134,7 @@ end
 --
 local function RedrawSideMarks (S, vcur, vnext, n)
 	local marks, dx, dy = vcur.m_side_marks or {}, side.Perp(vcur, vnext)
-	local start = (1 - n * Spacing) / 2
+	local start = (1 - n * Spacing) / 2 -- todo: parametrize
 
 	for i = 1, n do
 		local x, y = side.GetPosOnSide(vcur, vnext, start + (i - 1) * Spacing)
@@ -110,8 +147,37 @@ local function RedrawSideMarks (S, vcur, vnext, n)
 	vcur.m_side_marks = marks
 end
 
+-- --
+local Props = {}
+
 --
-local function GetOrRemoveLabel (S, index, name, label)
+local function NewProp (name, def)
+	Props[name] = { key = "m_" .. name, def = def }
+end
+
+--
+local function GetSetOpt (from, name, opts)
+	local v, prop = opts and opts[name], Props[name]
+
+	if v == nil then
+		v = from[prop.key]
+
+		if v == nil then
+			v = prop.def
+		end
+	else
+		from[prop.key] = v
+	end
+
+	return v
+end
+
+--
+NewProp("font", native.systemFontBold)
+NewProp("size", 24)
+
+--
+local function GetOrRemoveLabel (S, index, name, label, opts)
 	local v = S[index]
 
 	if not label then
@@ -123,7 +189,7 @@ local function GetOrRemoveLabel (S, index, name, label)
 
 		if label ~= true then -- true: reuse as is
 			if not cur then
-				cur = display.newText(S.m_mark_group, label, 0, 0, native.systemFont, 24)
+				cur = display.newText(S.m_mark_group, label, 0, 0, GetSetOpt(v, "font", opts), GetSetOpt(v, "size", opts))
 
 				v[name] = cur
 			elseif cur.text ~= label then
@@ -136,17 +202,21 @@ local function GetOrRemoveLabel (S, index, name, label)
 end
 
 --
-local function UpdateAngleLabel (S, index, label)
-	local apos, text = GetOrRemoveLabel(S, index, "m_angle_label", label)
+NewProp("radius", 35)
+NewProp("angle_time", .5)
+
+--
+local function UpdateAngleLabel (S, index, label, opts)
+	local apos, text = GetOrRemoveLabel(S, index, "m_angle_label", label, opts)
 
 	if text then
 		local vprev, vnext = GetNeighbors(S, index)
 		local frame = angle.GetAxes(vprev, S[index], vnext)
 
-		frame:SetRadius(35)
+		frame:SetRadius(GetSetOpt(apos, "radius", opts))
 		frame:SetPosition(apos.x, apos.y)
 
-		text.x, text.y = frame:GetPosAtParameter(.5)
+		text.x, text.y = frame:GetPosAtParameter(GetSetOpt(apos, "angle_time", opts))
 	end
 end
 
@@ -155,21 +225,28 @@ end
 -- @tparam ?|string|nil label
 -- @table[opt] props
 function Shape:LabelAngle (angle_index, label, props)
-	-- props
-
-	UpdateAngleLabel(self, angle_index, label)
+	UpdateAngleLabel(self, angle_index, label, props)
 end
 
 --
-local function UpdateSideLabel (S, index, label)
-	local side, text = GetOrRemoveLabel(S, index, "m_side_label", label)
+NewProp("t", .5)
+NewProp("text_offset", 30)
+NewProp("align", false)
+
+--
+local function UpdateSideLabel (S, index, label, opts)
+	local cur, text = GetOrRemoveLabel(S, index, "m_side_label", label)
 
 	if text then
 		local next = S:GetNext(index)
-		local x, y = side.GetPosOnSide(side, next, .5) -- TODO: t
-		local dx, dy = AwayFromSide(S, index)
+		local x, y = side.GetPosOnSide(cur, next, GetSetOpt(cur, "t", opts))
+		local offset, dx, dy = GetSetOpt(cur, "text_offset", opts), AwayFromSide(S, index)
 
-		text.x, text.y = x + dx * 30, y + dy * 30
+		text.x, text.y = x + dx * offset, y + dy * offset
+
+		if GetSetOpt(cur, "align", opts) then
+			text.rotation = deg(atan2(dy, dx)) + 90
+		end
 	end
 end
 
@@ -178,9 +255,7 @@ end
 -- @tparam ?|string|nil label
 -- @table[opt] props
 function Shape:LabelSide (side_index, label, props)
-	-- props
-
-	UpdateSideLabel(self, side_index, label)
+	UpdateSideLabel(self, side_index, label, props)
 end
 
 --
@@ -237,6 +312,12 @@ function Shape:MarkSide (side_index, count, props)
 		side.m_side_marks = nil
 	end
 end
+
+--- DOCME
+Shape.NextIndex = NextIndex
+
+--- DOCME
+Shape.PrevIndex = PrevIndex
 
 --- Destroy the triangle.
 function Shape:Remove ()
@@ -298,50 +379,63 @@ local function RedrawSide (S, index)
 	display.remove(v1.m_object)
 
 	--
-	local style, px, py = v1.m_style, AwayFromSide(S, index)
+	local style, w, px, py = v1.m_style, 5, AwayFromSide(S, index)
 
 	if style == "a_to_b" or style == "b_to_a" then
 		v1.m_object = display.newLine(S.m_side_group, arrows.GetPoints(v1, v2, px, py, .9, style == "b_to_a"))
-	else
+	elseif style ~= "hide" then
 		v1.m_object = display.newLine(S.m_side_group, v1.x, v1.y, v2.x, v2.y)
 
 		if style == "dashed" then
-			--
+			local stroke = v1.m_object.stroke
+
+			stroke.effect, w = "generator.stripes", 2
+			stroke.effect.angle, stroke.effect.periods = 45, { 4, 8, 4, 8 }
 		end
+	else
+		v1.m_object = nil
 	end
 
 	--
 	-- TODO: If offset, push side away by offset * px,py
+	if style ~= "hide" then
+		v1.m_object.strokeWidth = w
 
-	v1.m_object.strokeWidth = 5
+		color.ApplyColor(v1.m_object, "m_color", v1, v2)
+	end
+end
 
-	color.ApplyColor(v1.m_object, "m_color", v1, v2)
+--
+local function UpdateProp (k)
+	return function(S, i, v)
+		if S[i][k] ~= v then
+			S[i][k] = v
+
+			RedrawSide(S, i)
+		end
+	end
 end
 
 --- DOCME
 -- @int side_index
 -- @number[opt] offset
-function Shape:SetSideOffset (side_index, offset)
-	if self[side_index].m_offset ~= offset then
-		self[side_index].m_offset = offset
+Shape.SetSideOffset = UpdateProp("m_offset")
 
-		RedrawSide(self, side_index)
-	end
-end
+-- --
+local Styles = { a_to_b = true, b_to_a = true, dashed = true, hide = true }
+
+--
+local UpdateStyle = UpdateProp("m_style")
 
 --- DOCME
 -- @int side_index
 -- @string[opt="normal"] style
 function Shape:SetSideStyle (side_index, style)
-	if style ~= "a_to_b" and style ~= "b_to_a" then
+	if not Styles[style] then
 		style = "normal"
 	end
 
-	if self[side_index].m_style ~= style then
-		self[side_index].m_style = style
-
-		RedrawSide(self, side_index)
-	end
+	UpdateStyle(self, side_index, style)
 end
 
 --- DOCME
@@ -376,8 +470,8 @@ function Shape:SetVertexPos (vertex_index, x, y)
 end
 
 --- DOCME
-function M.Inherit ()
-	local mt = setmetatable({}, Shape)
+function M.Inherit (n)
+	local mt = setmetatable({ m_n = n, __metatable = true }, Shape)
 
 	mt.__index = mt
 

@@ -69,8 +69,6 @@ function M.ApplyColor (object, ckey, v1, v2)
 			color2 = { r2, g2, b2, a2 }
 		}
 	else
-		object.stroke = nil
-
 		object:setStrokeColor(r1, g1, b1, a1)
 	end
 end

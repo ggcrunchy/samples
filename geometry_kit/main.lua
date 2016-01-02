@@ -28,7 +28,7 @@ local triangle = require("triangle")
 
 local T = triangle.New()
 
---T:SetSideStyle(2, "b_to_a")
+T:SetSideStyle(2, "dashed")
 --[[
 T:LabelAngle(1, "a")
 T:LabelAngle(2, "d")

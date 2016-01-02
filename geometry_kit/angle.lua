@@ -24,8 +24,10 @@
 --
 
 -- Standard library imports --
+local abs = math.abs
 local acos = math.acos
 local cos = math.cos
+local pi = math.pi
 local setmetatable = setmetatable
 local sin = math.sin
 
@@ -42,8 +44,21 @@ Frame.__index = Frame
 
 --- DOCME
 function Frame:GetPosAtParameter (t)
-	local angle, radius, x, y = self.m_angle * t, self.m_radius or 1, self.m_x or 0, self.m_y or 0
-	local dx, dy = radius * cos(angle), radius * sin(angle)
+	local angle = self.m_angle * t
+
+	return self:Map(cos(angle), sin(angle))
+end
+
+--- DOCME
+function Frame:IsRight ()
+	return abs(self.m_angle - .5 * pi) < 5e-3
+end
+
+--- DOCME
+function Frame:Map (dx, dy)
+	local radius, x, y = self.m_radius or 1, self.m_x or 0, self.m_y or 0
+
+	dx, dy = radius * dx, radius * dy
 
 	return x + dx * self.m_xx + dy * self.m_yx, y + dx * self.m_xy + dy * self.m_yy
 end

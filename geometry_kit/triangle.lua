@@ -33,22 +33,7 @@ local display = display
 local M = {}
 
 --
-local Triangle = shape.Inherit()
-
---- DOCME
-function Triangle:GetPrev (index)
-	return self[self:PrevIndex(index)]
-end
-
---- DOCME
-function Triangle:GetNext (index)
-	return self[(index % 3) + 1]
-end
-
---- DOCME
-function Triangle:PrevIndex (index)
-	return (index + 1) % 3 + 1
-end
+local Triangle = shape.Inherit(3)
 
 -- --
 local CX, CY = display.contentCenterX, display.contentCenterY
@@ -60,8 +45,8 @@ function M.New (into)
 	local tri = shape.NewShape(into, Triangle)
 
 	tri:SetVertexPos(1, CX / 2, CY / 2)
-	tri:SetVertexPos(2, 1.5 * CX, CY)
-	tri:SetVertexPos(3, CX, 1.5 * CY)
+	tri:SetVertexPos(2, 1.5 * CX, CY / 2)--1.5 * CX, CY)
+	tri:SetVertexPos(3, 1.5 * CX, CY)--CX, 1.5 * CY)
 
 	return tri
 end
