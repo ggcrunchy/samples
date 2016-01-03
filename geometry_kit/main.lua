@@ -23,20 +23,9 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
--- Modules --
---[=[
-local triangle = require("triangle")
+-- --
+local CW, CH = display.contentWidth, display.contentHeight
 
-local T = triangle.New()
+display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
 
-T:SetSideStyle(2, "dashed")
---[[
-T:LabelAngle(1, "a")
-T:LabelAngle(2, "d")
-T:LabelAngle(3, "e")]]
-
-T:MarkAngle(2, 2)
-
-T:MarkSide(2, 7)
-]=]
-require("Triangles.figure2")
+require("Triangles.figure6")

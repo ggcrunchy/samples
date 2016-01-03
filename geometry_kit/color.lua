@@ -56,7 +56,7 @@ local function GetRGBA (v, key)
 end
 
 --- DOCME
-function M.ApplyColor (object, ckey, v1, v2)
+function M.ApplyColor (object, ckey, v1, v2, dashed)
 	local r1, g1, b1, a1 = GetRGBA(v1, ckey)
 	local r2, g2, b2, a2 = GetRGBA(v2, ckey)
 

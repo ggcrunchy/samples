@@ -1,4 +1,4 @@
---- Triangles, figure 1.
+--- Triangles, figure 3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -26,4 +26,30 @@
 -- Modules --
 local triangle = require("triangle")
 
--- STUFF!
+-- --
+local CW, CH = display.contentWidth, display.contentHeight
+
+--
+local BottomY, BottomLeftX = .75 * CH, .5 * CW
+local TopX, TopY = .25 * CW, .25 * CH
+local RightX = .9 * CW
+
+--
+local T = triangle.New()
+
+T:SetVertexPos(1, BottomLeftX, BottomY)
+T:SetVertexPos(2, TopX, TopY)
+T:SetVertexPos(3, RightX, BottomY)
+
+T:LabelSide(3, "base")
+
+local U = triangle.New()
+
+U:SetVertexPos(1, TopX, BottomY)
+U:SetVertexPos(2, TopX, TopY)
+U:SetVertexPos(3, BottomLeftX, BottomY)
+
+U:SetSideStyle(1, "dashed")
+U:SetSideStyle(3, "dashed")
+U:LabelSide(1, "altitude", { align = true, t = .35, text_offset = 15 })
+U:MarkAngle(1, 1)

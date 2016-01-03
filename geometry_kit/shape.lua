@@ -25,8 +25,15 @@
 
 -- Standard library imports --
 local atan2 = math.atan2
+local cos = math.cos
 local deg = math.deg
+local getmetatable = getmetatable
+local pairs = pairs
+local rad = math.rad
 local setmetatable = setmetatable
+local sin = math.sin
+local sqrt = math.sqrt
+local type = type
 
 -- Modules --
 local angle = require("angle")
@@ -39,15 +46,57 @@ local math2d = require "plugin.math2d"
 
 -- Corona globals --
 local display = display
+local graphics = graphics
 local native = native
+
+-- Cached module references --
+local _NewShape_
 
 -- Exports --
 local M = {}
 
 --
-local Shape = { __metatable = true }
+local Shape = {}
 
 Shape.__index = Shape
+
+--
+local function AuxClone (into, from)
+	for k, v in pairs(from) do
+		if not into[k] then
+			if type(v) == "table" then -- n.b. assumes no cycles!
+				if v._proxy then
+					into[k] = v.text -- display object, might have text
+				elseif k == "m_angle_marks" or k == "m_side_marks" then
+					into[k] = #v
+				else
+					into[k] = {}
+
+					AuxClone(into[k], v)
+				end
+			else
+				into[k] = v
+			end
+		end
+	end
+end
+
+--
+local function Refresh (S, n)
+	for i = 1, n do
+		S:SetVertexPos(i, S:GetVertexPos(i)) -- invoke redraws
+	end
+end
+
+--- DOCME
+function Shape:Clone (into)
+	local clone = _NewShape_(into, getmetatable(self))
+
+	AuxClone(clone, self)
+	Refresh(clone, clone.m_n)
+
+	return clone
+end
 
 --
 local function NextIndex (S, index)
@@ -57,8 +106,9 @@ end
 --
 local function PrevIndex (S, index)
 	local n = S.m_n
+	local m = n - 2
 
-	return (index + n - 2) % n + 1
+	return (index + m) % n + 1
 end
 
 --- DOCME
@@ -92,68 +142,6 @@ local function GetNeighbors (S, index)
 end
 
 -- --
-local Spacing = .05
-
---
-local function RedrawAngleMarks (S, vprev, vcur, vnext, n)
-	local marks, frame = vcur.m_angle_marks or {}, angle.GetAxes(vprev, vcur, vnext)
-	local len = math2d.length(math2d.diff(vcur, vnext, true))
-
-	frame:SetPosition(vcur.x, vcur.y)
-
-	if frame:IsRight() then -- todo: able to ignore
-		frame:SetRadius(.1 * len)
-
-		local x1, y1 = frame:GetPosAtParameter(0)
-		local x2, y2 = frame:Map(1, 1)
-		local x3, y3 = frame:GetPosAtParameter(1)
-
-		marks[1] = display.newLine(S.m_mark_group, x1, y1, x2, y2, x3, y3)
-
-		marks[1]:setStrokeColor(0)
-
-		marks[1].strokeWidth = 3
-	else
-		for i = 1, n do
-			frame:SetRadius((.1 + (i - 1) * Spacing) * len)
-
-			local x1, y1 = frame:GetPosAtParameter(0)
-			local x2, y2 = frame:GetPosAtParameter(.1)
-
-			marks[i] = display.newLine(S.m_mark_group, x1, y1, x2, y2)
-
-			marks[i]:setStrokeColor(0)
-
-			for j = 2, 10 do -- todo: parametrize
-				marks[i]:append(frame:GetPosAtParameter(j / 10))
-			end
-
-			marks[i].strokeWidth = 3
-		end
-	end
-
-	vcur.m_angle_marks = marks
-end
-
---
-local function RedrawSideMarks (S, vcur, vnext, n)
-	local marks, dx, dy = vcur.m_side_marks or {}, side.Perp(vcur, vnext)
-	local start = (1 - n * Spacing) / 2 -- todo: parametrize
-
-	for i = 1, n do
-		local x, y = side.GetPosOnSide(vcur, vnext, start + (i - 1) * Spacing)
-
-		marks[i] = display.newLine(S.m_mark_group, x - dx * 10, y - dy * 10, x + dx * 10, y + dy * 10)
-
-		marks[i]:setStrokeColor(0)
-
-		marks[i].strokeWidth = 3
-	end
-
-	vcur.m_side_marks = marks
-end
-
--- --
 local Props = {}
 
 --
@@ -179,20 +167,97 @@ local function GetSetOpt (from, name, opts)
 end
 
 --
+NewProp("angle_offset", .1)
+NewProp("angle_resolution", 10)
+NewProp("angle_spacing", .05)
+NewProp("no_right_angles", false)
+
+--
+local function RedrawAngleMarks (S, vprev, vcur, vnext, n, opts)
+	local marks, frame = vcur.m_angle_marks or {}, angle.GetAxes(vprev, vcur, vnext)
+	local len, offset = math2d.length(math2d.diff(vcur, vnext, true)), GetSetOpt(vcur, "angle_offset", opts)
+
+	frame:SetPosition(vcur.x, vcur.y)
+
+	if frame:IsRight() and not GetSetOpt(vcur, "no_right_angles", opts) then
+		frame:SetRadius(offset * len)
+
+		local x1, y1 = frame:GetPosAtParameter(0)
+		local x2, y2 = frame:Map(1, 1)
+		local x3, y3 = frame:GetPosAtParameter(1)
+
+		marks[1] = display.newLine(S.m_mark_group, x1, y1, x2, y2, x3, y3)
+
+		marks[1]:setStrokeColor(0)
+
+		marks[1].strokeWidth = 3
+	else
+		local spacing, nangle = GetSetOpt(vcur, "angle_spacing", opts), GetSetOpt(vcur, "angle_resolution", opts)
+
+		for i = 1, n do
+			frame:SetRadius((offset + (i - 1) * spacing) * len)
+
+			local x1, y1 = frame:GetPosAtParameter(0)
+			local x2, y2 = frame:GetPosAtParameter(1 / nangle)
+
+			marks[i] = display.newLine(S.m_mark_group, x1, y1, x2, y2)
+
+			marks[i]:setStrokeColor(0)
+
+			for j = 2, nangle do -- todo: parametrize
+				marks[i]:append(frame:GetPosAtParameter(j / nangle))
+			end
+
+			marks[i].strokeWidth = 3
+		end
+	end
+
+	vcur.m_angle_marks = marks
+end
+
+--
+NewProp("font", native.systemFontBold)
+NewProp("side_mark_length", 20)
+NewProp("size", 24)
+
+--
+local function RedrawSideMarks (S, vcur, vnext, n, opts)
+	local marks, dx, dy = vcur.m_side_marks or {}, side.Perp(vcur, vnext)
+	local spacing = GetSetOpt(vcur, "angle_spacing", opts)
+	local start = (1 - n * spacing) / 2 -- todo: parametrize
+	local len = GetSetOpt(vcur, "side_mark_length", opts) / 2
+
+	for i = 1, n do
+		local x, y = side.GetPosOnSide(vcur, vnext, start + (i - 1) * spacing)
+
+		marks[i] = display.newLine(S.m_mark_group, x - dx * len, y - dy * len, x + dx * len, y + dy * len)
+
+		marks[i]:setStrokeColor(0)
+
+		marks[i].strokeWidth = 3
+	end
+
+	vcur.m_side_marks = marks
+end
+
+--
 NewProp("font", native.systemFontBold)
 NewProp("size", 24)
 
 --
 local function GetOrRemoveLabel (S, index, name, label, opts)
 	local v = S[index]
+	local cur = v[name]
+
+	if type(cur) == "string" then -- text pending?
+		label, cur = cur
+	end
 
 	if not label then
-		display.remove(v[name])
+		display.remove(cur)
 
 		v[name] = nil
 	else
-		local cur = v[name]
-
 		if label ~= true then -- true: reuse as is
 			if not cur then
 				cur = display.newText(S.m_mark_group, label, 0, 0, GetSetOpt(v, "font", opts), GetSetOpt(v, "size", opts))
@@ -238,7 +303,7 @@ end
 
 --
 NewProp("t", .5)
-NewProp("text_offset", 30)
+NewProp("text_offset", 25)
 NewProp("align", false)
 
 --
@@ -267,16 +332,24 @@ function Shape:LabelSide (side_index, label, props)
 end
 
 --
-local function RemoveMarks (marks)
-	local n = #(marks or "")
+local function RemoveMarks (S, mkey)
+	local marks = S[mkey]
 
-	for i = 1, n do
-		marks[i]:removeSelf()
+	if type(marks) == "number" then
+		S[mkey] = nil
 
-		marks[i] = nil
+		return marks
+	else
+		local n = #(marks or "")
+
+		for i = 1, n do
+			marks[i]:removeSelf()
+
+			marks[i] = nil
+		end
+
+		return n
 	end
-
-	return n
 end
 
 --- Add or remove markings to / from an angle.
@@ -286,15 +359,10 @@ end
 function Shape:MarkAngle (angle_index, count, props)
 	local angle = self[angle_index]
 
-	RemoveMarks(angle.m_angle_marks)
+	RemoveMarks(angle, "m_angle_marks")
 
 	if count and count > 0 then
-		--
-		if props then
-			-- offset, spacing
-		end
-
-		RedrawAngleMarks(self, self:GetPrev(angle_index), angle, self:GetNext(angle_index), count)
+		RedrawAngleMarks(self, self:GetPrev(angle_index), angle, self:GetNext(angle_index), count, props)
 	else
 		angle.m_angle_marks = nil
 	end
@@ -307,15 +375,10 @@ end
 function Shape:MarkSide (side_index, count, props)
 	local side = self[side_index]
 
-	RemoveMarks(side.m_side_marks)
+	RemoveMarks(side, "m_side_marks")
 
 	if count and count > 0 then
-		--
-		if props then
-			-- offset, spacing
-		end
-
-		RedrawSideMarks(self, side, self:GetNext(side_index), count)
+		RedrawSideMarks(self, side, self:GetNext(side_index), count, props)
 	else
 		side.m_side_marks = nil
 	end
@@ -332,6 +395,33 @@ function Shape:Remove ()
 	display.remove(self.m_object_group)
 
 	self.m_object_group = nil
+end
+
+--- DOCME
+function Shape:Rotate (delta)
+	local cx, cy, n = 0, 0, self.m_n
+
+	--
+	for i = 1, n do
+		local px, py = self:GetVertexPos(i)
+
+		cx, cy = cx + px, cy + py
+	end
+
+	cx, cy = cx / n, cy / n
+
+	--
+	delta = rad(delta)
+
+	for i = 1, n do
+		local apos = self[i]
+		local dx, dy = apos.x - cx, apos.y - cy
+		local radius, to = sqrt(dx^2 + dy^2), atan2(dy, dx) + delta
+
+		apos.x, apos.y = cx + radius * cos(to), cy + radius * sin(to)
+	end
+
+	Refresh(self, n)
 end
 
 --- DOCME
@@ -363,6 +453,27 @@ function Shape:SetSideMarkColor (side_index, ...)
 end
 
 --
+do
+	local kernel = { category = "filter", group = "geometry_kit", name = "dashes" }
+
+	kernel.vertexData = {
+		{ name = "spacing", min = 1, max = 100, default = 12, index = 0 }
+	}
+
+	kernel.fragment = [[
+		P_COLOR vec4 FragmentKernel (P_UV vec2 uv)
+		{
+			P_COLOR vec4 color = texture2D(CoronaSampler0, uv);
+			P_UV float offset = mod(gl_FragCoord.x + gl_FragCoord.y, 2. * CoronaVertexUserData.x);
+
+			return CoronaColorScale(color) * step(offset, CoronaVertexUserData.x);
+		}
+	]]
+
+	graphics.defineEffect(kernel)
+end
+
+--
 local function RedrawSide (S, index)
 	--
 	UpdateAngleLabel(S, index, true)
@@ -370,8 +481,8 @@ local function RedrawSide (S, index)
 
 	--
 	local v1, v2 = S[index], S:GetNext(index)
-	local nam = RemoveMarks(v1.m_angle_marks)
-	local nas = RemoveMarks(v1.m_side_marks)
+	local nam = RemoveMarks(v1, "m_angle_marks")
+	local nas = RemoveMarks(v1, "m_side_marks")
 
 	--
 	if nam > 0 then
@@ -397,8 +508,7 @@ local function RedrawSide (S, index)
 		if style == "dashed" then
 			local stroke = v1.m_object.stroke
 
-			stroke.effect, w = "generator.stripes", 2
-			stroke.effect.angle, stroke.effect.periods = 45, { 4, 8, 4, 8 }
+			stroke.effect, w = "filter.geometry_kit.dashes", 2
 		end
 	else
 		v1.m_object = nil
@@ -479,7 +589,7 @@ end
 
 --- DOCME
 function M.Inherit (n)
-	local mt = setmetatable({ m_n = n, __metatable = true }, Shape)
+	local mt = setmetatable({ m_n = n }, Shape)
 
 	mt.__index = mt
 
@@ -504,6 +614,9 @@ function M.NewShape (into, mt)
 		m_object_group = object_group
 	}, mt)
 end
+
+-- Cache module members.
+_NewShape_ = M.NewShape
 
 -- Export the module.
 return M

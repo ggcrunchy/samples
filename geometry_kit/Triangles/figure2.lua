@@ -28,36 +28,25 @@ local triangle = require("triangle")
 
 -- --
 local CW, CH = display.contentWidth, display.contentHeight
-
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+local BottomY = .75 * CH
+local TopX, TopY = .5 * CW, .25 * CH
+local RightX = .9 * CW
 
 --
 local T = triangle.New()
 
-local bottomy = .75 * CH
-local topx, topy = .5 * CW, .25 * CH
-local rightx = .9 * CW
+T:SetVertexPos(1, .1 * CW, BottomY)
+T:SetVertexPos(2, TopX, TopY)
+T:SetVertexPos(3, RightX, BottomY)
 
-T:SetVertexPos(1, .1 * CW, bottomy)
-T:SetVertexPos(2, topx, topy)
-T:SetVertexPos(3, rightx, bottomy)
---[[
-T:LabelAngle(1, "B")
-T:LabelAngle(2, "A")
-T:LabelAngle(3, "C")
-
-T:LabelSide(1, "c")
-T:LabelSide(2, "b")
-T:LabelSide(3, "a")
-]]
 T:LabelSide(3, "base")
 
 local U = triangle.New()
 
-U:SetVertexPos(1, topx, bottomy)
-U:SetVertexPos(2, topx, topy)
-U:SetVertexPos(3, rightx, bottomy)
+U:SetVertexPos(1, TopX, BottomY)
+U:SetVertexPos(2, TopX, TopY)
+U:SetVertexPos(3, RightX, BottomY)
 
 U:SetSideStyle(1, "dashed")
-U:LabelSide(1, "alt", { align = true })
+U:LabelSide(1, "altitude", { align = true, t = .35, text_offset = 15 })
 U:MarkAngle(1, 1)

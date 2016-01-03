@@ -45,8 +45,8 @@ function M.New (into)
 	local tri = shape.NewShape(into, Triangle)
 
 	tri:SetVertexPos(1, CX / 2, CY / 2)
-	tri:SetVertexPos(2, 1.5 * CX, CY / 2)--1.5 * CX, CY)
-	tri:SetVertexPos(3, 1.5 * CX, CY)--CX, 1.5 * CY)
+	tri:SetVertexPos(2, 1.5 * CX, CY)
+	tri:SetVertexPos(3, CX, 1.5 * CY)
 
 	return tri
 end

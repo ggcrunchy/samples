@@ -28,10 +28,6 @@ local triangle = require("triangle")
 
 -- --
 local CW, CH = display.contentWidth, display.contentHeight
-
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
-
---
 local T = triangle.New()
 
 T:SetVertexPos(1, .1 * CW, .5 * CH)
@@ -45,3 +41,5 @@ T:LabelAngle(3, "C")
 T:LabelSide(1, "c")
 T:LabelSide(2, "b")
 T:LabelSide(3, "a")
+
+return T -- later figures refer back to this

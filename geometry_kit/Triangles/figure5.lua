@@ -1,4 +1,4 @@
---- Triangles, figure 1.
+--- Triangles, figure 5.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -26,4 +26,34 @@
 -- Modules --
 local triangle = require("triangle")
 
--- STUFF!
+-- --
+local CW, CH = display.contentWidth, display.contentHeight
+local ToLowerRightX = .6 * CW
+local ToUpperRightX, ToUpperRightY = .3 * CW, -.15 * CH
+
+local function TriAt (x, y)
+	local T = triangle.New()
+
+	T:SetVertexPos(1, x, y)
+	T:SetVertexPos(2, x + ToUpperRightX, y + ToUpperRightY)
+	T:SetVertexPos(3, x + ToLowerRightX, y)
+	T:SetSideStyle(2, "hide")
+
+	return T
+end
+
+--
+local T = TriAt(.1 * CW, .45 * CH)
+local x0, y0 = .3 * CW, .7 * CH
+
+local function GetXY (s)
+	return x0 + s * ToUpperRightX + (1 - s) * ToLowerRightX, y0 + s * ToUpperRightY
+end
+
+for i = 1, 3 do
+	local u = TriAt(x0, y0)
+
+	u:SetVertexPos(2, GetXY(1 - (i - 1) / 3))
+	u:SetVertexPos(3, GetXY(1 - i / 3))
+	u:MarkAngle(1, i, { angle_offset = .7 })
+end
