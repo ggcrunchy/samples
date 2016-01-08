@@ -31,6 +31,9 @@ local pi = math.pi
 local setmetatable = setmetatable
 local sin = math.sin
 
+-- Modules --
+local math2d_ex = require("math2d_ex")
+
 -- Plugins --
 local math2d = require "plugin.math2d"
 
@@ -77,16 +80,18 @@ end
 function M.GetAxes (vprev, vcur, vnext)
 	local vx, vy = math2d.diff(vcur, vprev, true)
 	local wx, wy = math2d.diff(vcur, vnext, true)
-	local offset = math2d.dot(vx, vy, wx, wy) / math2d.length2(wx, wy)
-	local dx, dy = wx * offset, wy * offset
+	local rx, ry = math2d_ex.ProjectOnto(vx, vy, wx, wy, "rejection")
 
 	wx, wy = math2d.normalize(wx, wy)
 
-	local cos_vw, frame = math2d.dot(vx, vy, wx, wy) / math2d.length(vx, vy), {}
+	local frame = {}
 
-	frame.m_angle = acos(cos_vw)
 	frame.m_xx, frame.m_xy = wx, wy
-	frame.m_yx, frame.m_yy = math2d.normalize(math2d.sub(vx, vy, dx, dy))
+	frame.m_yx, frame.m_yy = rx, ry
+
+	vx, vy = math2d.normalize(vx, vy)
+
+	frame.m_angle = math2d_ex.AngleBetweenUnitVectors(vx, vy, wx, wy)
 
 	return setmetatable(frame, Frame)
 end

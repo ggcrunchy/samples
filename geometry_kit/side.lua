@@ -23,6 +23,9 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
+-- Modules --
+local math2d_ex = require("math2d_ex")
+
 -- Plugins --
 local math2d = require "plugin.math2d"
 
@@ -41,6 +44,14 @@ function M.Perp (v1, v2)
 	local dx, dy = math2d.normalize(math2d.sub(v1, v2, true))
 
 	return -dy, dx
+end
+
+--- DOCME
+function M.ProjectOpposite (c, p1, p2)
+	local vx, vy = math2d.diff(p2, c, true)
+	local wx, wy = math2d.diff(p1, p2, true)
+
+	return math2d_ex.ProjectOnto(vx, vy, wx, wy)
 end
 
 -- Export the module.
