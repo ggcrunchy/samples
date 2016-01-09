@@ -36,14 +36,12 @@ local M = {}
 function M.GetPosOnSide (v1, v2, t)
 	local dx, dy = math2d.diff(v1, v2, true)
 
-	return v1.x + dx * t, v1.y + dy * t
+	return math2d_ex.AddScaled(v1, dx, dy, t)
 end
 
 --- DOCME
 function M.Perp (v1, v2)
-	local dx, dy = math2d.normalize(math2d.sub(v1, v2, true))
-
-	return -dy, dx
+	return math2d.normals(math2d.normalize(math2d.sub(v1, v2, true)))
 end
 
 --- DOCME

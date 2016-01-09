@@ -1,4 +1,4 @@
---- Triangles, figure 1.
+--- Triangles, figure 25.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,5 +25,28 @@
 
 -- Modules --
 local triangle = require("triangle")
+local figure24 = require("Triangles.figure24")
 
--- STUFF!
+-- --
+local P, Q = figure24.P, figure24.Q
+local BottomY, TopY = P.y, Q.y
+local LeftX, RightX = P.x, Q.x
+
+figure24.StrP:removeSelf()
+figure24.StrQ:removeSelf()
+
+--
+local T = triangle.New()
+
+T:SetVertexPos(1, LeftX, BottomY)
+T:SetVertexPos(2, RightX, TopY)
+T:SetVertexPos(3, RightX, BottomY)
+
+T:SetSideStyle(1, "dashed")
+T:SetSideStyle(2, "dashed")
+T:SetSideStyle(3, "dashed")
+
+T:LabelSide(2, "dy")
+T:LabelSide(3, "dx")
+
+T:MarkAngle(3, 1)

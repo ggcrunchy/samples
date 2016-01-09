@@ -50,10 +50,10 @@ local len1, len2 = math2d.length(math2d.sub(vprev, corner, true)), math2d.length
 
 axes:SetPosition(corner.x, corner.y)
 
-axes:SetRadius(len2)
-dup:SetVertexPos(1, axes:GetPosAtParameter(-.1))
 axes:SetRadius(len1)
-dup:SetVertexPos(2, axes:GetPosAtParameter(1.1))
+dup:SetVertexPos(2, axes:GetPosAtParameter(-.1))
+axes:SetRadius(len2)
+dup:SetVertexPos(1, axes:GetPosAtParameter(1.1))
 dup:LabelAngle(3, "C'", { radius = 45 })
 
 dup:SetSideStyle(1, "hide")

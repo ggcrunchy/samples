@@ -1,4 +1,4 @@
---- Triangles, figure 1.
+--- Triangles, figure 24.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -26,4 +26,23 @@
 -- Modules --
 local triangle = require("triangle")
 
--- STUFF!
+-- --
+local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .6 * CH
+local LeftX, TopY = .1 * CW, .3 * CH
+local RightX = .8 * CW
+
+--
+local P = display.newCircle(.1 * CW, .6 * CH, 12)
+local Q = display.newCircle(.8 * CW, .3 * CH, 12)
+
+P:setFillColor(0)
+Q:setFillColor(0)
+
+local StrP = display.newText("p", P.x - 3, P.y - 35, native.systemFontBold, 22)
+local StrQ = display.newText("q", Q.x + 5, Q.y + 35, native.systemFontBold, 22)
+
+StrP:setTextColor(0)
+StrQ:setTextColor(0)
+
+return { P = P, Q = Q, StrP = StrP, StrQ = StrQ } -- for figure 25

@@ -78,8 +78,8 @@ end
 
 --- DOCME
 function M.GetAxes (vprev, vcur, vnext)
-	local vx, vy = math2d.diff(vcur, vprev, true)
-	local wx, wy = math2d.diff(vcur, vnext, true)
+	local vx, vy = math2d.diff(vcur, vnext, true)
+	local wx, wy = math2d.diff(vcur, vprev, true)
 	local rx, ry = math2d_ex.ProjectOnto(vx, vy, wx, wy, "rejection")
 
 	wx, wy = math2d.normalize(wx, wy)

@@ -26,6 +26,7 @@
 -- Standard library imports --
 local asin = math.asin
 local pi = math.pi
+local type = type
 
 -- Plugins --
 local math2d = require "plugin.math2d"
@@ -34,19 +35,33 @@ local math2d = require "plugin.math2d"
 local M = {}
 
 --- DOCME
+function M.AddScaled (a, b, c, d, e) -- TODO: altRets?
+	--
+	if type(a) == "table" then -- a = { x = v.x, y = v.y }
+		if type(b) == "table" then -- b = { x = w.x, y = w.y }, c = scale
+			return math2d.add(a, math2d.scale(b, c))
+		else -- b = w.x, c = w.y, d = scale
+			return math2d.add(a.x, a.y, math2d.scale(b, c, d))
+		end
+	elseif type(b) == "table" then -- a = v.x, b = v.y, c = { x = w.x, y = w.y }, d = scale
+		return math2d.add(a, b, math2d.scale(c.x, c.y, d))
+	else -- a = v.x, b = v.y, c = w.x, d = w.y, e = scale
+		return math2d.add(a, b, math2d.scale(c, d, e))
+	end
+end
+
+--- DOCME
 -- See also [The Right Way To Calculate Stuff](, http://www.plunk.org/~hatch/rightway.php), "angle between unit vectors". 
 function M.AngleBetweenUnitVectors (vx, vy, wx, wy)
-	local neg = math2d.dot(vx, vy, wx, wy) < 0
 	local dx, dy = math2d.sub(wx, wy, vx, vy)
-	local angle = 2 * asin(math2d.length(dx, dy) / 2)
 
-	return neg and pi - angle or angle
+	return 2 * asin(math2d.length(dx, dy) / 2)
 end
 
 --- DOCME
 function M.ProjectOnto (vx, vy, wx, wy, how)
 	local offset = math2d.dot(vx, vy, wx, wy) / math2d.length2(wx, wy)
-	local px, py = wx * offset, wy * offset
+	local px, py = math2d.scale(wx, wy, offset)
 
 	if how == "rejection" or how == "both" then
 		local rx, ry = math2d.normalize(math2d.sub(vx, vy, px, py))
