@@ -28,8 +28,8 @@ local CW, CH = display.contentWidth, display.contentHeight
 
 display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
 
-require("Triangles.figure6")
+require("Triangles.figure11")
 
 if false then
-	display.save(display.getCurrentStage(), "Figure25.png")
+	display.save(display.getCurrentStage(), "Figure11.png")
 end

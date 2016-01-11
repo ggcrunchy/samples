@@ -1,4 +1,4 @@
---- Triangles, figure 6.
+--- Triangles, figure 26.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -28,36 +28,29 @@ local triangle = require("triangle")
 
 -- --
 local CW, CH = display.contentWidth, display.contentHeight
-local ToSide = .25 * CW
+local LeftX = .1 * CW
+local MidX = .6 * CW
+local RightX = .9 * CW
+local BottomY = .75 * CH
+local TopY = .35 * CH
 
-local RA1, RA2 = triangle.New(), triangle.New()
+--
+local T = triangle.New()
 
-local rax, ray = .4 * CW, .3 * CH
+T:SetVertexPos(1, LeftX, BottomY)
+T:SetVertexPos(2, MidX, TopY)
+T:SetVertexPos(3, MidX, BottomY)
 
-local function CommonRA (ra, add)
-	ra:SetVertexPos(1, rax + add, ray)
-	ra:SetVertexPos(2, rax, ray - .2 * CH)
-	ra:SetVertexPos(3, rax, ray)
-	ra:SetSideStyle(1, "hide")
-	ra:MarkAngle(3, 1, { angle_offset = .2 })
-end
+T:LabelSide(1, "z")
+T:LabelSide(3, "L")
 
-CommonRA(RA1, -ToSide)
-CommonRA(RA2, ToSide)
+local U = triangle.New()
 
-local Supp1, Supp2 = triangle.New(), triangle.New()
+U:SetVertexPos(1, MidX, BottomY)
+U:SetVertexPos(2, MidX, TopY)
+U:SetVertexPos(3, RightX, BottomY)
 
-local suppx, suppy = .6 * CW, .7 * CH
-
-local function CommonSupp (supp, add)
-	supp:SetVertexPos(1, suppx + add, suppy)
-	supp:SetVertexPos(2, suppx + .25 * CW, suppy - .15 * CH)
-	supp:SetVertexPos(3, suppx, suppy)
-	supp:SetSideStyle(1, "hide")
-	supp:MarkAngle(3, add > 0 and 2 or 1, { angle_offset = .2, angle_spacing = .075 })
-end
-
-CommonSupp(Supp1, -ToSide)
-CommonSupp(Supp2, ToSide)
-
-return { RA1 = RA1, RA2 = RA2, Supp1 = Supp1, Supp2 = Supp2 } -- reused by figure 7
+U:LabelSide(1, "h", { t = .35, text_offset = 15 })
+U:LabelSide(2, "y")
+U:LabelSide(3, "R")
+U:MarkAngle(1, 1)

@@ -37,6 +37,16 @@ figure1:LabelAngle(3, nil)
 figure1:LabelSide(2, nil)
 figure1:LabelSide(3, nil)
 
+for i = 1, 2 do
+	local label = figure1:GetAngleLabel(i)
+
+	label:setTextColor(1, .95)
+
+	display.getCurrentStage():insert(label)
+
+	label:toFront()
+end
+
 figure1:SetSideStyle(2, "hide")
 figure1:SetSideStyle(3, "hide")
 
@@ -51,9 +61,9 @@ local len1, len2 = math2d.length(math2d.sub(vprev, corner, true)), math2d.length
 axes:SetPosition(corner.x, corner.y)
 
 axes:SetRadius(len1)
-dup:SetVertexPos(2, axes:GetPosAtParameter(-.1))
+dup:SetVertexPos(2, axes:GetPosAtParameter(.1))
 axes:SetRadius(len2)
-dup:SetVertexPos(1, axes:GetPosAtParameter(1.1))
-dup:LabelAngle(3, "C'", { radius = 45 })
+dup:SetVertexPos(1, axes:GetPosAtParameter(.9))
+dup:LabelAngle(3, "C'", { radius = 65 })
 
 dup:SetSideStyle(1, "hide")

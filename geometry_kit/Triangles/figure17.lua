@@ -1,4 +1,4 @@
---- Triangles, figure 1.
+--- Triangles, figure 17.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,5 +25,8 @@
 
 -- Modules --
 local triangle = require("triangle")
+local figure16 = require("Triangles.figure16")
 
--- STUFF!
+figure16.T1:SetSideStyle(3, "normal")
+figure16.T1:LabelSide(1, "w")
+figure16.T1:LabelSide(2, "h")

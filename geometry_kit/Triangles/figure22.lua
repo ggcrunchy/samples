@@ -1,4 +1,4 @@
---- Triangles, figure 1.
+--- Triangles, figure 22.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -26,4 +26,55 @@
 -- Modules --
 local triangle = require("triangle")
 
--- STUFF!
+-- --
+local CW, CH = display.contentWidth, display.contentHeight
+
+-- --
+local X = .4 * CW
+local Y = .25 * CW
+
+--
+local BottomY, BottomLeftX = .5 * CH, .5 * CW
+local LeftX, TopY = .15 * CW, .15 * CH
+
+--
+local T = triangle.New()
+
+T:SetVertexPos(1, LeftX, TopY)
+T:SetVertexPos(2, LeftX + X, TopY)
+T:SetVertexPos(3, LeftX, TopY + Y)
+
+T:LabelSide(1, "x")
+T:LabelSide(3, "y")
+T:SetSideStyle(2, "hide")
+T:MarkAngle(1, 1, { angle_offset = .15 })
+
+local list, cur = {}, T
+
+for i, name in ipairs{ "ul", "ur", "lr", "ll" } do
+	list[name] = cur
+
+	local new = cur:Clone()
+
+	new:Rotate(90)
+
+	local x2, y2 = cur:GetVertexPos(2)
+	local mark = display.newCircle(x2, y2, 5)
+
+	mark:setFillColor(.3)
+	mark:setStrokeColor(0)
+
+	mark.strokeWidth = 4
+
+	if i < 4 then
+		local x1, y1 = new:GetVertexPos(3)
+
+		new:Translate(x2 - x1, y2 - y1)
+
+		cur = new
+	else
+		new:Remove()
+	end
+end
+
+return list -- reuse in figures 23, 24

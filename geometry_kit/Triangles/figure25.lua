@@ -25,28 +25,34 @@
 
 -- Modules --
 local triangle = require("triangle")
-local figure24 = require("Triangles.figure24")
 
 -- --
-local P, Q = figure24.P, figure24.Q
-local BottomY, TopY = P.y, Q.y
-local LeftX, RightX = P.x, Q.x
-
-figure24.StrP:removeSelf()
-figure24.StrQ:removeSelf()
+local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .75 * CH
+local TopY = .25 * CH
+local LeftX = .1 * CW
+local MidX = .5 * CW
+local RightX = .8 * CW
 
 --
 local T = triangle.New()
 
 T:SetVertexPos(1, LeftX, BottomY)
 T:SetVertexPos(2, RightX, TopY)
-T:SetVertexPos(3, RightX, BottomY)
+T:SetVertexPos(3, MidX, BottomY)
 
-T:SetSideStyle(1, "dashed")
-T:SetSideStyle(2, "dashed")
-T:SetSideStyle(3, "dashed")
+T:LabelSide(1, "z")
+T:LabelSide(3, "x")
 
-T:LabelSide(2, "dy")
-T:LabelSide(3, "dx")
+local U = triangle.New()
 
-T:MarkAngle(3, 1)
+U:SetVertexPos(1, MidX, BottomY)
+U:SetVertexPos(2, RightX, TopY)
+U:SetVertexPos(3, RightX, BottomY)
+
+U:LabelSide(1, "y", { text_offset = 15, t = .3 })
+U:LabelSide(2, "h")
+U:LabelSide(3, "R")
+U:SetSideStyle(2, "dashed")
+U:SetSideStyle(3, "dashed")
+U:MarkAngle(3, 1, { angle_offset = .2 })

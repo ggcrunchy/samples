@@ -1,4 +1,4 @@
---- Triangles, figure 1.
+--- Triangles, figure 21.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -26,4 +26,42 @@
 -- Modules --
 local triangle = require("triangle")
 
--- STUFF!
+-- --
+local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .6 * CH
+local TopY = .25 * CH
+local LeftX = .15 * CW
+local MidX = .5 * CW
+local RightX = .75 * CW
+
+--
+local L = triangle.New()
+
+L:SetVertexPos(1, LeftX, TopY)
+L:SetVertexPos(2, MidX, TopY)
+L:SetVertexPos(3, LeftX, BottomY)
+
+L:SetSideStyle(3, "dashed")
+L:LabelAngle(2, "B")
+L:MarkAngle(1, 1, { angle_offset = .15 })
+
+--
+local T = triangle.New()
+
+T:SetVertexPos(1, MidX, TopY)
+T:SetVertexPos(2, RightX, BottomY)
+T:SetVertexPos(3, LeftX, BottomY)
+
+T:LabelAngle(1, "A")
+T:LabelAngle(2, "C")
+T:LabelAngle(3, "B")
+
+local R = triangle.New()
+
+R:SetVertexPos(1, MidX, TopY)
+R:SetVertexPos(2, RightX, TopY)
+R:SetVertexPos(3, RightX, BottomY)
+
+R:SetSideStyle(2, "dashed")
+R:LabelAngle(1, "C")
+R:MarkAngle(2, 1, { angle_offset = .1 })

@@ -24,36 +24,26 @@
 --
 
 -- Modules --
-local angle = require("angle")
 local triangle = require("triangle")
-local figure1 = require("Triangles.figure1")
+local figure6 = require("Triangles.figure6")
 
--- Plugins --
-local math2d = require "plugin.math2d"
+--
+figure6.RA1:Remove()
+figure6.RA2:Remove()
 
-local dup = figure1:Clone()
+local CW, CH = display.contentWidth, display.contentHeight
+local MidX, MidY = figure6.Supp1:GetVertexPos(3)
+local ToSide = figure6.Supp2:GetVertexPos(1) - MidX
 
-figure1:LabelAngle(3, nil)
-figure1:LabelSide(2, nil)
-figure1:LabelSide(3, nil)
+local Vert1, Vert2 = triangle.New(), triangle.New()
 
-figure1:SetSideStyle(2, "hide")
-figure1:SetSideStyle(3, "hide")
+local function CommonVert (vert, add)
+	vert:SetVertexPos(1, MidX - add, MidY)
+	vert:SetVertexPos(2, MidX - .25 * CW, MidY + .15 * CH)
+	vert:SetVertexPos(3, MidX, MidY)
+	vert:SetSideStyle(1, "hide")
+	vert:MarkAngle(3, add > 0 and 2 or 1, { angle_offset = .2, angle_spacing = .075 })
+end
 
-dup:LabelAngle(1, nil)
-dup:LabelAngle(2, nil)
-dup:LabelSide(1, nil)
-
-local vprev, corner, vnext = dup:GetPrev(3), dup[3], dup:GetNext(3)
-local axes = angle.GetAxes(vprev, corner, vnext)
-local len1, len2 = math2d.length(math2d.sub(vprev, corner, true)), math2d.length(math2d.sub(vnext, corner, true))
-
-axes:SetPosition(corner.x, corner.y)
-
-axes:SetRadius(len1)
-dup:SetVertexPos(2, axes:GetPosAtParameter(.1))
-axes:SetRadius(len2)
-dup:SetVertexPos(1, axes:GetPosAtParameter(.9))
-dup:LabelAngle(3, "C'", { radius = 65 })
-
-dup:SetSideStyle(1, "hide")
+CommonVert(Vert1, -ToSide)
+CommonVert(Vert2, ToSide)

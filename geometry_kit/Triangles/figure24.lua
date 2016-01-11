@@ -25,24 +25,11 @@
 
 -- Modules --
 local triangle = require("triangle")
+local figure22 = require("Triangles.figure22")
 
--- --
-local CW, CH = display.contentWidth, display.contentHeight
-local BottomY = .6 * CH
-local LeftX, TopY = .1 * CW, .3 * CH
-local RightX = .8 * CW
-
---
-local P = display.newCircle(.1 * CW, .6 * CH, 12)
-local Q = display.newCircle(.8 * CW, .3 * CH, 12)
-
-P:setFillColor(0)
-Q:setFillColor(0)
-
-local StrP = display.newText("p", P.x - 3, P.y - 35, native.systemFontBold, 22)
-local StrQ = display.newText("q", Q.x + 5, Q.y + 35, native.systemFontBold, 22)
-
-StrP:setTextColor(0)
-StrQ:setTextColor(0)
-
-return { P = P, Q = Q, StrP = StrP, StrQ = StrQ } -- for figure 25
+for _, tri in pairs(figure22) do
+	tri:SetSideStyle(2, "normal")
+	tri:LabelSide(2, "z", { align = true, text_offset = 15 })
+	tri:MarkAngle(2, 1, { angle_offset = .2 })
+	tri:MarkAngle(3, 2, { angle_offset = .2, angle_spacing = .1 })
+end

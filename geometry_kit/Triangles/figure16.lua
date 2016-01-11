@@ -1,4 +1,4 @@
---- Triangles, figure 1.
+--- Triangles, figure 16.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -26,4 +26,45 @@
 -- Modules --
 local triangle = require("triangle")
 
--- STUFF!
+local CW, CH = display.contentWidth, display.contentHeight
+local Unit = .15 * CW
+local TopY = .25 * CH
+local BottomY = TopY + 3 * Unit
+local LeftX = .2 * CW
+local RightX = LeftX + 4 * Unit
+
+--
+local T = triangle.New()
+
+T:SetVertexPos(1, LeftX, TopY)
+T:SetVertexPos(2, RightX, TopY)
+T:SetVertexPos(3, RightX, BottomY)
+
+T:SetSideStyle(3, "hide")
+T:LabelSide(1, "4")
+T:LabelSide(2, "3")
+
+local U = triangle.New()
+
+U:SetSideStyle(3, "hide")
+U:SetVertexPos(1, RightX, BottomY)
+U:SetVertexPos(2, LeftX, BottomY)
+U:SetVertexPos(3, LeftX, TopY)
+
+local function Segment (x1, y1, x2, y2)
+	local seg = display.newLine(x1, y1, x2 or x1, y2 or y1)
+
+	seg:setStrokeColor(0)
+
+	seg.strokeWidth = 3
+end
+
+for i = 1, 3 do
+	Segment(LeftX + i * Unit, TopY, false, BottomY)
+end
+
+for j = 1, 2 do
+	Segment(LeftX, TopY + j * Unit, RightX, false)
+end
+
+return { T1 = T, T2 = U } -- reused in figure 17

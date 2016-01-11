@@ -1,4 +1,4 @@
---- Triangles, figure 1.
+--- Triangles, figure 14.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,5 +25,14 @@
 
 -- Modules --
 local triangle = require("triangle")
+local figure1 = require("Triangles.figure1")
 
--- STUFF!
+local new = figure1:Clone()
+
+figure1:Translate(20, -70)
+new:Scale(.7)
+new:Translate(-30, 130)
+
+new:LabelSide(1, "c'")
+new:LabelSide(2, "b'")
+new:LabelSide(3, "a'")

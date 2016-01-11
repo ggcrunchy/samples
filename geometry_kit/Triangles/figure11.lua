@@ -1,4 +1,4 @@
---- Triangles, figure 1.
+--- Triangles, figure 11.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,5 +25,52 @@
 
 -- Modules --
 local triangle = require("triangle")
+local arrows = require("arrows")
+local math2d_ex = require("math2d_ex")
+local side = require("side")
 
--- STUFF!
+-- --
+local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .55 * CH
+local MidY = .4 * CH
+local TopY = .25 * CH
+local LeftX = .15 * CW
+local MidX = .25 * CW
+local RightX = .35 * CW
+
+--
+local T = triangle.New()
+
+T:SetVertexPos(1, MidX, TopY)
+T:SetVertexPos(2, RightX, MidY)
+T:SetVertexPos(3, LeftX, BottomY)
+
+T:LabelSide(3, "D", { align = true, text_offset = 15 })
+T:MarkAngle(3, 1, { angle_offset = .2 })
+
+T:LabelSide(2, "?")
+
+local Qmark = T:GetSideLabel(2)
+
+local function Diff (dx, dy, scale)
+	local U = T:Clone()
+	local x2, y2 = T:GetVertexPos(2)
+	local x3, y3 = T:GetVertexPos(3)
+
+	U:SetVertexPos(2, math2d_ex.AddScaled(x3, y3, x2 - x3, y2 - y3, scale))
+	U:Translate(dx, dy)
+	U:LabelSide(2, nil)
+
+	local cx, cy = U:Centroid()
+	local to = { x = cx, y = cy }
+	local ax, ay = side.Perp(Qmark, to)
+	local pointer = display.newLine(arrows.GetPoints(Qmark, to, ax, ay, .9))
+
+	pointer.strokeWidth = 3
+	
+	pointer:setStrokeColor(.2, .4)
+end
+
+Diff(40, 190, .7)
+Diff(140, 50, 1.8)
+Diff(85, -60, 2.3)

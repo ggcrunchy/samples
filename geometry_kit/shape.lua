@@ -60,6 +60,20 @@ local Shape = {}
 
 Shape.__index = Shape
 
+--- DOCME
+function Shape:Centroid ()
+	local cx, cy, n = 0, 0, self.m_n
+
+	--
+	for i = 1, n do
+		local px, py = self:GetVertexPos(i)
+
+		cx, cy = cx + px, cy + py
+	end
+
+	return cx / n, cy / n
+end
+
 --
 local function AuxClone (into, from)
 	for k, v in pairs(from) do
@@ -99,6 +113,19 @@ function Shape:Clone (into)
 end
 
 --
+local function AuxGetLabel (S, index, lkey)
+	local v = S[index]
+	local label = v[lkey]
+
+	return type(label) ~= "string" and label
+end
+
+--- DOCME
+function Shape:GetAngleLabel (index)
+	return AuxGetLabel(self, index, "m_angle_label")
+end
+
+--
 local function NextIndex (S, index)
 	return (index % S.m_n) + 1
 end
@@ -119,6 +146,11 @@ end
 --- DOCME
 function Shape:GetNext (index)
 	return self[NextIndex(self, index)]
+end
+
+--- DOCME
+function Shape:GetSideLabel (index)
+	return AuxGetLabel(self, index, "m_side_label")
 end
 
 --- Get a vertex's position.
@@ -399,19 +431,9 @@ end
 
 --- DOCME
 function Shape:Rotate (delta)
-	local cx, cy, n = 0, 0, self.m_n
-
-	--
-	for i = 1, n do
-		local px, py = self:GetVertexPos(i)
-
-		cx, cy = cx + px, cy + py
-	end
-
-	cx, cy = cx / n, cy / n
-
-	--
 	delta = rad(delta)
+
+	local n, cx, cy = self.m_n, self:Centroid()
 
 	for i = 1, n do
 		local apos = self[i]
@@ -419,6 +441,20 @@ function Shape:Rotate (delta)
 		local radius, to = sqrt(dx^2 + dy^2), atan2(dy, dx) + delta
 
 		apos.x, apos.y = cx + radius * cos(to), cy + radius * sin(to)
+	end
+
+	Refresh(self, n)
+end
+
+--- DOCME
+function Shape:Scale (scale)
+	local n, cx, cy = self.m_n, self:Centroid()
+
+	for i = 1, n do
+		local vpos = self[i]
+		local dx, dy = vpos.x - cx, vpos.y - cy
+
+		vpos.x, vpos.y = cx + scale * dx, cy + scale * dy
 	end
 
 	Refresh(self, n)
@@ -585,6 +621,19 @@ function Shape:SetVertexPos (vertex_index, x, y)
 	if vnext then
 		RedrawSide(self, vertex_index)
 	end
+end
+
+--- DOCME
+function Shape:Translate (dx, dy)
+	local n = self.m_n
+
+	for i = 1, n do
+		local v = self[i]
+
+		v.x, v.y = v.x + dx, v.y + dy
+	end
+
+	Refresh(self, n)
 end
 
 --- DOCME

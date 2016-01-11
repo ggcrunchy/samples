@@ -1,4 +1,4 @@
---- Triangles, figure 1.
+--- Triangles, figure 20.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -26,4 +26,48 @@
 -- Modules --
 local triangle = require("triangle")
 
--- STUFF!
+-- --
+local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .55 * CH
+local TopY = .25 * CH
+local LeftX = .3 * CW
+local RightX = .6 * CW
+
+--
+local L = triangle.New()
+
+L:SetVertexPos(1, LeftX, TopY)
+L:SetVertexPos(2, LeftX, BottomY)
+L:SetVertexPos(3, .1 * CW, TopY)
+
+L:SetSideStyle(1, "hide")
+
+--
+local T = triangle.New()
+
+T:SetVertexPos(1, LeftX, TopY)
+T:SetVertexPos(2, RightX, TopY)
+T:SetVertexPos(3, LeftX, BottomY)
+
+T:SetSideStyle(3, "dashed")
+T:MarkAngle(1, 1, { angle_offset = .15 })
+T:MarkAngle(2, 1, { angle_offset = .15 })
+
+local U = triangle.New()
+
+U:SetVertexPos(1, RightX, TopY)
+U:SetVertexPos(2, RightX, BottomY)
+U:SetVertexPos(3, LeftX, BottomY)
+
+U:SetSideStyle(1, "dashed")
+U:MarkAngle(2, 1, { angle_offset = .15 })
+U:MarkAngle(3, 1, { angle_offset = .15 })
+
+local V = triangle.New()
+
+V:SetVertexPos(1, RightX, TopY)
+V:SetVertexPos(2, RightX + .2 * CW, TopY - .2 * CH)
+V:SetVertexPos(3, RightX + .2 * CW, TopY)
+
+V:SetSideStyle(2, "hide")
+V:MarkAngle(1, 1, { angle_offset = .2 })

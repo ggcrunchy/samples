@@ -1,4 +1,4 @@
---- Triangles, figure 1.
+--- Triangles, figure 23.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,5 +25,8 @@
 
 -- Modules --
 local triangle = require("triangle")
+local figure22 = require("Triangles.figure22")
 
--- STUFF!
+for _, tri in pairs(figure22) do
+	tri:SetSideStyle(2, "normal")
+end

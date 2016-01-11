@@ -26,4 +26,29 @@
 -- Modules --
 local triangle = require("triangle")
 
--- STUFF!
+--
+local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .65 * CH
+local MidY = .5 * CH
+local TopY = .35 * CH
+local LeftX = .1 * CW
+local RightX = .4 * CW
+
+local T = triangle.New()
+
+T:SetVertexPos(1, LeftX, MidY)
+T:SetVertexPos(2, RightX, TopY)
+T:SetVertexPos(3, RightX, BottomY)
+
+T:LabelAngle(2, "A")
+T:LabelAngle(3, "B")
+T:MarkAngle(1, 1, { angle_offset = .15 })
+T:MarkSide(1, 1)
+T:MarkSide(3, 1)
+
+local U = T:Clone()
+
+U:Translate(.45 * CW, 0)
+
+U:LabelAngle(3, "A")
+U:LabelAngle(2, "B")
