@@ -1,4 +1,4 @@
---- Triangles, figure 4.
+--- Triangles, figure D-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,22 +25,37 @@
 
 -- Modules --
 local triangle = require("triangle")
+local figure10 = require("Triangles.C3")
+local math2d_ex = require("math2d_ex")
 
--- --
-local CW, CH = display.contentWidth, display.contentHeight
-local BottomY = .75 * CH
-local TopX, TopY = .25 * CW, .25 * CH
-local RightX = .9 * CW
+local function Mark (x, y)
+	local mark = display.newCircle(x, y, 5)
 
---
-local T = triangle.New()
+	mark:setFillColor(.3)
+	mark:setStrokeColor(0)
 
-T:SetVertexPos(1, TopX, BottomY)
-T:SetVertexPos(2, TopX, TopY)
-T:SetVertexPos(3, RightX, BottomY)
+	mark.strokeWidth = 4
+end
 
-T:LabelSide(1, "leg 1", { text_offset = 35 })
-T:LabelSide(2, "hypotenuse", { align = true })
-T:LabelSide(3, "leg 2")
+local function Etch (from, name1, name2)
+	local new = triangle.New()
 
-T:MarkAngle(1, 1)
+	local x1, y1 = from:GetVertexPos(1)
+	local x2, y2 = from:GetVertexPos(2)
+	local x3, y3 = from:GetVertexPos(3)
+	local x4, y4 = math2d_ex.AddScaled(x3, y3, x2 - x3, y2 - y3, .75)
+	local x5, y5 = math2d_ex.AddScaled(x3, y3, x1 - x3, y1 - y3, .5)
+
+	new:SetVertexPos(1, x3, y3)
+	new:SetVertexPos(2, x4, y4)
+	new:SetVertexPos(3, x5, y5)
+
+	Mark(x4, y4)
+	Mark(x5, y5)
+
+	from:LabelSide(3, name1, { t = .5 })
+	from:LabelSide(2, name2, { t = .25 })
+end
+
+Etch(figure10.T1, "p1", "p2")
+Etch(figure10.T2, "q1", "q2")

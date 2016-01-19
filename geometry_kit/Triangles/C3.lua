@@ -1,4 +1,4 @@
---- Triangles, figure 14.
+--- Triangles, figure C-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,14 +25,17 @@
 
 -- Modules --
 local triangle = require("triangle")
-local figure1 = require("Triangles.figure1")
+local figure1 = require("Triangles.A1")
 
-local new = figure1:Clone()
+figure1:LabelAngle(1, nil)
+figure1:LabelAngle(2, nil)
+figure1:LabelSide(1, nil)
 
-figure1:Translate(20, -70)
-new:Scale(.7)
-new:Translate(-30, 130)
+figure1:Translate(0, -65)
 
-new:LabelSide(1, "c'")
-new:LabelSide(2, "b'")
-new:LabelSide(3, "a'")
+local T2 = figure1:Clone()
+
+T2:Rotate(125)
+T2:Translate(15, 230)
+
+return { T1 = figure1, T2 = T2 } -- reused in figure 12

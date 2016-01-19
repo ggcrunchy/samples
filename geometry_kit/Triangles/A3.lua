@@ -1,4 +1,4 @@
---- Triangles, figure 29.
+--- Triangles, figure A-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,28 +25,22 @@
 
 -- Modules --
 local triangle = require("triangle")
-local figure28 = require("Triangles.figure28")
 
 -- --
-local P, Q = figure28.P, figure28.Q
-local BottomY, TopY = P.y, Q.y
-local LeftX, RightX = P.x, Q.x
-
-figure28.StrP:removeSelf()
-figure28.StrQ:removeSelf()
+local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .75 * CH
+local TopX, TopY = .25 * CW, .25 * CH
+local RightX = .9 * CW
 
 --
 local T = triangle.New()
 
-T:SetVertexPos(1, LeftX, BottomY)
-T:SetVertexPos(2, RightX, TopY)
+T:SetVertexPos(1, TopX, BottomY)
+T:SetVertexPos(2, TopX, TopY)
 T:SetVertexPos(3, RightX, BottomY)
 
-T:SetSideStyle(1, "dashed")
-T:SetSideStyle(2, "dashed")
-T:SetSideStyle(3, "dashed")
+T:LabelSide(1, "leg 1", { text_offset = 35 })
+T:LabelSide(2, "hypotenuse", { align = true })
+T:LabelSide(3, "leg 2")
 
-T:LabelSide(2, "dy")
-T:LabelSide(3, "dx")
-
-T:MarkAngle(3, 1)
+T:MarkAngle(1, 1)

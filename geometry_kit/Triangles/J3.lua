@@ -1,4 +1,4 @@
---- Triangles, figure 5.
+--- Triangles, figure J-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,35 +25,11 @@
 
 -- Modules --
 local triangle = require("triangle")
+local figure22 = require("Triangles.J1")
 
--- --
-local CW, CH = display.contentWidth, display.contentHeight
-local ToLowerRightX = .6 * CW
-local ToUpperRightX, ToUpperRightY = .3 * CW, -.15 * CH
-
-local function TriAt (x, y)
-	local T = triangle.New()
-
-	T:SetVertexPos(1, x, y)
-	T:SetVertexPos(2, x + ToUpperRightX, y + ToUpperRightY)
-	T:SetVertexPos(3, x + ToLowerRightX, y)
-	T:SetSideStyle(2, "hide")
-
-	return T
-end
-
---
-local T = TriAt(.1 * CW, .45 * CH)
-local x0, y0 = .3 * CW, .7 * CH
-
-local function GetXY (s)
-	return x0 + s * ToUpperRightX + (1 - s) * ToLowerRightX, y0 + s * ToUpperRightY
-end
-
-for i = 1, 3 do
-	local u = TriAt(x0, y0)
-
-	u:SetVertexPos(2, GetXY(1 - (i - 1) / 3))
-	u:SetVertexPos(3, GetXY(1 - i / 3))
-	u:MarkAngle(1, i, { angle_offset = .7 })
+for _, tri in pairs(figure22) do
+	tri:SetSideStyle(2, "normal")
+	tri:LabelSide(2, "z", { align = true, text_offset = 15 })
+	tri:MarkAngle(2, 1, { angle_offset = .2 })
+	tri:MarkAngle(3, 2, { angle_offset = .2, angle_spacing = .1 })
 end

@@ -1,4 +1,4 @@
---- Triangles, figure 26.
+--- Triangles, figure F-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -28,29 +28,60 @@ local triangle = require("triangle")
 
 -- --
 local CW, CH = display.contentWidth, display.contentHeight
-local LeftX = .1 * CW
-local MidX = .6 * CW
-local RightX = .9 * CW
-local BottomY = .75 * CH
-local TopY = .35 * CH
+local BottomY = .45 * CH
+local TopY = .25 * CH
+local LeftX = .2 * CW
+local MidX = .45 * CW
+local RightX = .75 * CW
 
 --
 local T = triangle.New()
 
+local M = (TopY - BottomY) / (RightX - LeftX)
+
+local function Y (y1, x)
+	return y1 + M * x
+end
+
 T:SetVertexPos(1, LeftX, BottomY)
-T:SetVertexPos(2, MidX, TopY)
+T:SetVertexPos(2, MidX, Y(BottomY, MidX - LeftX))
 T:SetVertexPos(3, MidX, BottomY)
 
-T:LabelSide(1, "z")
-T:LabelSide(3, "L")
+local function Segment (x1, y1, x2, y2)
+	local seg = display.newLine(x1, y1, x2 or x1, y2)
+
+	seg:setStrokeColor(0)
+
+	seg.strokeWidth = 4
+end
+
+local function LabelRange (T, right)
+	local label = T:GetSideLabel(1)
+	local wx, wy, wbounds = label.x, label.y, label.contentBounds
+	local lefty, righty = Y(wy, LeftX - wx), Y(wy, right - wx)
+	local inner_leftx, inner_rightx = wbounds.xMin - 3, wbounds.xMax + 3
+	local inner_lefty = Y(wy, inner_leftx - wx)
+	local inner_righty = Y(wy, inner_rightx - wx)
+
+	Segment(LeftX, lefty, inner_leftx, inner_lefty)
+	Segment(inner_rightx, inner_righty, right, righty)
+	Segment(LeftX, lefty - 10, false, lefty + 10)
+	Segment(right, righty - 10, false, righty + 10)
+end
+
+T:MarkAngle(1, 1, { angle_offset = .3 })
+T:LabelSide(1, "z1", { align = true, t = .65 })
+T:LabelSide(2, "h1")
+
+LabelRange(T, MidX)
 
 local U = triangle.New()
 
-U:SetVertexPos(1, MidX, BottomY)
-U:SetVertexPos(2, MidX, TopY)
+U:SetVertexPos(1, LeftX, BottomY)
+U:SetVertexPos(2, RightX, TopY)
 U:SetVertexPos(3, RightX, BottomY)
 
-U:LabelSide(1, "h", { t = .35, text_offset = 15 })
-U:LabelSide(2, "y")
-U:LabelSide(3, "R")
-U:MarkAngle(1, 1)
+U:LabelSide(1, "z2", { align = true, text_offset = 55 })
+U:LabelSide(2, "h2")
+
+LabelRange(U, RightX)

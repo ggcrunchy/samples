@@ -1,4 +1,4 @@
---- Triangles, figure 8.
+--- Triangles, figure N-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,46 +24,29 @@
 --
 
 -- Modules --
-local angle = require("angle")
 local triangle = require("triangle")
-local figure1 = require("Triangles.figure1")
+local figure28 = require("Triangles.N1")
 
--- Plugins --
-local math2d = require "plugin.math2d"
+-- --
+local P, Q = figure28.P, figure28.Q
+local BottomY, TopY = P.y, Q.y
+local LeftX, RightX = P.x, Q.x
 
-local dup = figure1:Clone()
+figure28.StrP:removeSelf()
+figure28.StrQ:removeSelf()
 
-figure1:LabelAngle(3, nil)
-figure1:LabelSide(2, nil)
-figure1:LabelSide(3, nil)
+--
+local T = triangle.New()
 
-for i = 1, 2 do
-	local label = figure1:GetAngleLabel(i)
+T:SetVertexPos(1, LeftX, BottomY)
+T:SetVertexPos(2, RightX, TopY)
+T:SetVertexPos(3, RightX, BottomY)
 
-	label:setTextColor(1, .95)
+T:SetSideStyle(1, "dashed")
+T:SetSideStyle(2, "dashed")
+T:SetSideStyle(3, "dashed")
 
-	display.getCurrentStage():insert(label)
+T:LabelSide(2, "dy")
+T:LabelSide(3, "dx")
 
-	label:toFront()
-end
-
-figure1:SetSideStyle(2, "hide")
-figure1:SetSideStyle(3, "hide")
-
-dup:LabelAngle(1, nil)
-dup:LabelAngle(2, nil)
-dup:LabelSide(1, nil)
-
-local vprev, corner, vnext = dup:GetPrev(3), dup[3], dup:GetNext(3)
-local axes = angle.GetAxes(vprev, corner, vnext)
-local len1, len2 = math2d.length(math2d.sub(vprev, corner, true)), math2d.length(math2d.sub(vnext, corner, true))
-
-axes:SetPosition(corner.x, corner.y)
-
-axes:SetRadius(len1)
-dup:SetVertexPos(2, axes:GetPosAtParameter(.1))
-axes:SetRadius(len2)
-dup:SetVertexPos(1, axes:GetPosAtParameter(.9))
-dup:LabelAngle(3, "C'", { radius = 65 })
-
-dup:SetSideStyle(1, "hide")
+T:MarkAngle(3, 1)

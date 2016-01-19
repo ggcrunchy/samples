@@ -1,4 +1,4 @@
---- Triangles, figure 1.
+--- Triangles, figure M-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -28,18 +28,23 @@ local triangle = require("triangle")
 
 -- --
 local CW, CH = display.contentWidth, display.contentHeight
-local T = triangle.New()
+local LeftX = .025 * CW
+local TopY = .1 * CH
+local BottomY = .75 * CH
 
-T:SetVertexPos(1, .1 * CW, .5 * CH)
-T:SetVertexPos(2, .5 * CW, .25 * CH)
-T:SetVertexPos(3, .85 * CW, .65 * CH)
+-- NOTE: use landscape for this one
+local N = 6
+local Width = CW / (N + .25 * (N + 1))
 
-T:LabelAngle(1, "B")
-T:LabelAngle(2, "A")
-T:LabelAngle(3, "C")
+for i = 1, N do
+	local T, t = triangle.New(), (i - 1) / (N - 1)
+	local s = 1 - t
 
-T:LabelSide(1, "c")
-T:LabelSide(2, "b")
-T:LabelSide(3, "a")
+	T:SetVertexPos(1, LeftX, BottomY)
+	T:SetVertexPos(2, LeftX + Width, s * TopY + t * BottomY)
+	T:SetVertexPos(3, LeftX + Width, BottomY)
 
-return T -- later figures refer back to this
+	T:MarkAngle(3, 1, { angle_offset = .25 - t * .125 })
+	
+	LeftX = LeftX + 1.25 * Width
+end

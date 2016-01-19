@@ -1,4 +1,4 @@
---- Triangles, figure 6.
+--- Triangles, figure N-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -28,36 +28,21 @@ local triangle = require("triangle")
 
 -- --
 local CW, CH = display.contentWidth, display.contentHeight
-local ToSide = .25 * CW
+local BottomY = .6 * CH
+local LeftX, TopY = .1 * CW, .3 * CH
+local RightX = .8 * CW
 
-local RA1, RA2 = triangle.New(), triangle.New()
+--
+local P = display.newCircle(.1 * CW, .6 * CH, 12)
+local Q = display.newCircle(.8 * CW, .3 * CH, 12)
 
-local rax, ray = .4 * CW, .3 * CH
+P:setFillColor(0)
+Q:setFillColor(0)
 
-local function CommonRA (ra, add)
-	ra:SetVertexPos(1, rax + add, ray)
-	ra:SetVertexPos(2, rax, ray - .2 * CH)
-	ra:SetVertexPos(3, rax, ray)
-	ra:SetSideStyle(1, "hide")
-	ra:MarkAngle(3, 1, { angle_offset = .2 })
-end
+local StrP = display.newText("p", P.x - 3, P.y - 35, native.systemFontBold, 22)
+local StrQ = display.newText("q", Q.x + 5, Q.y + 35, native.systemFontBold, 22)
 
-CommonRA(RA1, -ToSide)
-CommonRA(RA2, ToSide)
+StrP:setTextColor(0)
+StrQ:setTextColor(0)
 
-local Supp1, Supp2 = triangle.New(), triangle.New()
-
-local suppx, suppy = .6 * CW, .7 * CH
-
-local function CommonSupp (supp, add)
-	supp:SetVertexPos(1, suppx + add, suppy)
-	supp:SetVertexPos(2, suppx + .25 * CW, suppy - .15 * CH)
-	supp:SetVertexPos(3, suppx, suppy)
-	supp:SetSideStyle(1, "hide")
-	supp:MarkAngle(3, add > 0 and 2 or 1, { angle_offset = .2, angle_spacing = .075 })
-end
-
-CommonSupp(Supp1, -ToSide)
-CommonSupp(Supp2, ToSide)
-
-return { RA1 = RA1, RA2 = RA2, Supp1 = Supp1, Supp2 = Supp2 } -- reused by figure 7
+return { P = P, Q = Q, StrP = StrP, StrQ = StrQ } -- for figure 28

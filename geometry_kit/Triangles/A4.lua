@@ -1,4 +1,4 @@
---- Triangles, figure 16.
+--- Triangles, figure A-4.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -26,45 +26,30 @@
 -- Modules --
 local triangle = require("triangle")
 
+-- --
 local CW, CH = display.contentWidth, display.contentHeight
-local Unit = .15 * CW
-local TopY = .25 * CH
-local BottomY = TopY + 3 * Unit
-local LeftX = .2 * CW
-local RightX = LeftX + 4 * Unit
+
+--
+local BottomY, BottomLeftX = .75 * CH, .5 * CW
+local TopX, TopY = .25 * CW, .25 * CH
+local RightX = .9 * CW
 
 --
 local T = triangle.New()
 
-T:SetVertexPos(1, LeftX, TopY)
-T:SetVertexPos(2, RightX, TopY)
+T:SetVertexPos(1, BottomLeftX, BottomY)
+T:SetVertexPos(2, TopX, TopY)
 T:SetVertexPos(3, RightX, BottomY)
 
-T:SetSideStyle(3, "hide")
-T:LabelSide(1, "4")
-T:LabelSide(2, "3")
+T:LabelSide(3, "base")
 
 local U = triangle.New()
 
-U:SetSideStyle(3, "hide")
-U:SetVertexPos(1, RightX, BottomY)
-U:SetVertexPos(2, LeftX, BottomY)
-U:SetVertexPos(3, LeftX, TopY)
+U:SetVertexPos(1, TopX, BottomY)
+U:SetVertexPos(2, TopX, TopY)
+U:SetVertexPos(3, BottomLeftX, BottomY)
 
-local function Segment (x1, y1, x2, y2)
-	local seg = display.newLine(x1, y1, x2 or x1, y2 or y1)
-
-	seg:setStrokeColor(0)
-
-	seg.strokeWidth = 3
-end
-
-for i = 1, 3 do
-	Segment(LeftX + i * Unit, TopY, false, BottomY)
-end
-
-for j = 1, 2 do
-	Segment(LeftX, TopY + j * Unit, RightX, false)
-end
-
-return { T1 = T, T2 = U } -- reused in figure 17
+U:SetSideStyle(1, "dashed")
+U:SetSideStyle(3, "dashed")
+U:LabelSide(1, "altitude", { align = true, t = .35, text_offset = 15 })
+U:MarkAngle(1, 1)

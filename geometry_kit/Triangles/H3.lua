@@ -1,4 +1,4 @@
---- Triangles, figure 11.
+--- Triangles, figure H-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,52 +25,65 @@
 
 -- Modules --
 local triangle = require("triangle")
-local arrows = require("arrows")
-local math2d_ex = require("math2d_ex")
-local side = require("side")
 
 -- --
 local CW, CH = display.contentWidth, display.contentHeight
-local BottomY = .55 * CH
-local MidY = .4 * CH
+local BottomY = .75 * CH
 local TopY = .25 * CH
 local LeftX = .15 * CW
-local MidX = .25 * CW
-local RightX = .35 * CW
+local MidX = .4 * CW
+local RightX = .85 * CW
 
 --
 local T = triangle.New()
 
-T:SetVertexPos(1, MidX, TopY)
-T:SetVertexPos(2, RightX, MidY)
-T:SetVertexPos(3, LeftX, BottomY)
+T:SetVertexPos(1, LeftX, BottomY)
+T:SetVertexPos(2, MidX, TopY)
+T:SetVertexPos(3, MidX, BottomY)
 
-T:LabelSide(3, "D", { align = true, text_offset = 15 })
-T:MarkAngle(3, 1, { angle_offset = .2 })
+T:LabelSide(3, "L")
 
-T:LabelSide(2, "?")
+local U = triangle.New()
 
-local Qmark = T:GetSideLabel(2)
+U:SetVertexPos(1, MidX, BottomY)
+U:SetVertexPos(2, MidX, TopY)
+U:SetVertexPos(3, RightX, BottomY)
 
-local function Diff (dx, dy, scale)
-	local U = T:Clone()
-	local x2, y2 = T:GetVertexPos(2)
-	local x3, y3 = T:GetVertexPos(3)
+U:MarkAngle(1, 1)
+U:LabelSide(3, "R")
 
-	U:SetVertexPos(2, math2d_ex.AddScaled(x3, y3, x2 - x3, y2 - y3, scale))
-	U:Translate(dx, dy)
-	U:LabelSide(2, nil)
+local UL = triangle.New()
 
-	local cx, cy = U:Centroid()
-	local to = { x = cx, y = cy }
-	local ax, ay = side.Perp(Qmark, to)
-	local pointer = display.newLine(arrows.GetPoints(Qmark, to, ax, ay, .9))
+UL:SetVertexPos(1, LeftX, TopY)
+UL:SetVertexPos(2, MidX, TopY)
+UL:SetVertexPos(3, LeftX, BottomY)
 
-	pointer.strokeWidth = 3
-	
-	pointer:setStrokeColor(.2, .4)
+UL:SetSideStyle(1, "dashed")
+UL:SetSideStyle(3, "dashed")
+UL:LabelSide(1, "w", { t = 1.4, text_offset = 30 })
+
+local wbounds = UL:GetSideLabel(1).contentBounds
+local wy = (wbounds.yMin + wbounds.yMax) / 2
+
+local function Segment (x1, y1, x2, y2)
+	local seg = display.newLine(x1, y1, x2 or x1, y2 or y1)
+
+	seg:setStrokeColor(0)
+
+	seg.strokeWidth = 4
 end
 
-Diff(40, 190, .7)
-Diff(140, 50, 1.8)
-Diff(85, -60, 2.3)
+Segment(LeftX, wy, wbounds.xMin - 20, false)
+Segment(wbounds.xMax + 20, wy, RightX, false)
+Segment(LeftX, wy - 10, false, wy + 10)
+Segment(RightX, wy - 10, false, wy + 10)
+
+local UR = triangle.New()
+
+UR:SetVertexPos(1, MidX, TopY)
+UR:SetVertexPos(2, RightX, TopY)
+UR:SetVertexPos(3, RightX, BottomY)
+
+UR:SetSideStyle(1, "dashed")
+UR:SetSideStyle(2, "dashed")
+UR:LabelSide(2, "h")

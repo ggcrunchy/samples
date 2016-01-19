@@ -1,4 +1,4 @@
---- Triangles, figure 7.
+--- Triangles, figure J-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,25 +25,8 @@
 
 -- Modules --
 local triangle = require("triangle")
-local figure6 = require("Triangles.figure6")
+local figure22 = require("Triangles.J1")
 
---
-figure6.RA1:Remove()
-figure6.RA2:Remove()
-
-local CW, CH = display.contentWidth, display.contentHeight
-local MidX, MidY = figure6.Supp1:GetVertexPos(3)
-local ToSide = figure6.Supp2:GetVertexPos(1) - MidX
-
-local Vert1, Vert2 = triangle.New(), triangle.New()
-
-local function CommonVert (vert, add)
-	vert:SetVertexPos(1, MidX - add, MidY)
-	vert:SetVertexPos(2, MidX - .25 * CW, MidY + .15 * CH)
-	vert:SetVertexPos(3, MidX, MidY)
-	vert:SetSideStyle(1, "hide")
-	vert:MarkAngle(3, add > 0 and 2 or 1, { angle_offset = .2, angle_spacing = .075 })
+for _, tri in pairs(figure22) do
+	tri:SetSideStyle(2, "normal")
 end
-
-CommonVert(Vert1, -ToSide)
-CommonVert(Vert2, ToSide)

@@ -1,4 +1,4 @@
---- Triangles, figure 20.
+--- Triangles, figure E-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -26,48 +26,29 @@
 -- Modules --
 local triangle = require("triangle")
 
--- --
+--
 local CW, CH = display.contentWidth, display.contentHeight
-local BottomY = .55 * CH
-local TopY = .25 * CH
-local LeftX = .3 * CW
-local RightX = .6 * CW
+local BottomY = .65 * CH
+local MidY = .5 * CH
+local TopY = .35 * CH
+local LeftX = .1 * CW
+local RightX = .4 * CW
 
---
-local L = triangle.New()
-
-L:SetVertexPos(1, LeftX, TopY)
-L:SetVertexPos(2, LeftX, BottomY)
-L:SetVertexPos(3, .1 * CW, TopY)
-
-L:SetSideStyle(1, "hide")
-
---
 local T = triangle.New()
 
-T:SetVertexPos(1, LeftX, TopY)
+T:SetVertexPos(1, LeftX, MidY)
 T:SetVertexPos(2, RightX, TopY)
-T:SetVertexPos(3, LeftX, BottomY)
+T:SetVertexPos(3, RightX, BottomY)
 
-T:SetSideStyle(3, "dashed")
+T:LabelAngle(2, "A")
+T:LabelAngle(3, "B")
 T:MarkAngle(1, 1, { angle_offset = .15 })
-T:MarkAngle(2, 1, { angle_offset = .15 })
+T:MarkSide(1, 1)
+T:MarkSide(3, 1)
 
-local U = triangle.New()
+local U = T:Clone()
 
-U:SetVertexPos(1, RightX, TopY)
-U:SetVertexPos(2, RightX, BottomY)
-U:SetVertexPos(3, LeftX, BottomY)
+U:Translate(.45 * CW, 0)
 
-U:SetSideStyle(1, "dashed")
-U:MarkAngle(2, 1, { angle_offset = .15 })
-U:MarkAngle(3, 1, { angle_offset = .15 })
-
-local V = triangle.New()
-
-V:SetVertexPos(1, RightX, TopY)
-V:SetVertexPos(2, RightX + .2 * CW, TopY - .2 * CH)
-V:SetVertexPos(3, RightX + .2 * CW, TopY)
-
-V:SetSideStyle(2, "hide")
-V:MarkAngle(1, 1, { angle_offset = .2 })
+U:LabelAngle(3, "A")
+U:LabelAngle(2, "B")

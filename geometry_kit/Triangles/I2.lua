@@ -1,4 +1,4 @@
---- Triangles, figure 18.
+--- Triangles, figure I-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -28,62 +28,46 @@ local triangle = require("triangle")
 
 -- --
 local CW, CH = display.contentWidth, display.contentHeight
-local BottomY = .75 * CH
+local BottomY = .55 * CH
 local TopY = .25 * CH
-local LeftX = .15 * CW
-local MidX = .4 * CW
-local RightX = .85 * CW
+local LeftX = .3 * CW
+local RightX = .6 * CW
+
+--
+local L = triangle.New()
+
+L:SetVertexPos(1, LeftX, TopY)
+L:SetVertexPos(2, LeftX, BottomY)
+L:SetVertexPos(3, .1 * CW, TopY)
+
+L:SetSideStyle(1, "hide")
 
 --
 local T = triangle.New()
 
-T:SetVertexPos(1, LeftX, BottomY)
-T:SetVertexPos(2, MidX, TopY)
-T:SetVertexPos(3, MidX, BottomY)
+T:SetVertexPos(1, LeftX, TopY)
+T:SetVertexPos(2, RightX, TopY)
+T:SetVertexPos(3, LeftX, BottomY)
 
-T:LabelSide(3, "L")
+T:SetSideStyle(3, "dashed")
+T:MarkAngle(1, 1, { angle_offset = .15 })
+T:MarkAngle(2, 1, { angle_offset = .15 })
 
 local U = triangle.New()
 
-U:SetVertexPos(1, MidX, BottomY)
-U:SetVertexPos(2, MidX, TopY)
-U:SetVertexPos(3, RightX, BottomY)
+U:SetVertexPos(1, RightX, TopY)
+U:SetVertexPos(2, RightX, BottomY)
+U:SetVertexPos(3, LeftX, BottomY)
 
-U:MarkAngle(1, 1)
-U:LabelSide(3, "R")
+U:SetSideStyle(1, "dashed")
+U:MarkAngle(2, 1, { angle_offset = .15 })
+U:MarkAngle(3, 1, { angle_offset = .15 })
 
-local UL = triangle.New()
+local V = triangle.New()
 
-UL:SetVertexPos(1, LeftX, TopY)
-UL:SetVertexPos(2, MidX, TopY)
-UL:SetVertexPos(3, LeftX, BottomY)
+V:SetVertexPos(1, RightX, TopY)
+V:SetVertexPos(2, RightX + .2 * CW, TopY - .2 * CH)
+V:SetVertexPos(3, RightX + .2 * CW, TopY)
 
-UL:SetSideStyle(1, "dashed")
-UL:SetSideStyle(3, "dashed")
-UL:LabelSide(1, "w", { t = 1.4, text_offset = 30 })
-
-local wbounds = UL:GetSideLabel(1).contentBounds
-local wy = (wbounds.yMin + wbounds.yMax) / 2
-
-local function Segment (x1, y1, x2, y2)
-	local seg = display.newLine(x1, y1, x2 or x1, y2 or y1)
-
-	seg:setStrokeColor(0)
-
-	seg.strokeWidth = 4
-end
-
-Segment(LeftX, wy, wbounds.xMin - 20, false)
-Segment(wbounds.xMax + 20, wy, RightX, false)
-Segment(LeftX, wy - 10, false, wy + 10)
-Segment(RightX, wy - 10, false, wy + 10)
-
-local UR = triangle.New()
-
-UR:SetVertexPos(1, MidX, TopY)
-UR:SetVertexPos(2, RightX, TopY)
-UR:SetVertexPos(3, RightX, BottomY)
-
-UR:SetSideStyle(1, "dashed")
-UR:SetSideStyle(2, "dashed")
-UR:LabelSide(2, "h")
+V:SetSideStyle(2, "hide")
+V:MarkAngle(1, 1, { angle_offset = .2 })

@@ -1,4 +1,4 @@
---- Triangles, figure 28.
+--- Triangles, figure K-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -28,21 +28,31 @@ local triangle = require("triangle")
 
 -- --
 local CW, CH = display.contentWidth, display.contentHeight
-local BottomY = .6 * CH
-local LeftX, TopY = .1 * CW, .3 * CH
+local BottomY = .75 * CH
+local TopY = .25 * CH
+local LeftX = .1 * CW
+local MidX = .5 * CW
 local RightX = .8 * CW
 
 --
-local P = display.newCircle(.1 * CW, .6 * CH, 12)
-local Q = display.newCircle(.8 * CW, .3 * CH, 12)
+local T = triangle.New()
 
-P:setFillColor(0)
-Q:setFillColor(0)
+T:SetVertexPos(1, LeftX, BottomY)
+T:SetVertexPos(2, RightX, TopY)
+T:SetVertexPos(3, MidX, BottomY)
 
-local StrP = display.newText("p", P.x - 3, P.y - 35, native.systemFontBold, 22)
-local StrQ = display.newText("q", Q.x + 5, Q.y + 35, native.systemFontBold, 22)
+T:LabelSide(1, "z")
+T:LabelSide(3, "x")
 
-StrP:setTextColor(0)
-StrQ:setTextColor(0)
+local U = triangle.New()
 
-return { P = P, Q = Q, StrP = StrP, StrQ = StrQ } -- for figure 28
+U:SetVertexPos(1, MidX, BottomY)
+U:SetVertexPos(2, RightX, TopY)
+U:SetVertexPos(3, RightX, BottomY)
+
+U:LabelSide(1, "y", { text_offset = 15, t = .3 })
+U:LabelSide(2, "h")
+U:LabelSide(3, "R")
+U:SetSideStyle(2, "dashed")
+U:SetSideStyle(3, "dashed")
+U:MarkAngle(3, 1, { angle_offset = .2 })

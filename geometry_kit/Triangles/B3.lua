@@ -1,4 +1,4 @@
---- Triangles, figure 27.
+--- Triangles, figure B-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,26 +25,25 @@
 
 -- Modules --
 local triangle = require("triangle")
+local figure6 = require("Triangles.B2")
 
--- --
+--
+figure6.RA1:Remove()
+figure6.RA2:Remove()
+
 local CW, CH = display.contentWidth, display.contentHeight
-local LeftX = .025 * CW
-local TopY = .1 * CH
-local BottomY = .75 * CH
+local MidX, MidY = figure6.Supp1:GetVertexPos(3)
+local ToSide = figure6.Supp2:GetVertexPos(1) - MidX
 
--- NOTE: use landscape for this one
-local N = 6
-local Width = CW / (N + .25 * (N + 1))
+local Vert1, Vert2 = triangle.New(), triangle.New()
 
-for i = 1, N do
-	local T, t = triangle.New(), (i - 1) / (N - 1)
-	local s = 1 - t
-
-	T:SetVertexPos(1, LeftX, BottomY)
-	T:SetVertexPos(2, LeftX + Width, s * TopY + t * BottomY)
-	T:SetVertexPos(3, LeftX + Width, BottomY)
-
-	T:MarkAngle(3, 1, { angle_offset = .25 - t * .125 })
-	
-	LeftX = LeftX + 1.25 * Width
+local function CommonVert (vert, add)
+	vert:SetVertexPos(1, MidX - add, MidY)
+	vert:SetVertexPos(2, MidX - .25 * CW, MidY + .15 * CH)
+	vert:SetVertexPos(3, MidX, MidY)
+	vert:SetSideStyle(1, "hide")
+	vert:MarkAngle(3, add > 0 and 2 or 1, { angle_offset = .2, angle_spacing = .075 })
 end
+
+CommonVert(Vert1, -ToSide)
+CommonVert(Vert2, ToSide)

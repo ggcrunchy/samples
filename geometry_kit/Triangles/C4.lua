@@ -1,4 +1,4 @@
---- Triangles, figure 12.
+--- Triangles, figure C-4.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,37 +25,52 @@
 
 -- Modules --
 local triangle = require("triangle")
-local figure10 = require("Triangles.figure10")
+local arrows = require("arrows")
 local math2d_ex = require("math2d_ex")
+local side = require("side")
 
-local function Mark (x, y)
-	local mark = display.newCircle(x, y, 5)
+-- --
+local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .55 * CH
+local MidY = .4 * CH
+local TopY = .25 * CH
+local LeftX = .15 * CW
+local MidX = .25 * CW
+local RightX = .35 * CW
 
-	mark:setFillColor(.3)
-	mark:setStrokeColor(0)
+--
+local T = triangle.New()
 
-	mark.strokeWidth = 4
+T:SetVertexPos(1, MidX, TopY)
+T:SetVertexPos(2, RightX, MidY)
+T:SetVertexPos(3, LeftX, BottomY)
+
+T:LabelSide(3, "D", { align = true, text_offset = 15 })
+T:MarkAngle(3, 1, { angle_offset = .2 })
+
+T:LabelSide(2, "?")
+
+local Qmark = T:GetSideLabel(2)
+
+local function Diff (dx, dy, scale)
+	local U = T:Clone()
+	local x2, y2 = T:GetVertexPos(2)
+	local x3, y3 = T:GetVertexPos(3)
+
+	U:SetVertexPos(2, math2d_ex.AddScaled(x3, y3, x2 - x3, y2 - y3, scale))
+	U:Translate(dx, dy)
+	U:LabelSide(2, nil)
+
+	local cx, cy = U:Centroid()
+	local to = { x = cx, y = cy }
+	local ax, ay = side.Perp(Qmark, to)
+	local pointer = display.newLine(arrows.GetPoints(Qmark, to, ax, ay, .9))
+
+	pointer.strokeWidth = 3
+	
+	pointer:setStrokeColor(.2, .4)
 end
 
-local function Etch (from, name1, name2)
-	local new = triangle.New()
-
-	local x1, y1 = from:GetVertexPos(1)
-	local x2, y2 = from:GetVertexPos(2)
-	local x3, y3 = from:GetVertexPos(3)
-	local x4, y4 = math2d_ex.AddScaled(x3, y3, x2 - x3, y2 - y3, .75)
-	local x5, y5 = math2d_ex.AddScaled(x3, y3, x1 - x3, y1 - y3, .5)
-
-	new:SetVertexPos(1, x3, y3)
-	new:SetVertexPos(2, x4, y4)
-	new:SetVertexPos(3, x5, y5)
-
-	Mark(x4, y4)
-	Mark(x5, y5)
-
-	from:LabelSide(3, name1, { t = .5 })
-	from:LabelSide(2, name2, { t = .25 })
-end
-
-Etch(figure10.T1, "p1", "p2")
-Etch(figure10.T2, "q1", "q2")
+Diff(40, 190, .7)
+Diff(140, 50, 1.8)
+Diff(85, -60, 2.3)
