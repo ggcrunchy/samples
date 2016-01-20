@@ -41,6 +41,9 @@ local arrows = require("arrows")
 local color = require("color")
 local side = require("side")
 
+-- Kernels --
+require("kernels")
+
 -- Plugins --
 local math2d = require "plugin.math2d"
 
@@ -185,7 +188,7 @@ end
 local function GetSetOpt (from, name, opts)
 	local v, prop = opts and opts[name], Props[name]
 
-	if v == nil then
+	if v == nil and from[prop.key] == nil then
 		v = from[prop.key]
 
 		if v == nil then
@@ -486,27 +489,6 @@ end
 -- @param ...
 function Shape:SetSideMarkColor (side_index, ...)
 	color.SetThenApplyToArray(self, side_index, "m_side_marks", "m_side_mark_color", ...)
-end
-
---
-do
-	local kernel = { category = "filter", group = "geometry_kit", name = "dashes" }
-
-	kernel.vertexData = {
-		{ name = "spacing", min = 1, max = 100, default = 12, index = 0 }
-	}
-
-	kernel.fragment = [[
-		P_COLOR vec4 FragmentKernel (P_UV vec2 uv)
-		{
-			P_COLOR vec4 color = texture2D(CoronaSampler0, uv);
-			P_UV float offset = mod(gl_FragCoord.x + gl_FragCoord.y, 2. * CoronaVertexUserData.x);
-
-			return CoronaColorScale(color) * step(offset, CoronaVertexUserData.x);
-		}
-	]]
-
-	graphics.defineEffect(kernel)
 end
 
 --

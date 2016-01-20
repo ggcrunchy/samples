@@ -28,32 +28,47 @@ local triangle = require("triangle")
 
 -- --
 local CW, CH = display.contentWidth, display.contentHeight
-local ToLowerRightX = .6 * CW
-local ToUpperRightX, ToUpperRightY = .3 * CW, -.15 * CH
+local MidX = .5 * CW
+local MidY = .6 * CH
+local Radius = .3 * CW
 
-local function TriAt (x, y)
-	local T = triangle.New()
+local circle = display.newCircle(MidX, MidY, Radius)
 
-	T:SetVertexPos(1, x, y)
-	T:SetVertexPos(2, x + ToUpperRightX, y + ToUpperRightY)
-	T:SetVertexPos(3, x + ToLowerRightX, y)
-	T:SetSideStyle(2, "hide")
+circle:setFillColor(0, 0)
+circle:setStrokeColor(0)
 
-	return T
-end
+circle.strokeWidth = 4
+
+local block = display.newRect(MidX, MidY, CW, CH)
+
+block.anchorY = 0
+
+block:setFillColor(.7)
 
 --
-local T = TriAt(.1 * CW, .45 * CH)
-local x0, y0 = .3 * CW, .7 * CH
+local function Pos (ca, sa, scale)
+	local offset = Radius * scale
 
-local function GetXY (s)
-	return x0 + s * ToUpperRightX + (1 - s) * ToLowerRightX, y0 + s * ToUpperRightY
+	return MidX + offset * ca, MidY - offset * sa
 end
 
-for i = 1, 3 do
-	local u = TriAt(x0, y0)
+for _, degs in ipairs{ 0, 37, 71, 90, 116, 151, 180 } do
+	local rads = math.rad(degs)
+	local ca, sa = math.cos(rads), math.sin(rads)
+	local x, y = Pos(ca, sa, 1.35)
+	local str = display.newText(("%i°"):format(degs), x, y, native.systemFontBold, 25)
+	local x1, y1 = Pos(ca, sa, .9)
+	local x2, y2 = Pos(ca, sa, 1.1)
+	local slash = display.newLine(x1, y1, x2, y2)
 
-	u:SetVertexPos(2, GetXY(1 - (i - 1) / 3))
-	u:SetVertexPos(3, GetXY(1 - i / 3))
-	u:MarkAngle(1, i, { angle_offset = .7 })
+	slash:setStrokeColor(0)
+
+	slash.strokeWidth = 3
+
+	str:setTextColor(0)
+
+	if degs % 90 ~= 0 then
+		str.rotation = degs < 90 and -degs or 180 - degs
+	end
 end
+-- "dfdfdf

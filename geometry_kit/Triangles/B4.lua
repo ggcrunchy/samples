@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangles, figure B-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,13 +23,27 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
--- --
+-- Modules --
+local triangle = require("triangle")
+local figure6 = require("Triangles.B2")
+
+--
+figure6.RA1:Remove()
+figure6.RA2:Remove()
+
 local CW, CH = display.contentWidth, display.contentHeight
+local MidX, MidY = figure6.Supp1:GetVertexPos(3)
+local ToSide = figure6.Supp2:GetVertexPos(1) - MidX
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+local Vert1, Vert2 = triangle.New(), triangle.New()
 
-require("Triangles.G1")
-
-if true then
-	display.save(display.getCurrentStage(), "G1.png")
+local function CommonVert (vert, add)
+	vert:SetVertexPos(1, MidX - add, MidY)
+	vert:SetVertexPos(2, MidX - .25 * CW, MidY + .15 * CH)
+	vert:SetVertexPos(3, MidX, MidY)
+	vert:SetSideStyle(1, "hide")
+	vert:MarkAngle(3, add > 0 and 2 or 1, { angle_offset = .2, angle_spacing = .075 })
 end
+
+CommonVert(Vert1, -ToSide)
+CommonVert(Vert2, ToSide)

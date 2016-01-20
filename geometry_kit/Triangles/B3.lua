@@ -1,4 +1,4 @@
---- Triangles, figure B-3.
+--- Triangles, figure B-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,25 +25,39 @@
 
 -- Modules --
 local triangle = require("triangle")
-local figure6 = require("Triangles.B2")
 
---
-figure6.RA1:Remove()
-figure6.RA2:Remove()
-
+-- --
 local CW, CH = display.contentWidth, display.contentHeight
-local MidX, MidY = figure6.Supp1:GetVertexPos(3)
-local ToSide = figure6.Supp2:GetVertexPos(1) - MidX
+local ToSide = .25 * CW
 
-local Vert1, Vert2 = triangle.New(), triangle.New()
+local RA1, RA2 = triangle.New(), triangle.New()
 
-local function CommonVert (vert, add)
-	vert:SetVertexPos(1, MidX - add, MidY)
-	vert:SetVertexPos(2, MidX - .25 * CW, MidY + .15 * CH)
-	vert:SetVertexPos(3, MidX, MidY)
-	vert:SetSideStyle(1, "hide")
-	vert:MarkAngle(3, add > 0 and 2 or 1, { angle_offset = .2, angle_spacing = .075 })
+local rax, ray = .4 * CW, .3 * CH
+
+local function CommonRA (ra, add)
+	ra:SetVertexPos(1, rax + add, ray)
+	ra:SetVertexPos(2, rax, ray - .2 * CH)
+	ra:SetVertexPos(3, rax, ray)
+	ra:SetSideStyle(1, "hide")
+	ra:MarkAngle(3, 1, { angle_offset = .2 })
 end
 
-CommonVert(Vert1, -ToSide)
-CommonVert(Vert2, ToSide)
+CommonRA(RA1, -ToSide)
+CommonRA(RA2, ToSide)
+
+local Supp1, Supp2 = triangle.New(), triangle.New()
+
+local suppx, suppy = .6 * CW, .7 * CH
+
+local function CommonSupp (supp, add)
+	supp:SetVertexPos(1, suppx + add, suppy)
+	supp:SetVertexPos(2, suppx + .25 * CW, suppy - .15 * CH)
+	supp:SetVertexPos(3, suppx, suppy)
+	supp:SetSideStyle(1, "hide")
+	supp:MarkAngle(3, add > 0 and 2 or 1, { angle_offset = .2, angle_spacing = .075 })
+end
+
+CommonSupp(Supp1, -ToSide)
+CommonSupp(Supp2, ToSide)
+
+return { RA1 = RA1, RA2 = RA2, Supp1 = Supp1, Supp2 = Supp2 } -- reused by figure 7

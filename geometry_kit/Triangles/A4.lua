@@ -53,3 +53,5 @@ U:SetSideStyle(1, "dashed")
 U:SetSideStyle(3, "dashed")
 U:LabelSide(1, "altitude", { align = true, t = .35, text_offset = 15 })
 U:MarkAngle(1, 1)
+
+return { T1 = T, T2 = U } -- reused later

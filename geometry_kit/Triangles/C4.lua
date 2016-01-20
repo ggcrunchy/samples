@@ -45,7 +45,7 @@ T:SetVertexPos(1, MidX, TopY)
 T:SetVertexPos(2, RightX, MidY)
 T:SetVertexPos(3, LeftX, BottomY)
 
-T:LabelSide(3, "D", { align = true, text_offset = 15 })
+T:MarkSide(3, 1)
 T:MarkAngle(3, 1, { angle_offset = .2 })
 
 T:LabelSide(2, "?")

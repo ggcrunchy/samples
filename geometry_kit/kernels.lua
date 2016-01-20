@@ -1,4 +1,4 @@
---- Entry point.
+--- Various shape kernels.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,13 +23,23 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
--- --
-local CW, CH = display.contentWidth, display.contentHeight
+--
+do
+	local kernel = { category = "filter", group = "geometry_kit", name = "dashes" }
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+	kernel.vertexData = {
+		{ name = "spacing", min = 1, max = 100, default = 12, index = 0 }
+	}
 
-require("Triangles.G1")
+	kernel.fragment = [[
+		P_COLOR vec4 FragmentKernel (P_UV vec2 uv)
+		{
+			P_COLOR vec4 color = texture2D(CoronaSampler0, uv);
+			P_UV float offset = mod(gl_FragCoord.x + gl_FragCoord.y, 2. * CoronaVertexUserData.x);
 
-if true then
-	display.save(display.getCurrentStage(), "G1.png")
+			return CoronaColorScale(color) * step(offset, CoronaVertexUserData.x);
+		}
+	]]
+
+	graphics.defineEffect(kernel)
 end
