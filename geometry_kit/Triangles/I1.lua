@@ -41,6 +41,7 @@ T:SetVertexPos(2, RightX, TopY)
 T:SetVertexPos(3, LeftX, BottomY)
 
 T:MarkAngle(1, 1, { angle_offset = .15 })
+T:MarkAngle(2, 1, { angle_offset = .125 })
 
 local U = triangle.New()
 
@@ -51,3 +52,4 @@ U:SetVertexPos(3, LeftX, BottomY)
 U:SetSideStyle(1, "dashed")
 U:SetSideStyle(2, "dashed")
 U:MarkAngle(2, 1, { angle_offset = .15 })
+U:MarkAngle(3, 1, { angle_offset = .125 })

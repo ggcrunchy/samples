@@ -1,4 +1,4 @@
---- Triangles, figure H-4.
+--- Triangles, figure H-5.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,44 +25,27 @@
 
 -- Modules --
 local triangle = require("triangle")
+local A4 = require("Triangles.A4")
 
--- --
-local CW, CH = display.contentWidth, display.contentHeight
-local BottomY = .75 * CH
-local TopY = .25 * CH
-local LeftX = .15 * CW
-local MidX = .4 * CW
-local RightX = .85 * CW
+A4.T1:LabelSide(3, "R")
+A4.T2:LabelSide(1, "h", { t = .35, text_offset = 15 })
 
---
-local T = triangle.New()
+local leftx, topy = A4.T2:GetVertexPos(2)
+local rightx, bottomy = A4.T1:GetVertexPos(3)
 
-T:SetVertexPos(1, LeftX, BottomY)
-T:SetVertexPos(2, MidX, TopY)
-T:SetVertexPos(3, MidX, BottomY)
+local UR = triangle.New()
 
-T:LabelSide(3, "L")
+UR:SetVertexPos(1, leftx, topy)
+UR:SetVertexPos(2, rightx, topy)
+UR:SetVertexPos(3, rightx, bottomy)
 
-local U = triangle.New()
+for i = 1, 3 do
+	UR:SetSideStyle(i, "dashed")
+end
 
-U:SetVertexPos(1, MidX, BottomY)
-U:SetVertexPos(2, MidX, TopY)
-U:SetVertexPos(3, RightX, BottomY)
+UR:LabelSide(1, "w", { text_offset = 30 })
 
-U:MarkAngle(1, 1)
-U:LabelSide(3, "R")
-
-local UL = triangle.New()
-
-UL:SetVertexPos(1, LeftX, TopY)
-UL:SetVertexPos(2, MidX, TopY)
-UL:SetVertexPos(3, LeftX, BottomY)
-
-UL:SetSideStyle(1, "dashed")
-UL:SetSideStyle(3, "dashed")
-UL:LabelSide(1, "w", { t = 1.4, text_offset = 30 })
-
-local wbounds = UL:GetSideLabel(1).contentBounds
+local wbounds = UR:GetSideLabel(1).contentBounds
 local wy = (wbounds.yMin + wbounds.yMax) / 2
 
 local function Segment (x1, y1, x2, y2)
@@ -73,17 +56,7 @@ local function Segment (x1, y1, x2, y2)
 	seg.strokeWidth = 4
 end
 
-Segment(LeftX, wy, wbounds.xMin - 20, false)
-Segment(wbounds.xMax + 20, wy, RightX, false)
-Segment(LeftX, wy - 10, false, wy + 10)
-Segment(RightX, wy - 10, false, wy + 10)
-
-local UR = triangle.New()
-
-UR:SetVertexPos(1, MidX, TopY)
-UR:SetVertexPos(2, RightX, TopY)
-UR:SetVertexPos(3, RightX, BottomY)
-
-UR:SetSideStyle(1, "dashed")
-UR:SetSideStyle(2, "dashed")
-UR:LabelSide(2, "h")
+Segment(leftx, wy, wbounds.xMin - 20, false)
+Segment(wbounds.xMax + 20, wy, rightx, false)
+Segment(leftx, wy - 10, false, wy + 10)
+Segment(rightx, wy - 10, false, wy + 10)

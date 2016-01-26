@@ -1,4 +1,4 @@
---- Triangles, figure H-3.
+--- Triangles, figure I-4.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -26,54 +26,40 @@
 -- Modules --
 local triangle = require("triangle")
 
+
+
+
+
+
+
+
+
+
 -- --
 local CW, CH = display.contentWidth, display.contentHeight
-
--- --
-local X = .4 * CW
-local Y = .25 * CW
-
---
-local BottomY, BottomLeftX = .5 * CH, .5 * CW
-local LeftX, TopY = .15 * CW, .15 * CH
+local BottomY = .55 * CH
+local TopY = .25 * CH
+local LeftX = .2 * CW
+local RightX = .75 * CW
 
 --
 local T = triangle.New()
 
 T:SetVertexPos(1, LeftX, TopY)
-T:SetVertexPos(2, LeftX + X, TopY)
-T:SetVertexPos(3, LeftX, TopY + Y)
+T:SetVertexPos(2, RightX, TopY)
+T:SetVertexPos(3, LeftX, BottomY)
 
-T:SetSideStyle(2, "hide")
-T:MarkAngle(1, 1, { angle_offset = .15 })
+T:MarkAngle(1, 1, { angle_offset = .125 })
+T:LabelAngle(2, "A", { radius = 45 })
+T:LabelAngle(3, "B", { radius = 40 })
 
-local cur = T
+local U = triangle.New()
 
-for i = 1, 2 do
-	local new = cur:Clone()
+U:SetVertexPos(1, RightX, TopY)
+U:SetVertexPos(2, RightX, BottomY)
+U:SetVertexPos(3, LeftX, BottomY)
 
-	new:Rotate(90)
-
-	local x2, y2 = cur:GetVertexPos(2)
-
-	if i < 2 then
-		local x1, y1 = new:GetVertexPos(3)
-
-		new:Translate(x2 - x1, y2 - y1)
-
-		cur = new
-	else
-		new:Remove()
-	end
-end
-
-local Right = triangle.New()
-
-local x3, y3 = cur:GetVertexPos(1)
-
-Right:SetVertexPos(1, x3, y3)
-Right:SetVertexPos(2, x3 + 40, y3)
-Right:SetVertexPos(3, x3, y3 + 100)
-
-Right:SetSideStyle(2, "hide")
-Right:MarkAngle(1, 1, { angle_offset = .5 })
+U:MarkAngle(2, 1, { angle_offset = .125 })
+U:LabelAngle(3, "A", { radius = 40 })
+U:SetSideStyle(1, "dashed")
+U:SetSideStyle(2, "dashed")

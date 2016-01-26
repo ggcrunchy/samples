@@ -28,8 +28,11 @@ local CW, CH = display.contentWidth, display.contentHeight
 
 display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
 
-require("Triangles.G1")
+local Prefix = "Triangles"
+local Name = "I4"
 
-if true then
-	display.save(display.getCurrentStage(), "G1.png")
+require(Prefix .. "." .. Name)
+
+if false then
+	display.save(display.getCurrentStage(), Name .. ".png")
 end

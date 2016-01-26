@@ -187,8 +187,8 @@ end
 --
 local function GetSetOpt (from, name, opts)
 	local v, prop = opts and opts[name], Props[name]
-
-	if v == nil and from[prop.key] == nil then
+-- TODO: Argh! (something's wrong when it's already there...)
+	if v == nil then
 		v = from[prop.key]
 
 		if v == nil then

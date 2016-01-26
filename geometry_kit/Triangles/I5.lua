@@ -1,4 +1,4 @@
---- Triangles, figure H-4.
+--- Triangles, figure I-5.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -26,64 +26,33 @@
 -- Modules --
 local triangle = require("triangle")
 
--- --
 local CW, CH = display.contentWidth, display.contentHeight
-local BottomY = .75 * CH
+local BottomY = .65 * CH
+local MidY = .4 * CH
 local TopY = .25 * CH
-local LeftX = .15 * CW
-local MidX = .4 * CW
-local RightX = .85 * CW
+local LeftX = .05 * CW
+local RightX = .95 * CW
+local MidX = LeftX + (MidY - BottomY) * (RightX - LeftX) / (TopY - BottomY)
 
 --
 local T = triangle.New()
 
 T:SetVertexPos(1, LeftX, BottomY)
-T:SetVertexPos(2, MidX, TopY)
+T:SetVertexPos(2, MidX, MidY)
 T:SetVertexPos(3, MidX, BottomY)
 
-T:LabelSide(3, "L")
+T:SetSideStyle(2, "dashed")
+T:LabelAngle(1, "D", { angle_time = .45, radius = 47 })
+T:LabelAngle(2, "S", {  })
+T:MarkAngle(3, 1)
 
 local U = triangle.New()
 
-U:SetVertexPos(1, MidX, BottomY)
-U:SetVertexPos(2, MidX, TopY)
-U:SetVertexPos(3, RightX, BottomY)
+U:SetVertexPos(1, MidX, MidY)
+U:SetVertexPos(2, RightX, TopY)
+U:SetVertexPos(3, MidX, BottomY)
 
-U:MarkAngle(1, 1)
-U:LabelSide(3, "R")
-
-local UL = triangle.New()
-
-UL:SetVertexPos(1, LeftX, TopY)
-UL:SetVertexPos(2, MidX, TopY)
-UL:SetVertexPos(3, LeftX, BottomY)
-
-UL:SetSideStyle(1, "dashed")
-UL:SetSideStyle(3, "dashed")
-UL:LabelSide(1, "w", { t = 1.4, text_offset = 30 })
-
-local wbounds = UL:GetSideLabel(1).contentBounds
-local wy = (wbounds.yMin + wbounds.yMax) / 2
-
-local function Segment (x1, y1, x2, y2)
-	local seg = display.newLine(x1, y1, x2 or x1, y2 or y1)
-
-	seg:setStrokeColor(0)
-
-	seg.strokeWidth = 4
-end
-
-Segment(LeftX, wy, wbounds.xMin - 20, false)
-Segment(wbounds.xMax + 20, wy, RightX, false)
-Segment(LeftX, wy - 10, false, wy + 10)
-Segment(RightX, wy - 10, false, wy + 10)
-
-local UR = triangle.New()
-
-UR:SetVertexPos(1, MidX, TopY)
-UR:SetVertexPos(2, RightX, TopY)
-UR:SetVertexPos(3, RightX, BottomY)
-
-UR:SetSideStyle(1, "dashed")
-UR:SetSideStyle(2, "dashed")
-UR:LabelSide(2, "h")
+U:LabelAngle(1, "A", { radius = 15 })
+U:LabelAngle(2, "B", { angle_time = .55, radius = 60 })
+U:LabelAngle(3, "C", { radius = 55 })
+U:SetSideStyle(3, "hide")
