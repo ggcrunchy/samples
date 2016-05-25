@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangles, figure E-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,16 +23,39 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
--- --
+-- Modules --
+local triangle = require("triangle")
+
+--
 local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .75 * CH
+local MidY = .5 * CH
+local TopY = .25 * CH
+local LeftX = .1 * CW
+local RightX = .7 * CW
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+local T = triangle.New()
 
-local Prefix = "Triangles"
-local Name = "N4"
+T:SetVertexPos(1, LeftX, MidY)
+T:SetVertexPos(2, RightX, MidY)
+T:SetVertexPos(3, RightX, BottomY)
 
-require(Prefix .. "." .. Name)
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+T:MarkAngle(1, 1, { angle_offset = .2 })
+T:MarkAngle(2, 1, { angle_offset = .15 })
+T:MarkAngle(3, 2, { angle_offset = .1 })
+T:MarkSide(2, 2)
+T:MarkSide(3, 1)
+T:SetSideStyle(1, "dashed")
+
+local U = triangle.New()
+
+U:SetVertexPos(1, LeftX, MidY)
+U:SetVertexPos(2, RightX, MidY)
+U:SetVertexPos(3, RightX, TopY)
+U:MarkSide(2, 2)
+U:MarkSide(3, 1)
+U:SetSideStyle(1, "hide")
+
+U:MarkAngle(1, 1, { angle_offset = .2 })
+U:MarkAngle(3, 2, { angle_offset = .1 })

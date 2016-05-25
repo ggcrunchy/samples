@@ -28,16 +28,104 @@ do
 	local kernel = { category = "filter", group = "geometry_kit", name = "dashes" }
 
 	kernel.vertexData = {
-		{ name = "spacing", min = 1, max = 100, default = 12, index = 0 }
+		{ name = "spacing", min = 1, max = 100, default = 7, index = 0 },
+		{ name = "x", index = 1 },
+		{ name = "y", index = 2 }
 	}
 
+	kernel.vertex = [[
+		varying P_POSITION vec2 v_Pos;
+
+		P_POSITION vec2 VertexKernel (P_POSITION vec2 pos)
+		{
+			v_Pos = pos;
+
+			return pos;
+		}
+	]]
+
 	kernel.fragment = [[
+		varying P_POSITION vec2 v_Pos;
+
 		P_COLOR vec4 FragmentKernel (P_UV vec2 uv)
 		{
-			P_COLOR vec4 color = texture2D(CoronaSampler0, uv);
-			P_UV float offset = mod(gl_FragCoord.x + gl_FragCoord.y, 2. * CoronaVertexUserData.x);
+			P_UV float offset = mod(length(v_Pos - CoronaVertexUserData.yz) / CoronaVertexUserData.x, 2.);
 
-			return CoronaColorScale(color) * step(offset, CoronaVertexUserData.x);
+			return CoronaColorScale(texture2D(CoronaSampler0, uv)) * step(offset, 1.);
+		}
+	]]
+
+	graphics.defineEffect(kernel)
+end
+
+do
+	local kernel = { category = "filter", group = "geometry_kit", name = "arc_dashes" }
+
+	kernel.vertexData = {
+		{ name = "angles", min = 0, max = 0xFFFF, default = 0xFF00, index = 0 },
+		{ name = "cx", default = 0, index = 1 },
+		{ name = "cy", default = 0, index = 2 },
+		{ name = "spacing", min = math.pi / 50, max = 4 * math.pi, default = 4 * math.pi, index = 3 }
+	}
+
+	kernel.vertex = [[
+		varying P_UV float a1, a2;
+		varying P_POSITION vec2 offset;
+
+		P_POSITION vec2 VertexKernel (P_POSITION vec2 pos)
+		{
+			a1 = mod(CoronaVertexUserData.x, 256.) / 255.;
+			a2 = (CoronaVertexUserData.x - a1) / (256. * 255.);
+			offset = pos - CoronaVertexUserData.yz;
+
+			return pos;
+		}
+	]]
+
+	kernel.fragment = [[
+		P_UV float PI = 4. * atan(1.);
+		P_UV float TWO_PI = 2. * PI;
+		P_UV float PI_OVER_TWO = PI / 2.;
+
+		P_UV float ONE_OVER_PI = 1. / PI;
+		P_UV float ONE_OVER_TWO_PI = .5 / PI;
+
+		P_POSITION vec2 GetUV_PhiDelta (P_POSITION vec2 diff, P_UV float dphi)
+		{
+			P_POSITION float dist_sq = dot(diff, diff);
+
+			if (dist_sq > 1.) return vec2(-1.);
+
+			P_POSITION float z = sqrt(1. - dist_sq);
+			P_POSITION float phi = atan(z, diff.x);
+			P_POSITION float angle = .5 + phi / TWO_PI;
+
+			angle = mod(angle + dphi, 1.);
+
+			return vec2(angle, .5 + asin(diff.y) / PI);
+		}
+
+		varying P_UV float a1, a2;
+		varying P_POSITION vec2 offset;
+
+		P_COLOR vec4 FragmentKernel (P_UV vec2 uv)
+		{
+			P_UV float angle = mod(atan(offset.y, offset.x), TWO_PI);
+
+			// Outside the arc? (Also, detect the 0 -> 2 * pi branch.)
+			if (a1 < a2)
+			{
+				if (angle < a1 * TWO_PI || angle > a2 * TWO_PI) return vec4(0.);
+			}
+		   
+			else
+			{
+				if (angle < a1 * TWO_PI && angle > a2 * TWO_PI) return vec4(0.);
+			}
+
+			P_UV float offset = mod(angle / CoronaVertexUserData.w, 2.);
+
+			return CoronaColorScale(texture2D(CoronaSampler0, uv)) * step(offset, 1.);
 		}
 	]]
 

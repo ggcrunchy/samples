@@ -527,6 +527,8 @@ local function RedrawSide (S, index)
 			local stroke = v1.m_object.stroke
 
 			stroke.effect, w = "filter.geometry_kit.dashes", 2
+			stroke.effect.x = v2.x
+			stroke.effect.y = v2.y
 		end
 	else
 		v1.m_object = nil

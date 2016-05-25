@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangles, figure N-4.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,16 +23,62 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
+-- Modules --
+local triangle = require("triangle")
+
 -- --
 local CW, CH = display.contentWidth, display.contentHeight
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local P = display.newCircle(.2 * CW, .2 * CH, 12)
+local Q = display.newCircle(P.x + .6 * CW, P.y + .1 * CH, 12)
+local R = display.newCircle(P.x + .2 * CW, P.y + .5 * CH, 12)
 
-local Prefix = "Triangles"
-local Name = "N4"
+P:setFillColor(0)
+Q:setFillColor(0)
+R:setFillColor(0)
 
-require(Prefix .. "." .. Name)
+local StrP = display.newText("p", P.x - 3, P.y - 35, native.systemFontBold, 22)
+local StrQ = display.newText("q", Q.x + 13, Q.y - 35, native.systemFontBold, 22)
+local StrR = display.newText("r", R.x - 1, R.y + 30, native.systemFontBold, 22)
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+StrP:setTextColor(0)
+StrQ:setTextColor(0)
+StrR:setTextColor(0)
+
+-- --
+local T = triangle.New()
+
+T:SetVertexPos(1, P.x, P.y)
+T:SetVertexPos(2, Q.x, Q.y)
+T:SetVertexPos(3, R.x, R.y)
+
+local U = T:Clone()
+
+U:Scale(.6)
+
+local x, y = U:GetVertexPos(1)
+
+U:Translate(P.x - x, P.y - y)
+
+for i = 2, 3 do
+	local x2, y2 = U:GetVertexPos(i)
+	local mark = display.newCircle(x2, y2, 5)
+
+	mark:setFillColor(.3)
+	mark:setStrokeColor(0)
+
+	mark.strokeWidth = 4
 end
+
+T:SetSideStyle(1, "dashed")
+T:SetSideStyle(2, "dashed")
+T:SetSideStyle(3, "dashed")
+--[[
+local A = require("arc").New()
+
+A:SetRadius(80)
+A:SetCenter(200, 300)
+A:SetAngles(0, 120)
+A:SetStyle("dashed")
+]]
