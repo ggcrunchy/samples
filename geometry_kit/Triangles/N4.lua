@@ -74,11 +74,3 @@ end
 T:SetSideStyle(1, "dashed")
 T:SetSideStyle(2, "dashed")
 T:SetSideStyle(3, "dashed")
---[[
-local A = require("arc").New()
-
-A:SetRadius(80)
-A:SetCenter(200, 300)
-A:SetAngles(0, 120)
-A:SetStyle("dashed")
-]]

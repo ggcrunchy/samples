@@ -24,16 +24,22 @@
 --
 
 -- Standard library imports --
+local cos = math.cos
 local deg = math.deg
 local floor = math.floor
 local pi = math.pi
+local rad = math.rad
 local setmetatable = setmetatable
+local sin = math.sin
 
 -- Kernels --
 require("kernels")
 
 -- Corona globals --
 local display = display
+
+-- Cached module references --
+local _New_
 
 -- Exports --
 local M = {}
@@ -42,6 +48,33 @@ local M = {}
 local Arc = {}
 
 Arc.__index = Arc
+
+--- DOCME
+function Arc:Clone (into)
+	local clone = _New_(into)
+
+	clone:SetAngles(-self.m_to, -self.m_from)
+	clone:SetCenter(self:GetCenter())
+	clone:SetRadius(self:GetRadius())
+
+	clone.m_circ.stroke.effect.spacing = self.m_circ.stroke.effect.spacing
+
+	return clone
+end
+
+--- DOCME
+function Arc:GetPos (t)
+	local from, to = self.m_from, self.m_to
+
+	if to < from then
+		to = to + 360
+	end
+
+	local angle, circ = rad(from + t * (to - from)), self.m_circ
+	local radius = circ.path.radius
+
+	return circ.x + floor(radius * cos(angle) + .5), circ.y + floor(radius * sin(angle) + .5)
+end
 
 --- Destroy the arc.
 function Arc:Remove ()
@@ -126,6 +159,9 @@ function M.New (into)
 		m_group = group
 	}, Arc)
 end
+
+-- Cache module members.
+_New_ = M.New
 
 -- Export the module.
 return M
