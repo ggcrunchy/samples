@@ -32,6 +32,9 @@ local rad = math.rad
 local setmetatable = setmetatable
 local sin = math.sin
 
+-- Plugins --
+local math2d = require "plugin.math2d"
+
 -- Kernels --
 require("kernels")
 
@@ -63,6 +66,43 @@ function Arc:Clone (into)
 end
 
 --- DOCME
+function Arc:CosSin ()
+	local angle = self:GetAngle_Radians()
+
+	return cos(angle), sin(angle)
+end
+
+--- DOCME
+function Arc:CosSin_R ()
+	local radius, cosa, sina = self:GetRadius(), self:CosSin()
+
+	return radius * cosa, radius * sina
+end
+
+--- DOCME
+function Arc:GetAngle (great_arc)
+	local from, to = self.m_from, self.m_to
+
+	if to < from then
+		to = to + 360
+	end
+
+	local angle = to - from
+
+	return great_arc and 360 - angle or angle
+end
+
+--- DOCME
+function Arc:GetAngle_Radians (great_arc)
+	return rad(self:GetAngle(great_arc))
+end
+
+--- DOCME
+function Arc:GetLength (great_arc)
+	return self:GetAngle_Radians(great_arc) * self:GetRadius()
+end
+
+--- DOCME
 function Arc:GetPos (t)
 	local from, to = self.m_from, self.m_to
 
@@ -76,13 +116,6 @@ function Arc:GetPos (t)
 	return circ.x + floor(radius * cos(angle) + .5), circ.y + floor(radius * sin(angle) + .5)
 end
 
---- Destroy the arc.
-function Arc:Remove ()
-	display.remove(self.m_group)
-
-	self.m_object_group = nil
-end
-
 --- DOCME
 function Arc:GetCenter ()
 	local circ = self.m_circ
@@ -93,6 +126,22 @@ end
 --- DOCME
 function Arc:GetRadius ()
 	return self.m_circ.path.radius
+end
+
+--- Destroy the arc.
+function Arc:Remove ()
+	display.remove(self.m_group)
+
+	self.m_object_group = nil
+end
+
+--- DOCME
+function Arc:Revolve (triangle, center_index, through_index)
+	local cx, cy = triangle:GetVertexPos(center_index or 1)
+	local px, py = triangle:GetVertexPos(through_index or 2)
+
+	self:SetCenter(cx, cy)
+	self:SetRadius(math2d.length(px - cx, py - cy))
 end
 
 --- DOCME

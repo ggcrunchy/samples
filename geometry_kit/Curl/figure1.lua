@@ -25,21 +25,11 @@
 
 -- Modules --
 local arc = require("arc")
+local helpers = require("helpers")
 local triangle = require("triangle")
 
 -- --
 local CX, CY = 100, 300
-
---
-local function Line (x1, y1, x2, y2)
-	local line = display.newLine(x1, y1, x2, y2)
-
-	line:setStrokeColor(0)
-
-	line.strokeWidth = 3
-
-	return line
-end
 
 --
 local A, R = arc.New(), 110
@@ -50,12 +40,12 @@ A:SetAngles(270, 360)
 
 local x1, y1 = A:GetPos(1)
 
-Line(x1 + 1, y1 + 1, x1 - 70, y1 + 1)
+helpers.Line(x1 + 1, y1 + 1, x1 - 70, y1 + 1)
 
 --
-local B, A1, A2 = A:Clone(), 270, 330
+local B = A:Clone()
 
-B:SetAngles(A1, A2)
+B:SetAngles(270, 330)
 A:SetStyle("dashed")
 
 --
@@ -65,20 +55,11 @@ C:SetRadius(R + 10)
 C:SetAngles(285, 315)
 
 --
-local function Text (str, x, y, size)
-	local text = display.newText(str, x, y, native.systemFontBold, size or 22)
-
-	text:setTextColor(0)
-
-	return text
-end
-
---
 local lx, ly = C:GetPos(.5)
 local dx, dy = lx - CX, ly - CY
 
-Line(lx, ly, lx + dx * .4, ly + dy * .4)
-Text("R·θ", lx + dx * .525, ly + dy * .525).rotation = -32.1
+helpers.Line(lx, ly, lx + dx * .4, ly + dy * .4)
+helpers.Text("Rθ", lx + dx * .525, ly + dy * .525).rotation = -32.1
 
 --
 local T = triangle.New()
@@ -94,7 +75,7 @@ T:LabelAngle(1, "θ")
 T:SetSideStyle(2, "hide")
 
 --
-local angle = math.rad(A2 - A1)
+local angle = B:GetAngle_Radians()
 local D = A:GetRadius() * (angle - math.sin(angle))
 
 --
@@ -109,10 +90,7 @@ U:SetSideStyle(2, "hide")
 U:SetSideStyle(3, "hide")
 
 --
-local top_line = Line(XL, CY - 20, XR + D, CY - 20)
-local tick1 = Line(XL, top_line.y - 10, XL, top_line.y + 10)
-local tick2 = Line(XR, top_line.y - 10, XR, top_line.y + 10)
-local tick3 = Line(XR + D, top_line.y - 10, XR + D, top_line.y + 10)
-
-Text("R·sinθ", (tick1.x + tick2.x) / 2, tick1.y - 5, 18)
-Text("D", (tick2.x + tick3.x) / 2, tick1.y - 5, 18)
+helpers.TextBelow_Multi({
+	"R sinθ", XR,
+	"D", XR + D
+}, XL, CY - 20, -15, 18)

@@ -1,4 +1,4 @@
---- Circles, figure 1.
+--- Circles, figure C-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,5 +24,27 @@
 --
 
 -- Modules --
+local arc = require("arc")
+local triangle = require("triangle")
 
--- STUFF!
+--
+local T = triangle.New()
+
+T:SetVertexPos(1, 50, 220)
+T:SetVertexPos(2, 170, 95)
+T:SetVertexPos(3, 170, 220)
+
+T:LabelAngle(1, "θ")
+T:MarkAngle(1, 1, { angle_offset = .125 })
+T:MarkAngle(3, 1, { angle_offset = .125 })
+T:LabelSide(1, "r", { align = true })
+T:LabelSide(2, "r sinθ", { text_offset = 50 })
+T:LabelSide(3, "r cosθ")
+
+local A = arc.New()
+
+A:Revolve(T)
+A:SetAngles(0, 90)
+A:SetStyle("dashed")
+
+return { A = A, T = T }

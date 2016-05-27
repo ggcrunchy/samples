@@ -61,6 +61,49 @@ local x, y = U:GetVertexPos(1)
 
 U:Translate(P.x - x, P.y - y)
 
+--
+local PQ = triangle.New()
+
+PQ:SetVertexPos(1, P.x, P.y)
+PQ:SetVertexPos(2, Q.x, P.y)
+PQ:SetVertexPos(3, Q.x, Q.y)
+
+PQ:SetSideStyle(1, "dashed")
+PQ:SetSideStyle(2, "dashed")
+PQ:SetSideStyle(3, "hide")
+
+local PQ2 = PQ:Clone()
+
+PQ2:Scale(.61)
+
+local x2, y2 = PQ2:GetVertexPos(1)
+
+PQ2:Translate(P.x - x2, P.y - y2)
+PQ2:SetSideStyle(1, "hide")
+PQ:MarkAngle(2, 1, { angle_offset = .25 })
+
+--
+local PR = triangle.New()
+
+PR:SetVertexPos(1, P.x, P.y)
+PR:SetVertexPos(2, R.x, R.y)
+PR:SetVertexPos(3, P.x, R.y)
+
+PR:SetSideStyle(1, "hide")
+PR:SetSideStyle(2, "dashed")
+PR:SetSideStyle(3, "dashed")
+
+local PR2 = PR:Clone()
+
+PR2:Scale(.61)
+
+local x3, y3 = PR2:GetVertexPos(1)
+
+PR2:Translate(P.x - x3, P.y - y3)
+PR2:SetSideStyle(1, "hide")
+PR:MarkAngle(3, 1, { angle_offset = .05 })
+
+--
 for i = 2, 3 do
 	local x2, y2 = U:GetVertexPos(i)
 	local mark = display.newCircle(x2, y2, 5)

@@ -25,21 +25,11 @@
 
 --- Modules --
 local arc = require("arc")
+local helpers = require("helpers")
 local triangle = require("triangle")
 
 -- --
 local CX, CY = 150, 300
-
---
-local function Line (x1, y1, x2, y2)
-	local line = display.newLine(x1, y1, x2, y2)
-
-	line:setStrokeColor(0)
-
-	line.strokeWidth = 3
-
-	return line
-end
 
 --
 local A = arc.New()
@@ -82,55 +72,36 @@ U:LabelAngle(1, "α")
 U:SetSideStyle(2, "hide")
 
 --
-local function Text (str, x, y, size)
-	local text = display.newText(str, x, y, native.systemFontBold, size or 22)
+helpers.TextBelow("D", x2 + .5, x1 + w, y2 - 20, -15, 18)
 
-	text:setTextColor(0)
+local _, tick1 = helpers.TextBelow("A", x1 - X + .5, x1, y1, 13, 18)
+local x0 = tick1.x
 
-	return text
+helpers.HLine(x0 - 30, x0 + 1, y1)
+
+--
+local texts, _, lines = helpers.TextBelow_Multi({
+	"R", x1 + R + 1,
+	"B", x1 + R + Y,
+	" ", x1 + w
+}, x1, y1, 13, 18)
+
+for i = 1, #lines do
+	lines[i]:removeSelf()
 end
 
 --
-local tick1 = Line(x2 + .5, y2 - 30, x2 + .5, y2 - 10)
-local tick2 = Line(x1 + w, y2 - 30, x1 + w, y2 - 10)
-
-Line(tick1.x, y2 - 20, tick2.x, y2 - 20)
-Text("D", (tick1.x + tick2.x) / 2, tick1.y - 5, 18)
-
---
-local tick3 = Line(x1 - X + .5, y1 - 10, x1 - X + .5, y1 + 10)
-local tick4 = Line(x1, y1 - 10, x1, y1 + 10)
-
-Text("A", (tick3.x + tick4.x) / 2, tick3.y + 23, 18)
-
-Line(tick3.x + 1, y1, tick3.x - 30, y1)
-Line(tick3.x, y1, x1, y1)
-
---
-local tick5 = Line(x1, y1 - 10, x1, y1 + 10)
-local tick6 = Line(x1 + R + 1, y1 - 10, x1 + R + 1, y1 + 10)
-local tick7 = Line(x1 + R + Y, y1 - 10, x1 + R + Y, y1 + 10)
-local tick8 = Line(x1 + w, y1 - 10, x1 + w, y1 + 10)
-
-Text("R", (tick5.x + tick6.x) / 2, tick5.y + 23, 18)
-Text("B", (tick6.x + tick7.x) / 2, tick6.y + 23, 18)
-
-local mid = (tick7.x + tick8.x) / 2
-
-Line(mid - 12, tick7.y + 15.5, mid + 12, tick7.y + 15.5)
-Line(mid, tick7.y + 15, mid, tick7.y + 43)
-
-local text = Text("½π·R - R", mid - 15, tick7.y + 55, 18)
+local mid = texts[3]
+local hline = helpers.HLine(mid.x - 12, mid.x + 12, mid.y - 5.5)
+local text = helpers.Text("½πR - R", mid.x - 15, hline.y + 35, 18)
 local rect = display.newRoundedRect(text.x, text.y, text.width + 20, text.height + 5, 16)
+
+helpers.VLine(mid.x, hline.y, text.y - rect.path.height / 2)
 
 rect:setFillColor(0, 0)
 rect:setStrokeColor(0)
 
 rect.strokeWidth = 2
 
-local top_text = Text("π·R", (tick3.x + tick8.x) / 2, y2 - 60, 18)
-
-Line(tick3.x, top_text.y, top_text.x - 21, top_text.y)
-Line(top_text.x + 21, top_text.y, tick8.x, top_text.y)
-Line(tick3.x, top_text.y - 10, tick3.x, top_text.y + 10)
-Line(tick8.x, top_text.y - 10, tick8.x, top_text.y + 10)
+--
+helpers.TextBetween("πR", x0, x1 + w, y2 - 60, 4, 18)

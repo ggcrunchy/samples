@@ -25,6 +25,7 @@
 
 --- Modules --
 local arc = require("arc")
+local helpers = require("helpers")
 local triangle = require("triangle")
 
 -- --
@@ -80,24 +81,15 @@ local function Text (str, x, y, size)
 end
 
 --
-local top_line = Line(x2 - X, y2 - 40, x2 + w, y2 - 40)
-local tick1 = Line(x2 - X + .5, top_line.y - 10, x2 - X + .5, top_line.y + 10)
-local tick2 = Line(x2 + w, top_line.y - 10, x2 + w, top_line.y + 10)
+helpers.TextBelow("D", x2 - X + .5, x2 + w, y2 - 40, -15, 18)
+helpers.TextBelow("A", x2 - X + .5, x2, y2, -15, 18)
 
-Text("D", (tick1.x + tick2.x) / 2, tick1.y - 5, 18)
+local _, _, lines = helpers.TextBelow_Multi({
+	"R", x1 + R,
+	"B", x1 + R + Y,
+	"πR", x1 + w
+}, x1, y1, 13, 18)
 
---
-local tick3 = Line(x2 - X + .5, y2 - 10, x2 - X + .5, y2 + 10)
-local tick4 = Line(x2, y2 - 10, x2, y2 + 10)
-
-Text("A", (tick3.x + tick4.x) / 2, tick3.y - 5, 18)
-
---
-local tick5 = Line(x1, y1 - 10, x1, y1 + 10)
-local tick6 = Line(x1 + R, y1 - 10, x1 + R, y1 + 10)
-local tick7 = Line(x1 + R + Y, y1 - 10, x1 + R + Y, y1 + 10)
-local tick8 = Line(x1 + w, y1 - 10, x1 + w, y1 + 10)
-
-Text("R", (tick5.x + tick6.x) / 2, tick5.y + 23, 18)
-Text("B", (tick6.x + tick7.x) / 2, tick6.y + 23, 18)
-Text("π·R", (tick7.x + tick8.x) / 2, tick7.y + 23, 18)
+for i = 1, #lines do
+	lines[i]:removeSelf()
+end

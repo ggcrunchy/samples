@@ -1,4 +1,4 @@
---- Curl, figure 4.
+--- Circles, figure C-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,53 +23,20 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
---- Modules --
+-- Modules --
 local arc = require("arc")
-local helpers = require("helpers")
 local triangle = require("triangle")
-
--- --
-local CX, CY = 150, 300
-
---
-local A, A2 = arc.New(), 40
-
-A:SetRadius(70)
-A:SetCenter(CX - 50, CY)
-A:SetAngles(270, A2)
+local helpers = require("helpers")
+local C1 = require("Circles.C1")
 
 --
-local B = A:Clone()
+C1.T:LabelAngle(1, nil)
+C1.T:LabelSide(1, nil)
+C1.T:LabelSide(2, nil)
+C1.T:LabelSide(3, nil)
 
-B:SetAngles(A2, 90)
-B:SetStyle("dashed")
+local x1, y1 = C1.T:GetVertexPos(1)
+local x2, _ = C1.T:GetVertexPos(2)
 
-local R, x1, y1 = A:GetRadius(), A:GetPos(1)
-local x2, y2 = A:GetPos(0)
-
-local T = triangle.New()
-
-T:SetVertexPos(1, A:GetCenter())
-T:SetVertexPos(2, x2, y2)
-T:SetVertexPos(3, x1, CY - R)
-
-T:SetSideStyle(1, "hide")
-T:SetSideStyle(2, "hide")
-T:SetSideStyle(3, "dashed")
-T:LabelAngle(1, "θ")
-T:MarkAngle(1, 2, { angle_offset = .225, angle_spacing = .1 })
-
---
-local U = triangle.New()
-
-U:SetVertexPos(1, A:GetCenter())
-U:SetVertexPos(2, x1, y1)
-U:SetVertexPos(3, x2, y2)
-
-U:MarkAngle(1, 1, { angle_offset = .2 })
-U:LabelAngle(1, "α")
-U:SetSideStyle(2, "hide")
-
---
-helpers.TextBelow("R sinθ", x1, x2 + .5, CY - R - 20, -12, 15)
-helpers.TextBetween("R", x1, x1 + R + .5, CY + R + 20, 3, 18)
+helpers.TextBetween("cosθ", x1, x2, y1 + 20, 2)
+helpers.TextBetween("1", x1, x1 + C1.A:GetRadius(), y1 + 50, 2)
