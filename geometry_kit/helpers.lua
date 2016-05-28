@@ -32,21 +32,32 @@ local _Line_
 local _Text_
 local _Tick_
 
+-- Kernels --
+require("kernels")
+
 -- Exports --
 local M = {}
 
 --- DOCME
-function M.HLine (x1, x2, y)
-	return _Line_(x1, y, x2, y)
+function M.HLine (x1, x2, y, dashed)
+	return _Line_(x1, y, x2, y, dashed)
 end
 
 --- DOCME
-function M.Line (x1, y1, x2, y2)
+function M.Line (x1, y1, x2, y2, dashed)
 	local line = display.newLine(x1, y1, x2, y2)
 
 	line:setStrokeColor(0)
 
-	line.strokeWidth = 3
+	if dashed then
+		local stroke = line.stroke
+
+		stroke.effect = "filter.geometry_kit.dashes"
+		stroke.effect.x = x1
+		stroke.effect.y = y1
+	end
+
+	line.strokeWidth = dashed and 2 or 3
 
 	return line
 end
@@ -60,46 +71,80 @@ function M.Text (str, x, y, size)
 	return text
 end
 
+--
+local function DoOpts (opts)
+	local line_style, margin, size
+
+	if opts then
+		line_style, margin, size = opts.line_style, opts.margin, opts.size
+	end
+
+	return line_style, size or 18, margin or 2
+end
+
+--
+local function IsDashed (style)
+	return style == "dashed" or style == "dashed_multi"
+end
+
+--
+local function Single (style)
+	return style ~= "multi" and style ~= "dashed_multi"
+end
+
 --- DOCME
-function M.TextBelow (str, x1, x2, y, ty, size)
+function M.TextBelow (str, x1, x2, y, ty, opts)
+	local line_style, size = DoOpts(opts)
 	local tick1, tick2 = _Tick_(x1, y), _Tick_(x2, y)
-	local line = _Line_(x1, y, x2, y)
+	local line = _Line_(x1, y, x2, y, IsDashed(line_style))
 	local text = _Text_(str, (x1 + x2) / 2, y + ty, size)
 
 	return text, tick1, tick2, line
 end
 
 --- DOCME
-function M.TextBelow_Multi (str_to_x2, x1, y, ty, size)
+function M.TextBelow_Multi (str_to_x2, x1, y, ty, opts)
+	local line_style, size = DoOpts(opts)
 	local texts, ticks, lines = {}, { _Tick_(x1, y) }, {}
+	local x0, is_dashed = Single(line_style) and x1, IsDashed(line_style)
 
 	for i = 1, #str_to_x2, 2 do
 		local str, x2 = str_to_x2[i], str_to_x2[i + 1]
 
 		texts[#texts + 1] = _Text_(str, (x1 + x2) / 2, y + ty, size)
 		ticks[#ticks + 1] = _Tick_(x2, y)
-		lines[#lines + 1] = _Line_(x1, y, x2, y)
+
+		if not x0 then
+			lines[#lines + 1] = _Line_(x1, y, x2, y, is_dashed)
+		end
 
 		x1 = x2
+	end
+
+	if x0 then
+		lines[#lines + 1] = _Line_(x0, y, x1, y, is_dashed)
 	end
 
 	return texts, ticks, lines
 end
 
 --- DOCME
-function M.TextBetween (str, x1, x2, y, margin, size)
+function M.TextBetween (str, x1, x2, y, opts)
+	local line_style, size, margin = DoOpts(opts)
 	local tick1, tick2 = _Tick_(x1, y), _Tick_(x2, y)
 	local text = _Text_(str, (x1 + x2) / 2, y, size)
-	local half = text.contentWidth / 2
-	local line1 = _Line_(x1, y, text.x - half - margin, y)
-	local line2 = _Line_(text.x + half + margin, y, x2, y)
+	local half, is_dashed = text.contentWidth / 2, IsDashed(line_style)
+	local line1 = _Line_(x1, y, text.x - half - margin, y, is_dashed)
+	local line2 = _Line_(text.x + half + margin, y, x2, y, is_dashed)
 
 	return text, tick1, tick2, line1, line2
 end
 
 --- DOCME
-function M.TextBetween_Multi (str_to_x2, x1, y, margin, size)
+function M.TextBetween_Multi (str_to_x2, x1, y, opts)
+	local line_style, size, margin = DoOpts(opts)
 	local texts, ticks, lines = {}, { _Tick_(x1, y) }, {}
+	local is_dashed = IsDashed(line_style)
 
 	for i = 1, #str_to_x2, 2 do
 		local str, x2 = str_to_x2[i], str_to_x2[i + 1]
@@ -110,8 +155,8 @@ function M.TextBetween_Multi (str_to_x2, x1, y, margin, size)
 		local half = text.contentWidth / 2
 
 		texts[#texts + 1] = text
-		lines[#lines + 1] = _Line_(x1, y, text.x - half - margin, y)
-		lines[#lines + 1] = _Line_(text.x + half + margin, y, x2, y)
+		lines[#lines + 1] = _Line_(x1, y, text.x - half - margin, y, is_dashed)
+		lines[#lines + 1] = _Line_(text.x + half + margin, y, x2, y, is_dashed)
 
 		x1 = x2
 	end
@@ -125,8 +170,8 @@ function M.Tick (x, y)
 end
 
 --- DOCME
-function M.VLine (x, y1, y2)
-	return _Line_(x, y1, x, y2)
+function M.VLine (x, y1, y2, dashed)
+	return _Line_(x, y1, x, y2, dashed)
 end
 
 -- Cache module references.

@@ -71,5 +71,5 @@ U:LabelAngle(1, "α")
 U:SetSideStyle(2, "hide")
 
 --
-helpers.TextBelow("R sinθ", x1, x2 + .5, CY - R - 20, -12, 15)
-helpers.TextBetween("R", x1, x1 + R + .5, CY + R + 20, 3, 18)
+helpers.TextBelow("R sinθ", x1, x2 + .5, CY - R - 20, -12, { size = 15 })
+helpers.TextBetween("R", x1, x1 + R + .5, CY + R + 20, { margin = 3, size = 18 })

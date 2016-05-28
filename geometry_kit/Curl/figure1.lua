@@ -79,18 +79,9 @@ local angle = B:GetAngle_Radians()
 local D = A:GetRadius() * (angle - math.sin(angle))
 
 --
-local U = triangle.New()
-
-U:SetVertexPos(1, x1, y1)
-U:SetVertexPos(2, XR + D, y1)
-U:SetVertexPos(3, x1, y1 + 100)
-
-U:SetSideStyle(1, "dashed")
-U:SetSideStyle(2, "hide")
-U:SetSideStyle(3, "hide")
-
---
 helpers.TextBelow_Multi({
 	"R sinθ", XR,
 	"D", XR + D
-}, XL, CY - 20, -15, 18)
+}, XL, CY - 20, -15, { size = 18 })
+helpers.HLine(x1, XR + D, y1, true)
+helpers.Tick(XR + D, y1)

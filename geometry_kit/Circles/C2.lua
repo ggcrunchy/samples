@@ -24,7 +24,6 @@
 --
 
 -- Modules --
-local arc = require("arc")
 local triangle = require("triangle")
 local helpers = require("helpers")
 local C1 = require("Circles.C1")
@@ -38,5 +37,5 @@ C1.T:LabelSide(3, nil)
 local x1, y1 = C1.T:GetVertexPos(1)
 local x2, _ = C1.T:GetVertexPos(2)
 
-helpers.TextBetween("cosθ", x1, x2, y1 + 20, 2)
-helpers.TextBetween("1", x1, x1 + C1.A:GetRadius(), y1 + 50, 2)
+helpers.TextBetween("cosθ", x1, x2, y1 + 20, { margin = 2 })
+helpers.TextBetween("1", x1, x1 + C1.A:GetRadius(), y1 + 50, { margin = 2 })

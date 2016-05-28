@@ -35,7 +35,7 @@ local CX, CY = 150, 300
 local A = arc.New()
 
 A:SetRadius(70)
-A:SetCenter(CX - 50, CY)
+A:SetCenter(100, 300)
 A:SetAngles(270, 40)
 
 --
@@ -47,53 +47,38 @@ B:SetStyle("dashed")
 local R, x1, y1 = A:GetRadius(), A:GetPos(1)
 local x2, y2 = A:GetPos(0)
 local X, Y, D = 30, 25, .5 * math.pi * R - R
+local w = R + Y + D
 
 --
 local T = triangle.New()
-local w = R + Y + D
 
-T:SetVertexPos(1, x1, y1)
-T:SetVertexPos(2, x1 + w, y1)
-T:SetVertexPos(3, x1, y1 + 100)
+T:SetVertexPos(1, A:GetCenter())
+T:SetVertexPos(2, x1, y1)
+T:SetVertexPos(3, x2, y2)
 
-T:SetSideStyle(1, "dashed")
+T:MarkAngle(1, 1, { angle_offset = .2 })
+T:LabelAngle(1, "α")
 T:SetSideStyle(2, "hide")
-T:SetSideStyle(3, "hide")
 
 --
-local U = triangle.New()
+helpers.TextBelow("D", x2 + .5, x1 + w, y2 - 20, -15, { size = 18 })
 
-U:SetVertexPos(1, A:GetCenter())
-U:SetVertexPos(2, x1, y1)
-U:SetVertexPos(3, x2, y2)
-
-U:MarkAngle(1, 1, { angle_offset = .2 })
-U:LabelAngle(1, "α")
-U:SetSideStyle(2, "hide")
-
---
-helpers.TextBelow("D", x2 + .5, x1 + w, y2 - 20, -15, 18)
-
-local _, tick1 = helpers.TextBelow("A", x1 - X + .5, x1, y1, 13, 18)
+local _, tick1 = helpers.TextBelow("A", x1 - X + .5, x1, y1, 13, { size = 18 })
 local x0 = tick1.x
 
 helpers.HLine(x0 - 30, x0 + 1, y1)
 
 --
-local texts, _, lines = helpers.TextBelow_Multi({
+local texts = helpers.TextBelow_Multi({
 	"R", x1 + R + 1,
 	"B", x1 + R + Y,
 	" ", x1 + w
-}, x1, y1, 13, 18)
-
-for i = 1, #lines do
-	lines[i]:removeSelf()
-end
+}, x1, y1, 13, { size = 18, line_style = "dashed" })
 
 --
 local mid = texts[3]
 local hline = helpers.HLine(mid.x - 12, mid.x + 12, mid.y - 5.5)
-local text = helpers.Text("½πR - R", mid.x - 15, hline.y + 35, 18)
+local text = helpers.Text("½πR - R", mid.x - 15, hline.y + 35, { size = 18 })
 local rect = display.newRoundedRect(text.x, text.y, text.width + 20, text.height + 5, 16)
 
 helpers.VLine(mid.x, hline.y, text.y - rect.path.height / 2)
@@ -104,4 +89,4 @@ rect:setStrokeColor(0)
 rect.strokeWidth = 2
 
 --
-helpers.TextBetween("πR", x0, x1 + w, y2 - 60, 4, 18)
+helpers.TextBetween("πR", x0, x1 + w, y2 - 60, { margin = 4, size = 18 })
