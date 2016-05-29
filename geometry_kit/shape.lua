@@ -116,19 +116,6 @@ function Shape:Clone (into)
 end
 
 --
-local function AuxGetLabel (S, index, lkey)
-	local v = S[index]
-	local label = v[lkey]
-
-	return type(label) ~= "string" and label
-end
-
---- DOCME
-function Shape:GetAngleLabel (index)
-	return AuxGetLabel(self, index, "m_angle_label")
-end
-
---
 local function NextIndex (S, index)
 	return (index % S.m_n) + 1
 end
@@ -139,6 +126,24 @@ local function PrevIndex (S, index)
 	local m = n - 2
 
 	return (index + m) % n + 1
+end
+
+--- DOCME
+function Shape:GetAngle (index)
+	return angle.GetAxes(self:GetPrev(index), self[index], self:GetNext(index)):GetAngle()
+end
+
+--
+local function AuxGetLabel (S, index, lkey)
+	local v = S[index]
+	local label = v[lkey]
+
+	return type(label) ~= "string" and label
+end
+
+--- DOCME
+function Shape:GetAngleLabel (index)
+	return AuxGetLabel(self, index, "m_angle_label")
 end
 
 --- DOCME

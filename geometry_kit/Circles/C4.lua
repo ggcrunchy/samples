@@ -24,27 +24,10 @@
 --
 
 -- Modules --
-local arc = require("arc")
-local triangle = require("triangle")
+local C1 = require("Circles.C1")
 
---
-local T = triangle.New()
+C1.T:LabelSide(1, "A secθ", { align = true })
+C1.T:LabelSide(2, "A tanθ", { text_offset = 50 })
+C1.T:LabelSide(3, "A")
 
-T:SetVertexPos(1, 50, 220)
-T:SetVertexPos(2, 170, 95)
-T:SetVertexPos(3, 170, 220)
-
-T:LabelAngle(1, "θ")
-T:MarkAngle(1, 1, { angle_offset = .125 })
-T:MarkAngle(3, 1, { angle_offset = .125 })
-T:LabelSide(1, "r", { align = true })
-T:LabelSide(2, "r sinθ", { text_offset = 50 })
-T:LabelSide(3, "r cosθ")
-
-local A = arc.New()
-
-A:Revolve(T)
-A:SetAngles(0, 90)
-A:SetStyle("dashed")
-
-return { T = T }
+C1.A:Remove()

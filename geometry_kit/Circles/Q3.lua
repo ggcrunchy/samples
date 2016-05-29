@@ -1,4 +1,4 @@
---- Circles, figure C-1.
+--- Circles, figure Q-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -26,38 +26,43 @@
 -- Modules --
 local helpers = require("helpers")
 local triangle = require("triangle")
-local C1 = require("Circles.C1")
 
 --
-local yshift = 50
-local x1, y1 = C1.T:GetVertexPos(1)
+local MidX = display.contentCenterX
+local BottomY, TopY = 250, 150
+local BottomW, TopW = 250, 140
+local BottomLeftX, TopLeftX = MidX - BottomW / 2, MidX - TopW / 2
+local BottomRightX, TopRightX = BottomLeftX + BottomW, TopLeftX + TopW - 20
 
-y1 = y1 + yshift
 
-C1.A:SetCenter(x1, y1)
-C1.T:Translate(0, yshift)
+helpers.HLine(BottomLeftX, BottomRightX, BottomY)
+helpers.HLine(TopLeftX, TopRightX, TopY)
 
-C1.T:LabelSide(1, nil)
-C1.T:LabelSide(2, nil)
-C1.T:LabelSide(3, nil)
+--
+helpers.TextBetween("w1", TopLeftX, TopRightX, TopY - 20, { margin = 3 })
+helpers.TextBetween("w2", BottomLeftX, BottomRightX, BottomY + 50)
 
-local U = C1.T:Clone()
+--
+local T1 = triangle.New()
 
-C1.T:MarkAngle(3, nil)
+T1:SetVertexPos(1, BottomLeftX, BottomY)
+T1:SetVertexPos(2, TopLeftX, TopY)
+T1:SetVertexPos(3, TopLeftX, BottomY)
 
-U:LabelAngle(1, nil)
-U:MarkAngle(1, nil)
-U:Scale(1 / math.cos(C1.T:GetAngle(1)))
+T1:SetSideStyle(2, "dashed")
+T1:SetSideStyle(3, "hide")
+T1:MarkAngle(3, 1, { angle_offset = .2 })
 
-local x2, y2 = U:GetVertexPos(1)
+local T2 = triangle.New()
 
-U:Translate(x1 - x2, y1 - y2)
+T2:SetVertexPos(1, TopRightX - 1, TopY - 1)
+T2:SetVertexPos(2, BottomRightX, BottomY)
+T2:SetVertexPos(3, TopRightX - 1, BottomY)
 
-for i = 1, 3 do
-	U:SetSideStyle(i, "dashed")
-end
+T2:SetSideStyle(2, "hide")
+T2:SetSideStyle(3, "dashed")
+T2:MarkAngle(3, 1, { angle_offset = .125 })
 
-U:LabelSide(1, "secθ", { align = true })
-U:LabelSide(2, "tanθ", { align = true, text_offset = 20 })
-
-helpers.PutRotatedObjectBetween(U:GetSideLabel(1), U:GetVertexPos(1), U:GetVertexPos(2), { margin = -4 })
+--
+helpers.TextBetween("b1", BottomLeftX, TopLeftX - .5, BottomY + 20)
+helpers.TextBetween("b2", TopRightX - .5, BottomRightX, BottomY + 20)

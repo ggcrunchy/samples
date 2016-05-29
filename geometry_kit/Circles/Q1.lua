@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure Q1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,16 +23,30 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
+-- Modules --
+local arc = require("arc")
+local helpers = require("helpers")
+
 -- --
-local CW, CH = display.contentWidth, display.contentHeight
+local CX, CY = 160, 210
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+helpers.Point(CX, CY, 5)
 
-local Prefix = "Circles"
-local Name = "F1"
+--
+local C = arc.New()
 
-require(Prefix .. "." .. Name)
+C:SetCenter(CX, CY)
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+for i = 1, 3 do
+	if i > 1 then
+		C = C:Clone()
+	end
+
+	local radius = i * 45
+
+	C:SetRadius(radius)
+
+	local angle, scale = .804 + i * .082, radius * (1.41 - i * .1)
+
+	helpers.Text("r" .. i, CX + scale * math.cos(angle), CY + scale *math.sin(angle))
 end

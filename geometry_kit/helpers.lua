@@ -23,6 +23,13 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
+-- Standard library imports --
+local cos = math.cos
+local rad = math.rad
+local sin = math.sin
+local sqrt = math.sqrt
+local tan = math.tan
+
 -- Corona globals --
 local display = display
 local native = native
@@ -31,6 +38,10 @@ local native = native
 local _Line_
 local _Text_
 local _Tick_
+
+-- Modules --
+local math2d_ex = require("math2d_ex")
+local triangle = require("triangle")
 
 -- Kernels --
 require("kernels")
@@ -63,12 +74,24 @@ function M.Line (x1, y1, x2, y2, dashed)
 end
 
 --- DOCME
-function M.Text (str, x, y, size)
-	local text = display.newText(str, x, y, native.systemFontBold, size or 22)
+function M.Mark (x, y)
+	local mark = display.newCircle(x, y, 5)
 
-	text:setTextColor(0)
+	mark:setFillColor(.3)
+	mark:setStrokeColor(0)
 
-	return text
+	mark.strokeWidth = 4
+
+	return mark
+end
+
+--- DOCME
+function M.Point (x, y, size)
+	local point = display.newCircle(x, y, size or 12)
+
+	point:setFillColor(0)
+
+	return point
 end
 
 --
@@ -90,6 +113,89 @@ end
 --
 local function Single (style)
 	return style ~= "multi" and style ~= "dashed_multi"
+end
+
+--- DOCME
+function M.PutRotatedObjectBetween (object, x1, x2, opts)
+	local line_style, _, margin = DoOpts(opts)
+	local bounds, is_dashed = object.contentBounds, IsDashed(line_style)
+	local x0, y0, angle = object.x, object.y, rad(object.rotation)
+	local xl, xr, slope = bounds.xMin - margin, bounds.xMax + margin, tan(angle)
+	local yl, yr = y0 + (xl - x0) * slope, y0 + (xr - x0) * slope
+	local y1, y2 = y0 + (x1 - x0) * slope, y0 + (x2 - x0) * slope
+	local line1 = _Line_(x1, y1, xl, yl, is_dashed)
+	local line2 = _Line_(xr, yr, x2, y2, is_dashed)
+	local tick1, tick2 = _Tick_(x1, y1), _Tick_(x2, y2)
+
+	return tick1, tick2, line1, line2
+end
+
+--
+local function ApplyTriOpts (T, opts)
+	if opts.angle_marks or opts.angle_label then
+		T:MarkAngle(1, opts.angle_marks, { angle_offset = opts.angle_offset })
+		T:LabelAngle(1, opts.angle_label, { angle_time = opts.angle_time, radius = opts.radius })
+	end
+
+	if opts.show_right_angle then
+		T:MarkAngle(3, 1, { angle_offset = opts.right_angle_offset })
+	end
+end
+
+--- DOCME
+function M.RotatedRightTriangle (x1, y1, x2, y2, angle, opts, opts2)
+	angle = rad(angle)
+
+	local vx, vy = cos(angle), -sin(angle)
+	local dx, dy = math2d_ex.ProjectOnto(x2 - x1, y2 - y1, vx, vy)
+	local x3, y3 = x1 + dx, y1 + dy
+	local tri, second = triangle.New()
+
+	tri:SetVertexPos(1, x1, y1)
+	tri:SetVertexPos(2, x2, y2)
+	tri:SetVertexPos(3, x3, y3)
+
+	if opts then
+		ApplyTriOpts(tri, opts)
+
+		if opts.second or opts2 then
+			second = triangle.New()
+
+			local hyp = sqrt((x2 - x1)^2 + (y2 - y1)^2)
+
+			second:SetVertexPos(1, x1, y1)
+			second:SetVertexPos(2, x1 + hyp * vx, y1 + hyp * vy)
+			second:SetVertexPos(3, x1 + hyp * vx, y1)
+
+			if opts2 then
+				ApplyTriOpts(second, opts2)
+			end
+		end
+	end
+
+	return tri, second
+end
+
+--- DOCME
+function M.SimilarTriangleVertex (T, scale, vertex_index)
+	local S, tx, ty = T:Clone(), T:GetVertexPos(vertex_index)
+	
+	S:Scale(scale)
+
+	local sx, sy = S:GetVertexPos(vertex_index)
+
+	S:Translate(tx - sx, ty - sy)
+
+	return S
+end
+
+--- DOCME
+function M.Text (str, x, y, size)
+	local text = display.newText(str, x, y, native.systemFontBold, size or 22)
+
+	text:setTextColor(0)
+
+	return text
 end
 
 --- DOCME

@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure Q-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,16 +23,28 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
--- --
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local helpers = require("helpers")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local MidX = display.contentCenterX
+local BottomY, TopY = 250, 150
+local BottomW, TopW = 120, 240
+local BottomLeftX, TopLeftX = MidX - BottomW / 2, MidX - TopW / 2
+local BottomRightX, TopRightX = BottomLeftX + BottomW, TopLeftX + TopW
 
-local Prefix = "Circles"
-local Name = "F1"
+--
+helpers.HLine(BottomLeftX, BottomRightX, BottomY)
+helpers.HLine(TopLeftX, TopRightX, TopY)
+helpers.Line(BottomLeftX, BottomY, TopLeftX, TopY, true)
+helpers.Line(BottomRightX, BottomY, TopRightX, TopY, true)
 
-require(Prefix .. "." .. Name)
+--
+helpers.TextBetween("2πr2", TopLeftX, TopRightX, TopY - 20, { margin = 3 })
+helpers.TextBetween("2πr1", BottomLeftX, BottomRightX, BottomY + 20)
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+--
+helpers.VLine(MidX, TopY + 10, BottomY - 10)
+helpers.HLine(MidX - 10, MidX + 10, TopY + 10)
+helpers.HLine(MidX - 10, MidX + 10, BottomY - 10)
+helpers.Text("r2 - r1", MidX + 32, (BottomY + TopY) / 2, { size = 18 })

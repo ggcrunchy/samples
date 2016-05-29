@@ -46,6 +46,11 @@ local Frame = {}
 Frame.__index = Frame
 
 --- DOCME
+function Frame:GetAngle ()
+	return self.m_angle
+end
+
+--- DOCME
 function Frame:GetPosAtParameter (t)
 	local angle = self.m_angle * t
 
