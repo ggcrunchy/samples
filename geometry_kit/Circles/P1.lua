@@ -1,4 +1,4 @@
---- Circles, figure Q-3.
+--- Circles, figure P-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,45 +24,43 @@
 --
 
 -- Modules --
+local arc = require("arc")
 local helpers = require("helpers")
-local triangle = require("triangle")
 
 --
-local MidX = display.contentCenterX
-local BottomY, TopY = 250, 150
-local BottomW, TopW = 250, 140
-local BottomLeftX, TopLeftX = MidX - BottomW / 2, MidX - TopW / 2
-local BottomRightX, TopRightX = BottomLeftX + BottomW, TopLeftX + TopW - 20
-
-
-helpers.HLine(BottomLeftX, BottomRightX, BottomY)
-helpers.HLine(TopLeftX, TopRightX, TopY)
+local m1 = helpers.Mark(100, 150)
+local m2 = helpers.Mark(270, 310)
 
 --
-helpers.TextBetween("w1", TopLeftX, TopRightX, TopY - 20, { margin = 3 })
-helpers.TextBetween("w2", BottomLeftX, BottomRightX, BottomY + 50)
+local cx, cy = (m1.x + m2.x) / 2, (m1.y + m2.y) / 2
+local dx, dy = cx - m1.x, cy - m1.y
+local len = math.sqrt(dx^2 + dy^2)
+local nx, ny = dy / len, -dx / len
 
 --
-local T1 = triangle.New()
+local function Angle (mark, x, y)
+	return math.deg(math.atan2(y - mark.y, mark.x - x))
+end
 
-T1:SetVertexPos(1, BottomLeftX, BottomY)
-T1:SetVertexPos(2, TopLeftX, TopY)
-T1:SetVertexPos(3, TopLeftX, BottomY)
+for i, R in ipairs{ 400, 220, 170 } do
+	local ndist = math.sqrt(R^2 - len^2)
+	local x, y = cx - nx * ndist, cy - ny * ndist
+	local a1 = Angle(m2, x, y)
+	local a2 = Angle(m1, x, y)
 
-T1:SetSideStyle(2, "dashed")
-T1:SetSideStyle(3, "hide")
-T1:MarkAngle(3, 1, { angle_offset = .2 })
+	--
+	local C = arc.New()
 
-local T2 = triangle.New()
+	C:SetCenter(x, y)
+	C:SetRadius(R)
 
-T2:SetVertexPos(1, TopRightX - 1, TopY - 1)
-T2:SetVertexPos(2, BottomRightX, BottomY)
-T2:SetVertexPos(3, TopRightX - 1, BottomY)
+	local L = C:Clone()
 
-T2:SetSideStyle(2, "hide")
-T2:SetSideStyle(3, "dashed")
-T2:MarkAngle(3, 1, { angle_offset = .125 })
+	C:SetAngles(a2, a1)
+	L:SetAngles(a1, a2)
+	C:SetStyle("dashed")
+end
 
 --
-helpers.TextBetween("b1", BottomLeftX, TopLeftX - .5, BottomY + 20)
-helpers.TextBetween("b2", TopRightX - .5, BottomRightX, BottomY + 20)
+m1:toFront()
+m2:toFront()

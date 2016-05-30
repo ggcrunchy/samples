@@ -29,7 +29,7 @@ local helpers = require("helpers")
 
 --
 local m1 = helpers.Mark(100, 150)
-local m2 = helpers.Mark(270, 310)
+local m2 = helpers.Mark(170, 210)
 
 --
 local cx, cy = (m1.x + m2.x) / 2, (m1.y + m2.y) / 2
@@ -42,7 +42,7 @@ local function Angle (mark, x, y)
 	return math.deg(math.atan2(y - mark.y, mark.x - x))
 end
 
-for i, R in ipairs{ 400, 220, 170 } do
+for _, R in ipairs{ 150, 90 } do
 	local ndist = math.sqrt(R^2 - len^2)
 	local x, y = cx - nx * ndist, cy - ny * ndist
 	local a1 = Angle(m2, x, y)
@@ -58,7 +58,9 @@ for i, R in ipairs{ 400, 220, 170 } do
 
 	C:SetAngles(a2, a1)
 	L:SetAngles(a1, a2)
-	C:SetStyle("dashed")
+	L:SetStyle("dashed")
+
+	nx, ny, m1, m2 = -nx, -ny, m2, m1
 end
 
 --

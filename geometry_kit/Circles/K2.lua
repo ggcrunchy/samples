@@ -1,4 +1,4 @@
---- Circles, figure Q-4.
+--- Circles, figure K-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -27,31 +27,24 @@
 local helpers = require("helpers")
 
 --
-local CX, CY, R = display.contentCenterX, display.contentCenterY, 35
-local TopW = 2 * math.pi * R
-local TopLeftX = CX - TopW / 2
-local TopRightX = TopLeftX + TopW
+local MidX = display.contentCenterX
+local BottomY, TopY = 250, 150
+local BottomW, TopW = 120, 240
+local BottomLeftX, TopLeftX = MidX - BottomW / 2, MidX - TopW / 2
+local BottomRightX, TopRightX = BottomLeftX + BottomW, TopLeftX + TopW
 
 --
-local slope = math.pi
-
-for i = 0, 2 do
-	local dy = i * R / 3
-	local trx, y = TopRightX - dy * slope, CY + dy
-
-	helpers.HLine(TopLeftX + dy * slope, trx, y + i * .5)
-	helpers.Text("r" .. (3 - i), trx + 5, y + 15, { size = 15 })
-end
+helpers.HLine(BottomLeftX, BottomRightX, BottomY)
+helpers.HLine(TopLeftX, TopRightX, TopY)
+helpers.Line(BottomLeftX, BottomY, TopLeftX, TopY, true)
+helpers.Line(BottomRightX, BottomY, TopRightX, TopY, true)
 
 --
-helpers.Line(TopLeftX, CY, CX, CY + R)
-helpers.Line(TopRightX, CY, CX, CY + R)
+helpers.TextBetween("2πr2", TopLeftX, TopRightX, TopY - 20, { margin = 3 })
+helpers.TextBetween("2πr1", BottomLeftX, BottomRightX, BottomY + 20)
 
 --
-helpers.VLine(TopLeftX - 25, CY, CY + R)
-helpers.HLine(TopLeftX - 35, TopLeftX - 15, CY)
-helpers.HLine(TopLeftX - 35, TopLeftX - 15, CY + R)
-helpers.Text("r", TopLeftX - 10, CY + R / 2)
-
---
-helpers.TextBetween("2πr", TopLeftX, TopRightX, CY - 15)
+helpers.VLine(MidX, TopY + 10, BottomY - 10)
+helpers.HLine(MidX - 10, MidX + 10, TopY + 10)
+helpers.HLine(MidX - 10, MidX + 10, BottomY - 10)
+helpers.Text("r2 - r1", MidX + 32, (BottomY + TopY) / 2, { size = 18 })

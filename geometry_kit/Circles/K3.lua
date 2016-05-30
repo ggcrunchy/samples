@@ -1,4 +1,4 @@
---- Circles, figure Q-2.
+--- Circles, figure K-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -25,26 +25,44 @@
 
 -- Modules --
 local helpers = require("helpers")
+local triangle = require("triangle")
 
 --
 local MidX = display.contentCenterX
 local BottomY, TopY = 250, 150
-local BottomW, TopW = 120, 240
+local BottomW, TopW = 250, 140
 local BottomLeftX, TopLeftX = MidX - BottomW / 2, MidX - TopW / 2
-local BottomRightX, TopRightX = BottomLeftX + BottomW, TopLeftX + TopW
+local BottomRightX, TopRightX = BottomLeftX + BottomW, TopLeftX + TopW - 20
 
---
+
 helpers.HLine(BottomLeftX, BottomRightX, BottomY)
 helpers.HLine(TopLeftX, TopRightX, TopY)
-helpers.Line(BottomLeftX, BottomY, TopLeftX, TopY, true)
-helpers.Line(BottomRightX, BottomY, TopRightX, TopY, true)
 
 --
-helpers.TextBetween("2πr2", TopLeftX, TopRightX, TopY - 20, { margin = 3 })
-helpers.TextBetween("2πr1", BottomLeftX, BottomRightX, BottomY + 20)
+helpers.TextBetween("w1", TopLeftX, TopRightX, TopY - 20, { margin = 3 })
+helpers.TextBetween("w2", BottomLeftX, BottomRightX, BottomY + 50)
 
 --
-helpers.VLine(MidX, TopY + 10, BottomY - 10)
-helpers.HLine(MidX - 10, MidX + 10, TopY + 10)
-helpers.HLine(MidX - 10, MidX + 10, BottomY - 10)
-helpers.Text("r2 - r1", MidX + 32, (BottomY + TopY) / 2, { size = 18 })
+local T1 = triangle.New()
+
+T1:SetVertexPos(1, BottomLeftX, BottomY)
+T1:SetVertexPos(2, TopLeftX, TopY)
+T1:SetVertexPos(3, TopLeftX, BottomY)
+
+T1:SetSideStyle(2, "dashed")
+T1:SetSideStyle(3, "hide")
+T1:MarkAngle(3, 1, { angle_offset = .2 })
+
+local T2 = triangle.New()
+
+T2:SetVertexPos(1, TopRightX - 1, TopY - 1)
+T2:SetVertexPos(2, BottomRightX, BottomY)
+T2:SetVertexPos(3, TopRightX - 1, BottomY)
+
+T2:SetSideStyle(2, "hide")
+T2:SetSideStyle(3, "dashed")
+T2:MarkAngle(3, 1, { angle_offset = .125 })
+
+--
+helpers.TextBetween("b1", BottomLeftX, TopLeftX - .5, BottomY + 20)
+helpers.TextBetween("b2", TopRightX - .5, BottomRightX, BottomY + 20)

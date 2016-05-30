@@ -1,4 +1,4 @@
---- Circles, figure Q1.
+--- Circles, figure K-4.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,29 +24,34 @@
 --
 
 -- Modules --
-local arc = require("arc")
 local helpers = require("helpers")
 
--- --
-local CX, CY = 160, 210
-
-helpers.Point(CX, CY, 5)
+--
+local CX, CY, R = display.contentCenterX, display.contentCenterY, 35
+local TopW = 2 * math.pi * R
+local TopLeftX = CX - TopW / 2
+local TopRightX = TopLeftX + TopW
 
 --
-local C = arc.New()
+local slope = math.pi
 
-C:SetCenter(CX, CY)
+for i = 0, 2 do
+	local dy = i * R / 3
+	local trx, y = TopRightX - dy * slope, CY + dy
 
-for i = 1, 3 do
-	if i > 1 then
-		C = C:Clone()
-	end
-
-	local radius = i * 45
-
-	C:SetRadius(radius)
-
-	local angle, scale = .804 + i * .082, radius * (1.41 - i * .1)
-
-	helpers.Text("r" .. i, CX + scale * math.cos(angle), CY + scale *math.sin(angle))
+	helpers.HLine(TopLeftX + dy * slope, trx, y + i * .5)
+	helpers.Text("r" .. (3 - i), trx + 5, y + 15, { size = 15 })
 end
+
+--
+helpers.Line(TopLeftX, CY, CX, CY + R)
+helpers.Line(TopRightX, CY, CX, CY + R)
+
+--
+helpers.VLine(TopLeftX - 25, CY, CY + R)
+helpers.HLine(TopLeftX - 35, TopLeftX - 15, CY)
+helpers.HLine(TopLeftX - 35, TopLeftX - 15, CY + R)
+helpers.Text("r", TopLeftX - 10, CY + R / 2)
+
+--
+helpers.TextBetween("2πr", TopLeftX, TopRightX, CY - 15)
