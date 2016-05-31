@@ -24,9 +24,11 @@
 --
 
 -- Standard library imports --
+local abs = math.abs
 local unpack = unpack
 
 -- Modules --
+local math2d_ex = require("math2d_ex")
 local side = require("side")
 
 -- Exports --
@@ -49,22 +51,27 @@ local function AddArrowXY (x, y)
 	end
 end
 
---- DOCME
-function M.GetPoints (v1, v2, px, py, t, reverse)
+--
+local function Begin (v1, v2, px, py, t, reverse, w)
 	if reverse then
 		v1, v2 = v2, v1
 	end
 
-	local neck_x, neck_y = side.GetPosOnSide(v1, v2, t)
+	local sx, sy, nx, ny = px * w, py * w, side.GetPosOnSide(v1, v2, t)
 
 	ArrowIndex, InReverse = 0, reverse
 
 	AddArrowXY(v1.x, v1.y)
-	AddArrowXY(neck_x, neck_y)
-	AddArrowXY(neck_x + px * 15, neck_y + py * 15)
-	AddArrowXY(v2.x, v2.y)
-	AddArrowXY(neck_x - px * 15, neck_y - py * 15)
-	AddArrowXY(neck_x, neck_y)
+	AddArrowXY(nx, ny)
+	AddArrowXY(nx + sx, ny + sy)
+
+	return nx, ny, sx, sy -- "neck" point, side displacement
+end
+
+--
+local function End (nx, ny, sx, sy)
+	AddArrowXY(nx - sx, ny - sy)
+	AddArrowXY(nx, ny)
 
 	if InReverse then
 		local correct = 1 - ArrowIndex
@@ -74,7 +81,55 @@ function M.GetPoints (v1, v2, px, py, t, reverse)
 		end
 	end
 
-	return unpack(Arrow)
+	return unpack(Arrow, 1, abs(ArrowIndex))
+end
+
+--- DOCME
+function M.GetPoints (v1, v2, px, py, t, reverse)
+	local nx, ny, sx, sy = Begin(v1, v2, px, py, t, reverse, 15)
+
+	if reverse then
+		v1, v2 = v2, v1
+	end
+
+	AddArrowXY(v2.x, v2.y)
+
+	return End(nx, ny, sx, sy)
+end
+
+-- --
+local W = 10 -- should be even
+
+--- DOCME
+function M.GetPointsFilled (v1, v2, px, py, t, reverse)
+	local nx, ny, sx, sy = Begin(v1, v2, px, py, t, reverse, W)
+	local nbins, diagx, diagy = W - 1, nx + sx, ny + sy
+
+	if reverse then
+		v1, v2 = v2, v1
+	end
+
+	local rx, ry, drx, dry, ddx, ddy = diagx, diagy, -sx / nbins, -sy / nbins, (v2.x - diagx) / nbins, (v2.y - diagy) / nbins
+
+	for i = 1, 2 * nbins - 1 do
+		-- At midpoint, "up" becomes down.
+		if i == nbins + 1 then
+			ddx, ddy = math2d_ex.Reflect(ddx, ddy, drx, dry)
+		end
+
+		diagx, rx = diagx + ddx, rx + drx
+		diagy, ry = diagy + ddy, ry + dry
+
+		if i % 2 == 0 then
+			AddArrowXY(diagx, diagy)
+			AddArrowXY(rx, ry)
+		else
+			AddArrowXY(rx, ry)
+			AddArrowXY(diagx, diagy)
+		end
+	end
+
+	return End(nx, ny, sx, sy)
 end
 
 -- Export the module.

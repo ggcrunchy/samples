@@ -29,7 +29,7 @@ local CW, CH = display.contentWidth, display.contentHeight
 display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
 
 local Prefix = "Circles"
-local Name = "L1"
+local Name = "C1"
 
 require(Prefix .. "." .. Name)
 

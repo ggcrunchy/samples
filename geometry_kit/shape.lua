@@ -525,6 +525,8 @@ local function RedrawSide (S, index)
 
 	if style == "a_to_b" or style == "b_to_a" then
 		v1.m_object = display.newLine(S.m_side_group, arrows.GetPoints(v1, v2, px, py, .9, style == "b_to_a"))
+	elseif style == "a_to_b_filled" or style == "b_to_a_filled" then
+		v1.m_object, w = display.newLine(S.m_side_group, arrows.GetPointsFilled(v1, v2, px, py, .9, style == "b_to_a_filled")), 3
 	elseif style ~= "hide" then
 		v1.m_object = display.newLine(S.m_side_group, v1.x, v1.y, v2.x, v2.y)
 
@@ -565,7 +567,7 @@ end
 Shape.SetSideOffset = UpdateProp("m_offset")
 
 -- --
-local Styles = { a_to_b = true, b_to_a = true, dashed = true, hide = true }
+local Styles = { a_to_b = true, b_to_a = true, a_to_b_filled = true, b_to_a_filled = true, dashed = true, hide = true }
 
 --
 local UpdateStyle = UpdateProp("m_style")
@@ -585,6 +587,7 @@ end
 -- @int vertex_index
 -- @param ...
 function Shape:SetVertexColor (vertex_index, ...)
+	-- TODO: Seems broken
 	color.SetThenApply(self, vertex_index, "m_object", "m_color", ...)
 end
 

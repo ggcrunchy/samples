@@ -1,4 +1,4 @@
---- Circles, figure C-1.
+--- Circles, figure A-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,30 +24,30 @@
 --
 
 -- Modules --
+local arc = require("arc")
 local helpers = require("helpers")
-local B1 = require("Circles.B1")
 
 --
-B1.U:Remove()
+local A = arc.New()
 
-for i = 1, #B1.marks do
-	B1.marks[i]:removeSelf()
-end
+A:SetCenter(150, 200)
+A:SetRadius(110)
+A:SetAngles(25, 25)
 
-for i = 2, 3 do
-	B1.T:LabelSide(i, nil)
-end
+local x, y = A:GetPos(0)
 
-B1.T:MarkAngle(1, 1, { angle_offset = .15 })
-B1.T:LabelAngle(1, "θ")
+A:SetAngles(35, 10)
 
 --
-B1.A:Revolve(B1.T)
+local C = helpers.Point(A:GetCenter())
+local P = helpers.Point(x, y)
+
+C.path.radius, P.path.radius = 5, 7
 
 --
-local x, y = B1.T:GetVertexPos(1)
+local dx, dy = (P.x - C.x) / 10, (P.y - C.y) / 10
 
-helpers.Line(x, y, B1.P.x, B1.P.y, true)
+helpers.Line(C.x + dx, C.y + dy, P.x - dx, P.y - dy, true)
 
 --
-helpers.Text("(x, y)", B1.P.x + 5, B1.P.y - 22)
+helpers.ArrowOnArc(A, 0)

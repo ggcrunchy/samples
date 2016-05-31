@@ -57,19 +57,21 @@ end
 
 --- DOCME
 function M.ApplyColor (object, ckey, v1, v2, dashed)
-	local r1, g1, b1, a1 = GetRGBA(v1, ckey)
-	local r2, g2, b2, a2 = GetRGBA(v2, ckey)
+	if object then -- TODO: appropriate?
+		local r1, g1, b1, a1 = GetRGBA(v1, ckey)
+		local r2, g2, b2, a2 = GetRGBA(v2, ckey)
 
-	if max(abs(r2 - r1), abs(g2 - g1), abs(b2 - b1), abs(a2 - a1)) > 1e-2 then
-		object:setStrokeColor(1, 1)
+		if max(abs(r2 - r1), abs(g2 - g1), abs(b2 - b1), abs(a2 - a1)) > 1e-2 then
+			object:setStrokeColor(1, 1)
 
-		object.stroke = {
-			type = "gradient", direction = "right",
-			color1 = { r1, g1, b1, a1 },
-			color2 = { r2, g2, b2, a2 }
-		}
-	else
-		object:setStrokeColor(r1, g1, b1, a1)
+			object.stroke = {
+				type = "gradient", direction = "right",
+				color1 = { r1, g1, b1, a1 },
+				color2 = { r2, g2, b2, a2 }
+			}
+		else
+			object:setStrokeColor(r1, g1, b1, a1)
+		end
 	end
 end
 

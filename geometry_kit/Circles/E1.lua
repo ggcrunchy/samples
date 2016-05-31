@@ -1,4 +1,4 @@
---- Circles, figure C-1.
+--- Circles, figure E-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -22,32 +22,3 @@
 --
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
-
--- Modules --
-local helpers = require("helpers")
-local B1 = require("Circles.B1")
-
---
-B1.U:Remove()
-
-for i = 1, #B1.marks do
-	B1.marks[i]:removeSelf()
-end
-
-for i = 2, 3 do
-	B1.T:LabelSide(i, nil)
-end
-
-B1.T:MarkAngle(1, 1, { angle_offset = .15 })
-B1.T:LabelAngle(1, "θ")
-
---
-B1.A:Revolve(B1.T)
-
---
-local x, y = B1.T:GetVertexPos(1)
-
-helpers.Line(x, y, B1.P.x, B1.P.y, true)
-
---
-helpers.Text("(x, y)", B1.P.x + 5, B1.P.y - 22)

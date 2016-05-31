@@ -1,4 +1,4 @@
---- Circles, figure C-1.
+--- Circles, figure B-5.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,30 +24,36 @@
 --
 
 -- Modules --
+local arc = require("arc")
 local helpers = require("helpers")
-local B1 = require("Circles.B1")
+local triangle = require("triangle")
 
 --
-B1.U:Remove()
+local T = triangle.New()
 
-for i = 1, #B1.marks do
-	B1.marks[i]:removeSelf()
-end
+T:SetVertexPos(1, 70, 200)
+T:SetVertexPos(2, 200, 70)
+T:SetVertexPos(3, 200, 200)
+
+--
+T:LabelSide(1, "1")
 
 for i = 2, 3 do
-	B1.T:LabelSide(i, nil)
+	T:MarkAngle(i - 1, 1, { angle_offset = .15 + (i - 2) * .07 })
+	T:MarkSide(i, 1)
 end
 
-B1.T:MarkAngle(1, 1, { angle_offset = .15 })
-B1.T:LabelAngle(1, "θ")
+T:MarkAngle(3, 1, { angle_offset = .15 })
 
 --
-B1.A:Revolve(B1.T)
+local A = arc.New()
+
+A:Revolve(T)
+A:SetAngles(0, 90)
+A:SetStyle("dashed")
 
 --
-local x, y = B1.T:GetVertexPos(1)
+local x1, y = A:GetCenter()
+local x2, _ = A:GetPos(1)
 
-helpers.Line(x, y, B1.P.x, B1.P.y, true)
-
---
-helpers.Text("(x, y)", B1.P.x + 5, B1.P.y - 22)
+helpers.HLine(x1, x2, y, true)

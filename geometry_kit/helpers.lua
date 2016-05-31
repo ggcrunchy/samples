@@ -40,7 +40,9 @@ local _Text_
 local _Tick_
 
 -- Modules --
+local arrows = require("arrows")
 local math2d_ex = require("math2d_ex")
+local side = require("side")
 local triangle = require("triangle")
 
 -- Kernels --
@@ -48,6 +50,50 @@ require("kernels")
 
 -- Exports --
 local M = {}
+
+--- DOCME
+function M.Arrow (px, py, qx, qy, opts)
+	local p, q, t, w, func = { x = px, y = py }, { x = qx, y = qy }
+
+	if opts then
+		t, w, func = opts.t, opts.w, not not opts.is_filled
+	end
+
+	func = func and arrows.GetPointsFilled or arrows.GetPoints
+
+	local ax, ay = side.Perp(p, q)
+	local pointer = display.newLine(func(p, q, ax, ay, t or .9))
+
+	pointer.strokeWidth = w or 3
+
+	return pointer
+end
+
+--- DOCME
+function M.ArrowOnArc (A, t, opts)
+	local w, h
+
+	if opts then
+		w, h = opts.w, opts.h
+	end
+
+	w, h = w or 10, h or 15
+
+	local x, y = A:GetPos(t)
+	local tx, ty = A:GetTangent(t)
+	local coords = {
+		tx * h, ty * h,
+		-ty * w, tx * w,
+		ty * w, -tx * w
+	}
+	local mx1, my1 = (coords[3] + coords[5]) / 2, (coords[4] + coords[6]) / 2
+	local mx2, my2 = (coords[1] + mx1) / 2, (coords[2] + my1) / 2
+	local tri = display.newPolygon(x + mx2, y + my2, coords)
+
+	tri:setFillColor(0)
+
+	return tri
+end
 
 --- DOCME
 function M.HLine (x1, x2, y, dashed)

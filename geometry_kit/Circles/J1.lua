@@ -1,4 +1,4 @@
---- Circles, figure C-1.
+--- Circles, figure J-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,30 +24,39 @@
 --
 
 -- Modules --
+local arc = require("arc")
 local helpers = require("helpers")
-local B1 = require("Circles.B1")
+
+-- Plugins --
+local math2d = require "plugin.math2d"
 
 --
-B1.U:Remove()
+local A = arc.New()
+local CX, CY = 150, 200
 
-for i = 1, #B1.marks do
-	B1.marks[i]:removeSelf()
-end
+A:SetCenter(CX, CY)
+A:SetRadius(40)
+A:SetAngles(25, 25)
 
-for i = 2, 3 do
-	B1.T:LabelSide(i, nil)
-end
+local x1, y1 = A:GetPos(0)
+local nx, ny = math2d.normalize(x1 - CX, y1 - CY)
 
-B1.T:MarkAngle(1, 1, { angle_offset = .15 })
-B1.T:LabelAngle(1, "θ")
-
---
-B1.A:Revolve(B1.T)
+A:SetAngles(0, 360)
 
 --
-local x, y = B1.T:GetVertexPos(1)
-
-helpers.Line(x, y, B1.P.x, B1.P.y, true)
+helpers.Line(x1 - nx * 10, y1 - ny * 10, x1 + nx * 10, y1 + ny * 10)
 
 --
-helpers.Text("(x, y)", B1.P.x + 5, B1.P.y - 22)
+local x2, y2 = x1 - 50, y1 + 150
+local dx, dy = x2 - CX, y2 - CX
+
+helpers.Arrow(CX + dx * .3, CY + dy * .3, x2, y2, { t = .8 }):setStrokeColor(.1, .5)
+
+--
+local x3, y3, len = x2 + dx * .1, y2 + dy * .1, 2 * math.pi * A:GetRadius()
+local a, b = .35 * len, .65 * len
+local vx, vy = math2d.normalize(30, -10)
+local x4, y4 = x3 - a * vx, y3 - a * vy
+local x5, y5 = x3 + b * vx, y3 + b * vy
+
+helpers.Line(x4, y4, x5, y5)

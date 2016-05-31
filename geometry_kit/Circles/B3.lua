@@ -1,4 +1,4 @@
---- Circles, figure C-1.
+--- Circles, figure B-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,30 +24,62 @@
 --
 
 -- Modules --
+local arc = require("arc")
 local helpers = require("helpers")
-local B1 = require("Circles.B1")
+local triangle = require("triangle")
 
 --
-B1.U:Remove()
+local angle = math.rad(30)
+local vx, vy = math.cos(angle), math.sin(angle)
+local CX, CY, R = 70, 200, 160
+local x2, y2 = CX + R * vx, CY - R * vy
 
-for i = 1, #B1.marks do
-	B1.marks[i]:removeSelf()
+--
+local T = triangle.New()
+
+T:SetVertexPos(1, CX, CY)
+T:SetVertexPos(2, x2, y2)
+T:SetVertexPos(3, x2, 2 * CY - y2)
+
+--
+local U = T:Clone()
+
+--
+for i = 1, 3 do
+	T:MarkAngle(i, 1, { angle_offset = .15 })
 end
 
-for i = 2, 3 do
-	B1.T:LabelSide(i, nil)
-end
-
-B1.T:MarkAngle(1, 1, { angle_offset = .15 })
-B1.T:LabelAngle(1, "θ")
+--
+T:LabelSide(1, "r")
+T:LabelSide(3, "r")
 
 --
-B1.A:Revolve(B1.T)
+U:SetVertexPos(3, x2, CY)
+
+U:MarkAngle(3, 1, { angle_offset = .1 })
+U:SetSideStyle(1, "hide")
+U:SetSideStyle(2, "hide")
+U:SetSideStyle(3, "dashed")
 
 --
-local x, y = B1.T:GetVertexPos(1)
+U:LabelSide(2, "½·r", { text_offset = 65 })
 
-helpers.Line(x, y, B1.P.x, B1.P.y, true)
+local vline = helpers.VLine(U:GetSideLabel(2).x - 25, CY, y2)
+local marks = {
+	vline,
+	helpers.HLine(vline.x - 10, vline.x + 10, CY),
+	helpers.HLine(vline.x - 10, vline.x + 10, y2)
+}
 
 --
-helpers.Text("(x, y)", B1.P.x + 5, B1.P.y - 22)
+local A = arc.New()
+
+A:Revolve(T)
+A:SetAngles(0, 90)
+A:SetStyle("dashed")
+
+--
+marks[#marks + 1] = helpers.HLine(x2, CX + R, CY, true)
+
+--
+return { A = A, T = T, U = U, marks = marks }

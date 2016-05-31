@@ -92,7 +92,7 @@ function M.GetAxes (vprev, vcur, vnext)
 	local frame = {}
 
 	frame.m_xx, frame.m_xy = wx, wy
-	frame.m_yx, frame.m_yy = rx, ry
+	frame.m_yx, frame.m_yy = math2d.normalize(rx, ry)
 
 	vx, vy = math2d.normalize(vx, vy)
 

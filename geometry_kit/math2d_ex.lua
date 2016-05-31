@@ -31,6 +31,9 @@ local type = type
 -- Plugins --
 local math2d = require "plugin.math2d"
 
+-- Cached module references --
+local _ProjectOnto_
+
 -- Exports --
 local M = {}
 
@@ -64,7 +67,7 @@ function M.ProjectOnto (vx, vy, wx, wy, how)
 	local px, py = math2d.scale(wx, wy, offset)
 
 	if how == "rejection" or how == "both" then
-		local rx, ry = math2d.normalize(math2d.sub(vx, vy, px, py))
+		local rx, ry = math2d.sub(vx, vy, px, py)
 
 		if how == "both" then
 			return px, py, rx, ry
@@ -75,6 +78,16 @@ function M.ProjectOnto (vx, vy, wx, wy, how)
 		return px, py
 	end
 end
+
+--- DOCME
+function M.Reflect (vx, vy, wx, wy)
+	local rx, ry = _ProjectOnto_(vx, vy, wx, wy, "rejection")
+
+	return vx - 2 * rx, vy - 2 * ry
+end
+
+-- Cache module members.
+_ProjectOnto_ = M.ProjectOnto
 
 -- Export the module.
 return M

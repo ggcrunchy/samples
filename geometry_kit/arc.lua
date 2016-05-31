@@ -98,25 +98,6 @@ function Arc:GetAngle_Radians (great_arc)
 end
 
 --- DOCME
-function Arc:GetLength (great_arc)
-	return self:GetAngle_Radians(great_arc) * self:GetRadius()
-end
-
---- DOCME
-function Arc:GetPos (t)
-	local from, to = self.m_from, self.m_to
-
-	if to < from then
-		to = to + 360
-	end
-
-	local angle, circ = rad(from + t * (to - from)), self.m_circ
-	local radius = circ.path.radius
-
-	return circ.x + floor(radius * cos(angle) + .5), circ.y + floor(radius * sin(angle) + .5)
-end
-
---- DOCME
 function Arc:GetCenter ()
 	local circ = self.m_circ
 
@@ -124,8 +105,41 @@ function Arc:GetCenter ()
 end
 
 --- DOCME
+function Arc:GetLength (great_arc)
+	return self:GetAngle_Radians(great_arc) * self:GetRadius()
+end
+
+--
+local function CosSinAtT (A, t)
+	local from, to = A.m_from, A.m_to
+
+	if to < from then
+		to = to + 360
+	end
+
+	local angle = rad(from + t * (to - from))
+
+	return cos(angle), sin(angle)
+end
+
+--- DOCME
+function Arc:GetPos (t)
+	local circ, cosa, sina = self.m_circ, CosSinAtT(self, t)
+	local radius = circ.path.radius
+
+	return circ.x + floor(radius * cosa + .5), circ.y + floor(radius * sina + .5)
+end
+
+--- DOCME
 function Arc:GetRadius ()
 	return self.m_circ.path.radius
+end
+
+--- DOCME
+function Arc:GetTangent (t)
+	local cosa, sina = CosSinAtT(self, t)
+
+	return sina, -cosa
 end
 
 --- Destroy the arc.

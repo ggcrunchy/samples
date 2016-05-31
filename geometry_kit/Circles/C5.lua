@@ -1,4 +1,4 @@
---- Circles, figure C-1.
+--- Circles, figure C-5.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,30 +24,10 @@
 --
 
 -- Modules --
-local helpers = require("helpers")
-local B1 = require("Circles.B1")
+local C2 = require("Circles.C2")
 
---
-B1.U:Remove()
+C2.T:LabelSide(1, "A secθ", { align = true })
+C2.T:LabelSide(2, "A tanθ", { text_offset = 50 })
+C2.T:LabelSide(3, "A")
 
-for i = 1, #B1.marks do
-	B1.marks[i]:removeSelf()
-end
-
-for i = 2, 3 do
-	B1.T:LabelSide(i, nil)
-end
-
-B1.T:MarkAngle(1, 1, { angle_offset = .15 })
-B1.T:LabelAngle(1, "θ")
-
---
-B1.A:Revolve(B1.T)
-
---
-local x, y = B1.T:GetVertexPos(1)
-
-helpers.Line(x, y, B1.P.x, B1.P.y, true)
-
---
-helpers.Text("(x, y)", B1.P.x + 5, B1.P.y - 22)
+C2.A:Remove()

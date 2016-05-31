@@ -1,4 +1,4 @@
---- Circles, figure C-1.
+--- Circles, figure C-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,40 +24,18 @@
 --
 
 -- Modules --
-local helpers = require("helpers")
 local triangle = require("triangle")
-local C1 = require("Circles.C1")
+local helpers = require("helpers")
+local C2 = require("Circles.C2")
 
 --
-local yshift = 50
-local x1, y1 = C1.T:GetVertexPos(1)
+C2.T:LabelAngle(1, nil)
+C2.T:LabelSide(1, nil)
+C2.T:LabelSide(2, nil)
+C2.T:LabelSide(3, nil)
 
-y1 = y1 + yshift
+local x1, y1 = C2.T:GetVertexPos(1)
+local x2, _ = C2.T:GetVertexPos(2)
 
-C1.A:SetCenter(x1, y1)
-C1.T:Translate(0, yshift)
-
-C1.T:LabelSide(1, nil)
-C1.T:LabelSide(2, nil)
-C1.T:LabelSide(3, nil)
-
-local U = C1.T:Clone()
-
-C1.T:MarkAngle(3, nil)
-
-U:LabelAngle(1, nil)
-U:MarkAngle(1, nil)
-U:Scale(1 / math.cos(C1.T:GetAngle(1)))
-
-local x2, y2 = U:GetVertexPos(1)
-
-U:Translate(x1 - x2, y1 - y2)
-
-for i = 1, 3 do
-	U:SetSideStyle(i, "dashed")
-end
-
-U:LabelSide(1, "secθ", { align = true })
-U:LabelSide(2, "tanθ", { align = true, text_offset = 20 })
-
-helpers.PutRotatedObjectBetween(U:GetSideLabel(1), U:GetVertexPos(1), U:GetVertexPos(2), { margin = -4 })
+helpers.TextBetween("cosθ", x1, x2, y1 + 20, { margin = 2 })
+helpers.TextBetween("1", x1, x1 + C2.A:GetRadius(), y1 + 50, { margin = 2 })
