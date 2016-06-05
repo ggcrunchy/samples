@@ -22,3 +22,44 @@
 --
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
+
+-- Modules --
+local arc = require("arc")
+local helpers = require("helpers")
+
+--
+local x, y, h = 180, 200, 30
+local DXL, DXR = 70, 40
+local y1, y2 = y - h, y + h
+
+--
+local AL = arc.New()
+
+AL:SetCenter(x - DXL, y)
+AL:SetRadius(math.sqrt(DXL^2 + h^2))
+
+local al = AL:GetAngleFromPos(x, y1)
+
+AL:SetAngles(al, 360 - al)
+AL:SetStyle("dashed")
+
+--
+local AR = arc.New()
+
+AR:SetCenter(x + DXR, y)
+AR:SetRadius(math.sqrt(DXR^2 + h^2))
+
+local ar = AR:GetAngleFromPos(x, y2)
+
+AR:SetAngles(ar, 360 - ar)
+AR:SetStyle("dashed")
+
+--
+helpers.Line(x - DXL, y, x, y1)
+helpers.Line(x, y1, x + DXR, y)
+helpers.Line(x, y2, x + DXR, y)
+helpers.Line(x - DXL, y, x, y2)
+
+--
+helpers.Point(x - DXL, y).path.radius = 4
+helpers.Point(x + DXR, y).path.radius = 4

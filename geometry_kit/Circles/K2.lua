@@ -24,27 +24,43 @@
 --
 
 -- Modules --
+local arc = require("arc")
 local helpers = require("helpers")
+local triangle = require("triangle")
 
 --
-local MidX = display.contentCenterX
-local BottomY, TopY = 250, 150
-local BottomW, TopW = 120, 240
-local BottomLeftX, TopLeftX = MidX - BottomW / 2, MidX - TopW / 2
-local BottomRightX, TopRightX = BottomLeftX + BottomW, TopLeftX + TopW
+local A, CX, CY = arc.New(), 160, 200
+
+A:SetCenter(CX, CY)
+A:SetRadius(110)
+A:SetAngles(0, 180)
+A:SetStyle("dashed")
 
 --
-helpers.HLine(BottomLeftX, BottomRightX, BottomY)
-helpers.HLine(TopLeftX, TopRightX, TopY)
-helpers.Line(BottomLeftX, BottomY, TopLeftX, TopY, true)
-helpers.Line(BottomRightX, BottomY, TopRightX, TopY, true)
+for i = 1, 3 do
+	local x1, y1 = A:GetPos((i - 1) / 3)
+	local x2, y2 = A:GetPos(i / 3)
+	local T = triangle.New()
+
+	T:SetVertexPos(1, x1, y1)
+	T:SetVertexPos(2, x2, y2)
+	T:SetVertexPos(3, CX, CY)
+
+	--
+	for j = 1, 3 do
+		T:MarkAngle(j, 1, { angle_offset = .2 })
+
+		if i == 1 or j < 3 then
+			T:MarkSide(j, 1)
+		end
+	end
+end
 
 --
-helpers.TextBetween("2πr2", TopLeftX, TopRightX, TopY - 20, { margin = 3 })
-helpers.TextBetween("2πr1", BottomLeftX, BottomRightX, BottomY + 20)
+for i = 1, 3 do
+	if i == 1 then
+		helpers.Mark(A:GetPos((i - 1) / 3))
+	end
 
---
-helpers.VLine(MidX, TopY + 10, BottomY - 10)
-helpers.HLine(MidX - 10, MidX + 10, TopY + 10)
-helpers.HLine(MidX - 10, MidX + 10, BottomY - 10)
-helpers.Text("r2 - r1", MidX + 32, (BottomY + TopY) / 2, { size = 18 })
+	helpers.Mark(A:GetPos(i / 3))
+end

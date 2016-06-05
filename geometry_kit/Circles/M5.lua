@@ -1,4 +1,4 @@
---- Circles, figure J-2.
+--- Circles, figure M-5.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -29,38 +29,55 @@ local helpers = require("helpers")
 local triangle = require("triangle")
 
 --
-local A, CX, CY = arc.New(), 160, 200
+local A1, CX, CY = arc.New(), 160, 200
 
-A:SetCenter(CX, CY)
-A:SetRadius(110)
-A:SetAngles(0, 180)
-A:SetStyle("dashed")
+A1:SetCenter(CX, CY)
+A1:SetRadius(135)
 
 --
-for i = 1, 3 do
-	local x1, y1 = A:GetPos((i - 1) / 3)
-	local x2, y2 = A:GetPos(i / 3)
-	local T = triangle.New()
+local x, y = A1:GetPos(.125)
+local dx, dy = x - CX, y - CY
 
-	T:SetVertexPos(1, x1, y1)
-	T:SetVertexPos(2, x2, y2)
-	T:SetVertexPos(3, CX, CY)
+--
+local A2, R2 = arc.New(), 35
+local N = R2 / math.sqrt(dx^2 + dy^2)
 
-	--
-	for j = 1, 3 do
-		T:MarkAngle(j, 1, { angle_offset = .2 })
+A2:SetCenter(x - dx * N, y - dy * N)
+A2:SetRadius(R2)
 
-		if i == 1 or j < 3 then
-			T:MarkSide(j, 1)
-		end
-	end
+--
+local T, CX2, CY2 = triangle.New(), A2:GetCenter()
+
+T:SetVertexPos(1, CX, CY)
+T:SetVertexPos(2, A1:GetPos(.8))
+T:SetVertexPos(3, CX2, CY2)
+
+T:LabelSide(1, "r1", { align = true, text_offset = 20 })
+T:LabelSide(3, "r1 - r2")
+T:SetSideStyle(1, "dashed")
+T:SetSideStyle(2, "hide")
+T:SetSideStyle(3, "dashed")
+
+--
+local label = T:GetSideLabel(3)
+
+label:translate(-50, 20)
+
+local rect = display.newRoundedRect(label.x, label.y, label.width + 7, label.height + 5, 15)
+
+rect:setFillColor(0, 0)
+
+rect.strokeWidth = 3
+
+local dcx, dcy = CX2 - CX, CY2 - CY
+local lx, ly = CX + .5 * dcx - 5, CY + .5 * dcy + 5
+local line = helpers.Line(label.x + label.width * .475 - .5, rect.y - .575 * rect.height / 2, lx, ly)
+local mark = helpers.Line(lx - dcx * .4, ly - dcy * .4, lx + dcx * .4, ly + dcy * .4)
+
+for _, object in ipairs{ rect, line, mark } do
+	object:setStrokeColor(.3)
 end
 
 --
-for i = 1, 3 do
-	if i == 1 then
-		helpers.Mark(A:GetPos((i - 1) / 3))
-	end
-
-	helpers.Mark(A:GetPos(i / 3))
-end
+helpers.Point(CX, CY).path.radius = 4
+helpers.Point(A2:GetCenter()).path.radius = 4

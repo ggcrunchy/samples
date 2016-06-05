@@ -22,3 +22,47 @@
 --
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
+
+-- Modules --
+local helpers = require("helpers")
+local triangle = require("triangle")
+
+--
+local MidX = display.contentCenterX
+local BottomY, TopY = 250, 150
+local BottomW, TopW = 250, 140
+local BottomLeftX, TopLeftX = MidX - BottomW / 2, MidX - TopW / 2
+local BottomRightX, TopRightX = BottomLeftX + BottomW, TopLeftX + TopW - 20
+
+
+helpers.HLine(BottomLeftX, BottomRightX, BottomY)
+helpers.HLine(TopLeftX, TopRightX, TopY)
+
+--
+helpers.TextBetween("w1", TopLeftX, TopRightX, TopY - 20, { margin = 3 })
+helpers.TextBetween("w2", BottomLeftX, BottomRightX, BottomY + 50)
+
+--
+local T1 = triangle.New()
+
+T1:SetVertexPos(1, BottomLeftX, BottomY)
+T1:SetVertexPos(2, TopLeftX, TopY)
+T1:SetVertexPos(3, TopLeftX, BottomY)
+
+T1:SetSideStyle(2, "dashed")
+T1:SetSideStyle(3, "hide")
+T1:MarkAngle(3, 1, { angle_offset = .2 })
+
+local T2 = triangle.New()
+
+T2:SetVertexPos(1, TopRightX - 1, TopY - 1)
+T2:SetVertexPos(2, BottomRightX, BottomY)
+T2:SetVertexPos(3, TopRightX - 1, BottomY)
+
+T2:SetSideStyle(2, "hide")
+T2:SetSideStyle(3, "dashed")
+T2:MarkAngle(3, 1, { angle_offset = .125 })
+
+--
+helpers.TextBetween("b1", BottomLeftX, TopLeftX - .5, BottomY + 20)
+helpers.TextBetween("b2", TopRightX - .5, BottomRightX, BottomY + 20)

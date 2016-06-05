@@ -24,6 +24,7 @@
 --
 
 -- Standard library imports --
+local atan2 = math.atan2
 local cos = math.cos
 local deg = math.deg
 local floor = math.floor
@@ -123,6 +124,19 @@ local function CosSinAtT (A, t)
 end
 
 --- DOCME
+function Arc:GetAngleFromPos (x, y)
+	local cx, cy = self:GetCenter()
+
+	x, y = x - cx, y - cy
+
+	if x^2 + y^2 < 1e-12 then
+		return 0
+	else
+		return deg(atan2(-y, x)) % 360
+	end
+end
+
+--- DOCME
 function Arc:GetPos (t)
 	local circ, cosa, sina = self.m_circ, CosSinAtT(self, t)
 	local radius = circ.path.radius
@@ -198,6 +212,13 @@ function Arc:SetStyle (style)
 
 		self.m_circ.stroke.effect.spacing = style == "normal" and 4 * pi or pi / 50
 	end
+end
+
+--- DOCME
+function Arc:Translate (dx, dy)
+	local cx, cy = self:GetCenter()
+
+	self:SetCenter(cx + dx, cy + dy)
 end
 
 --- DOCME

@@ -23,13 +23,12 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
--- --
 local CW, CH = display.contentWidth, display.contentHeight
 
 display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
 
 local Prefix = "Circles"
-local Name = "J3"
+local Name = "N4"
 
 require(Prefix .. "." .. Name)
 

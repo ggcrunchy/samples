@@ -1,4 +1,4 @@
---- Circles, figure J-2.
+--- Circles, figure M-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,62 +24,63 @@
 --
 
 -- Modules --
-local arc = require("arc")
 local helpers = require("helpers")
 local triangle = require("triangle")
 
 --
-local A, CX, CY = arc.New(), 160, 250
-
-A:SetCenter(CX, CY)
-A:SetRadius(190)
-A:SetAngles(60, 120)
-A:SetStyle("dashed")
+local x, y, h = 190, 200, 90
+local DXL, DXR = 150, 80
 
 --
-local T, x1, y1 = triangle.New(), A:GetPos(0)
+local UL = triangle.New()
 
-T:SetVertexPos(1, CX, CY)
-T:SetVertexPos(2, x1, y1)
-T:SetVertexPos(3, A:GetPos(1))
+UL:SetVertexPos(1, x - DXL, y)
+UL:SetVertexPos(2, x + .5, y - h)
+UL:SetVertexPos(3, x + .5, y)
 
-for i = 1, 3 do
-	T:MarkAngle(i, i == 1 and 2, { angle_offset = .2 })
-end
-
-T:SetSideStyle(2, "dashed")
-
---
-local U = triangle.New()
-
-U:SetVertexPos(1, T:GetVertexPos(2))
-U:SetVertexPos(2, CX, y1)
-U:SetVertexPos(3, CX, CY)
-
-for i = 1, 3 do
-	U:SetSideStyle(i, "hide")
-end
-
-U:MarkAngle(2, 1)
+UL:MarkAngle(1, 1, { angle_offset = .175 })
+UL:MarkAngle(3, 1)
+UL:MarkSide(1, 1)
+UL:SetSideStyle(2, "dashed")
+UL:SetSideStyle(3, "dashed")
 
 --
-local N1, N2 = triangle.New(), triangle.New()
+local UR = triangle.New()
 
-N1:SetVertexPos(1, x1, y1)
-N1:SetVertexPos(2, A:GetPos(.5))
-N1:SetVertexPos(3, CX, CY)
+UR:SetVertexPos(1, UL:GetVertexPos(3))
+UR:SetVertexPos(2, UL:GetVertexPos(2))
+UR:SetVertexPos(3, x + DXR, y)
 
-N2:SetVertexPos(1, A:GetPos(.5))
-N2:SetVertexPos(2, A:GetPos(1))
-N2:SetVertexPos(3, CX, CY)
+UR:MarkAngle(3, 2, { angle_offset = .2, angle_spacing = .1 })
+UR:MarkSide(2, 2)
+UR:SetSideStyle(1, "hide")
+UR:SetSideStyle(3, "dashed")
 
-N2:SetSideStyle(3, "hide")
+--
+local LL = triangle.New()
 
-for i = 1, 2 do
-	local props = { angle_offset = .03 + (3 - i) * .09 }
+LL:SetVertexPos(1, UL:GetVertexPos(1))
+LL:SetVertexPos(2, UL:GetVertexPos(3))
+LL:SetVertexPos(3, x + .5, y + h)
 
-	N1:MarkAngle(i, 1, props)
-	N2:MarkAngle(i, 1, props)
-	N1:MarkSide(i + 1, i > 1 and 1)
-	N2:MarkSide(i + 1, 1)
-end
+LL:MarkAngle(1, 1, { angle_offset = .2 })
+LL:MarkSide(3, 1)
+LL:SetSideStyle(1, "hide")
+LL:SetSideStyle(2, "dashed")
+
+--
+local LR = triangle.New()
+
+LR:SetVertexPos(1, LL:GetVertexPos(2))
+LR:SetVertexPos(2, UR:GetVertexPos(3))
+LR:SetVertexPos(3, LL:GetVertexPos(3))
+
+LR:MarkAngle(2, 2, { angle_offset = .15 })
+LR:MarkSide(2, 2)
+LR:SetSideStyle(1, "hide")
+LR:SetSideStyle(3, "hide")
+
+--
+helpers.Mark(UL:GetVertexPos(2))
+helpers.Mark(LL:GetVertexPos(3))
+helpers.Mark(x, y)
