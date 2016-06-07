@@ -26,6 +26,10 @@
 -- Standard library imports --
 local sqrt = math.sqrt
 
+-- Cached module references --
+local _Circumcircle_
+local _Orthocenter_
+
 -- Exports --
 local M = {}
 
@@ -171,6 +175,37 @@ function M.Incircle ( px, py, qx, qy, rx, ry, want_contact_triangle )
 end
 
 --- DOCME
+function M.NinePointCircle_Midpoints ( px, py, qx, qy, rx, ry )
+  -- Find the circumcircle from three of the points, namely the midpoints.
+  local x1, y1 = (px + qx) / 2, (py + qy) / 2
+  local x2, y2 = (qx + rx) / 2, (qy + ry) / 2
+  local x3, y3 = (rx + px) / 2, (ry + py) / 2
+
+  return _Circumcircle_( x1, y1, x2, y2, x3, y3 )
+end
+
+--- DOCME
+function M.NinePointCircle_OrthocenterMidpoints ( px, py, qx, qy, rx, ry )
+  -- Find the circumcircle from three of the points, namely the orthocenter-to-
+  -- triangle corner midpoints.
+  local ox, oy = _Orthocenter_( px, py, qx, qy, rx, ry ) 
+  local x1, y1 = (px + ox) / 2, (py + oy) / 2
+  local x2, y2 = (qx + ox) / 2, (qy + oy) / 2
+  local x3, y3 = (rx + ox) / 2, (ry + oy) / 2
+
+  return _Circumcircle_( x1, y1, x2, y2, x3, y3 )
+end
+
+--- DOCME
+function M.NinePointCircle_OrthicTriangle ( px, py, qx, qy, rx, ry )
+  -- Find the circumcircle from three of the points, namely the orthic triangle.
+  local _, _, orthic = _Orthocenter_( px, py, qx, qy, rx, ry, true )
+  local a, b, c = orthic.a, orthic.b, orthic.c
+
+  return _Circumcircle_( a.x, a.y, b.x, b.y, c.x, c.y )
+end
+
+--- DOCME
 function M.Orthocenter ( px, py, qx, qy, rx, ry, want_orthic_triangle )
   -- Deltas for sides A, B, C.
   local ax, ay = qx - px, qy - py
@@ -206,6 +241,10 @@ function M.Orthocenter ( px, py, qx, qy, rx, ry, want_orthic_triangle )
 
   return ox, oy
 end
+
+-- Cache module members.
+_Circumcircle_ = M.Circumcircle
+_Orthocenter_ = M.Orthocenter
 
 -- Export the module.
 return M

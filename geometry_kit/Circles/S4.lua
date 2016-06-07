@@ -56,13 +56,17 @@ Line(rx, ry, rx + 2 * (rx - qx), ry + 2 * (ry - qy))
 
 local circles, contacts, extouch = centers.Excircles(px, py, qx, qy, rx, ry, true, true)
 
-for i, circ in ipairs(circles) do
-	local cc = display.newCircle(circ.x, circ.y, circ.r)
+local function DrawCircle (x, y, r)
+	local cc = display.newCircle(x, y, r)
 
 	cc:setFillColor(0, 0)
 	cc:setStrokeColor(.4)
 
 	cc.strokeWidth = 2
+end
+
+for i, circ in ipairs(circles) do
+	DrawCircle(circ.x, circ.y, circ.r)
 
 	for k, v in pairs(contacts[i]) do
 		Circle(v.x, v.y, 0, 1, 1)
@@ -76,3 +80,12 @@ end
 Circle(px, py, 1, 0, 0)
 Circle(qx, qy, 0, 1, 0)
 Circle(rx, ry, 0, 0, 1)
+
+DrawCircle(centers.Incircle(px, py, qx, qy, rx, ry))
+DrawCircle(centers.NinePointCircle_Midpoints(px, py, qx, qy, rx, ry))
+
+require("helpers").Mark(centers.Orthocenter(px, py, qx, qy, rx, ry))
+
+print("Nine-point (midpoints): ", centers.NinePointCircle_Midpoints(px, py, qx, qy, rx, ry))
+print("Nine-point (orthocenter-corners): ", centers.NinePointCircle_OrthocenterMidpoints(px, py, qx, qy, rx, ry))
+print("Nine-point (orthic triangle): ", centers.NinePointCircle_OrthicTriangle(px, py, qx, qy, rx, ry))
