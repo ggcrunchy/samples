@@ -1,4 +1,4 @@
---- Circles, figure Q-1.
+--- Circles, figure G-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,43 +24,55 @@
 --
 
 -- Modules --
-local arc = require("arc")
 local helpers = require("helpers")
+local triangle = require("triangle")
+local E1 = require("Circles.E1")
 
 --
-local m1 = helpers.Mark(100, 150)
-local m2 = helpers.Mark(270, 310)
+local x1, y1 = E1.upper:GetVertexPos(1)
+local x2, y2 = E1.upper:GetVertexPos(2)
+local x3, _ = E1.T:GetVertexPos(3)
 
 --
-local cx, cy = (m1.x + m2.x) / 2, (m1.y + m2.y) / 2
-local dx, dy = cx - m1.x, cy - m1.y
-local len = math.sqrt(dx^2 + dy^2)
-local nx, ny = dy / len, -dx / len
+E1.A:Remove()
+E1.upper:Remove()
+E1.lower:Remove()
+E1.T:Remove()
 
---
-local function Angle (mark, x, y)
-	return math.deg(math.atan2(y - mark.y, mark.x - x))
-end
-
-for i, R in ipairs{ 400, 220, 170 } do
-	local ndist = math.sqrt(R^2 - len^2)
-	local x, y = cx - nx * ndist, cy - ny * ndist
-	local a1 = Angle(m2, x, y)
-	local a2 = Angle(m1, x, y)
-
-	--
-	local C = arc.New()
-
-	C:SetCenter(x, y)
-	C:SetRadius(R)
-
-	local L = C:Clone()
-
-	C:SetAngles(a2, a1)
-	L:SetAngles(a1, a2)
-	C:SetStyle("dashed")
+for i = 1, 2 do
+	E1.marks[i]:removeSelf()
 end
 
 --
-m1:toFront()
-m2:toFront()
+local T = triangle.New()
+
+T:SetVertexPos(1, x1, y1)
+T:SetVertexPos(2, x2, y2)
+T:SetVertexPos(3, x2, y1)
+
+T:SetSideStyle(2, "dashed")
+T:LabelSide(1, "A", { align = true })
+T:LabelAngle(1, "θ", { radius = 25 })
+
+--
+local U = triangle.New()
+
+U:SetVertexPos(1, T:GetVertexPos(3))
+U:SetVertexPos(2, T:GetVertexPos(2))
+U:SetVertexPos(3, x3, y1)
+
+U:MarkAngle(1, 1, { angle_offset = .07 })
+U:SetSideStyle(1, "hide")
+U:LabelSide(1, "Asinθ", { align = true, t = .3, text_offset = 17 })
+U:LabelSide(2, "B", { align = true, text_offset = 20 })
+U:LabelSide(3, "C - Acosθ")
+
+--
+local label = U:GetSideLabel(3)
+
+helpers.PutRotatedObjectBetween(label, x2 - .5, x3)
+
+--
+local text = helpers.Text("C", (x1 + x3) / 2, label.y + 30, 25)
+
+helpers.PutRotatedObjectBetween(text, x1, x3)

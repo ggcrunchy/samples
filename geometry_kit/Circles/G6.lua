@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure G-6.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,27 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local helpers = require("helpers")
+local triangle = require("triangle")
+local G5 = require("Circles.G5")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+G5.T1:Remove()
+G5.T2:Remove()
+G5.T3:Remove()
 
-local Prefix = "Circles"
-local Name = "R3"
+--
+local T = triangle.New()
 
-require(Prefix .. "." .. Name)
+for i, name in ipairs{ "a", "b", "c" } do
+	local point = G5.orthic[name]
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+	T:SetVertexPos(i, point.x, point.y)
+end
+
+for i = 1, 3 do
+	T:SetSideStyle(i, "dashed")
+
+	helpers.Mark(T:GetVertexPos(i))
 end

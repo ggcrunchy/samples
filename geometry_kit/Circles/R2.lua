@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure R-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,55 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local arc = require("arc")
+local helpers = require("helpers")
+local triangle = require("triangle")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local A, CX, CY, R = arc.New(), 150, 200, 120
 
-local Prefix = "Circles"
-local Name = "R3"
+A:SetCenter(CX, CY)
+A:SetRadius(R)
 
-require(Prefix .. "." .. Name)
+local x3, y3 = A:GetPos(.3)
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+helpers.Line(x3, y3, CX, CY)
+helpers.Point(x3, y3).path.radius = 6
+
+A:SetAngles(350, 70)
+
+local x1, y1 = A:GetPos(0)
+local x2, y2 = A:GetPos(1)
+local mx, my = (x1 + x2) / 2, (y1 + y2) / 2
+
+--
+local T1 = triangle.New()
+
+T1:SetVertexPos(1, CX, CY)
+T1:SetVertexPos(2, x1, y1)
+T1:SetVertexPos(3, mx, my)
+
+T1:LabelAngle(1, "α")
+T1:MarkAngle(3, 1)
+
+local T2 = triangle.New()
+
+T2:SetVertexPos(1, CX, CY)
+T2:SetVertexPos(2, mx, my)
+T2:SetVertexPos(3, x2, y2)
+
+for i = 1, 3 do
+	T1:SetSideStyle(i, "dashed")
+	T2:SetSideStyle(i, i == 1 and "hide" or "dashed")
 end
+
+T2:LabelAngle(1, "α")
+
+--
+A:SetAngles(0, 360)
+A:SetStyle("dashed")
+
+helpers.Point(x1, y1).path.radius = 6
+helpers.Point(x2, y2).path.radius = 6
+helpers.Mark(CX, CY)
