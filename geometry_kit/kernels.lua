@@ -85,25 +85,6 @@ do
 	kernel.fragment = [[
 		P_UV float PI = 4. * atan(1.);
 		P_UV float TWO_PI = 2. * PI;
-		P_UV float PI_OVER_TWO = PI / 2.;
-
-		P_UV float ONE_OVER_PI = 1. / PI;
-		P_UV float ONE_OVER_TWO_PI = .5 / PI;
-
-		P_POSITION vec2 GetUV_PhiDelta (P_POSITION vec2 diff, P_UV float dphi)
-		{
-			P_POSITION float dist_sq = dot(diff, diff);
-
-			if (dist_sq > 1.) return vec2(-1.);
-
-			P_POSITION float z = sqrt(1. - dist_sq);
-			P_POSITION float phi = atan(z, diff.x);
-			P_POSITION float angle = .5 + phi / TWO_PI;
-
-			angle = mod(angle + dphi, 1.);
-
-			return vec2(angle, .5 + asin(diff.y) / PI);
-		}
 
 		varying P_UV float a1, a2;
 		varying P_POSITION vec2 offset;

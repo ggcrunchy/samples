@@ -60,11 +60,13 @@ U:SetVertexPos(3, x3, y1)
 
 U:LabelAngle(2, "θ", { radius = 45 })
 U:MarkAngle(1, 1, { angle_offset = .07 })
-U:MarkAngle(2, 1, { angle_offset = .125 })
 U:SetSideStyle(1, "hide")
 U:LabelSide(1, "sin2θ", { align = true, t = .3, text_offset = 17 })
 U:LabelSide(2, "2sinθ", { align = true, text_offset = 20 })
 U:LabelSide(3, "1 - cos2θ")
 
 --
-helpers.PutRotatedObjectBetween(U:GetSideLabel(3), x2 - .5, x3)
+local marks = { helpers.PutRotatedObjectBetween(U:GetSideLabel(3), x2 - .5, x3) }
+
+--
+return { T = T, U = U, marks = marks }
