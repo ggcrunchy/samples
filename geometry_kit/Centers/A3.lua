@@ -1,4 +1,4 @@
---- Circles, figure R-3.
+--- Centers, figure A-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,67 +24,74 @@
 --
 
 -- Modules --
-local arc = require("arc")
+local centers = require("centers")
 local helpers = require("helpers")
 local triangle = require("triangle")
+local E1 = require("Circles.E1")
 
 --
-local A, CX, CY, R = arc.New(), 150, 200, 120
+local x1, y1 = E1.upper:GetVertexPos(1)
+local x2, y2 = E1.upper:GetVertexPos(2)
+local x3, _ = E1.T:GetVertexPos(3)
 
-A:SetCenter(CX, CY)
-A:SetRadius(R)
+--
+E1.A:Remove()
+E1.upper:Remove()
+E1.lower:Remove()
+E1.T:Remove()
 
-local x3, y3 = A:GetPos(.35)
+for i = 1, 2 do
+	E1.marks[i]:removeSelf()
+end
 
-helpers.Point(x3, y3).path.radius = 6
+--
+local T = triangle.New()
 
-A:SetAngles(340, 110)
+T:SetVertexPos(1, x1, y1)
+T:SetVertexPos(2, x2, y2)
+T:SetVertexPos(3, x3, y1)
 
-local x1, y1 = A:GetPos(0)
-local x2, y2 = A:GetPos(1)
+--
+local ox, oy, orthic = centers.Orthocenter(x1, y1, x2, y2, x3, y1, true)
 
 --
 local T1 = triangle.New()
 
-T1:SetVertexPos(1, CX, CY)
-T1:SetVertexPos(2, x1, y1)
-T1:SetVertexPos(3, x2, y2)
+T1:SetVertexPos(1, x1, y1)
+T1:SetVertexPos(2, orthic.a.x, orthic.a.y)
+T1:SetVertexPos(3, x3, y1)
 
-T1:LabelAngle(1, "2α", { radius = 25 })
-T1:LabelSide(2, "A", { align = true, text_offset = 17 })
+T1:SetSideStyle(1, "hide")
+T1:SetSideStyle(2, "dashed")
+T1:SetSideStyle(3, "hide")
+T1:MarkAngle(2, 1, { angle_offset = .08 })
 
 --
 local T2 = triangle.New()
 
-T2:SetVertexPos(1, CX, CY)
-T2:SetVertexPos(2, x3, y3)
-T2:SetVertexPos(3, x1, y1)
+T2:SetVertexPos(1, x1, y1)
+T2:SetVertexPos(2, x2, y2)
+T2:SetVertexPos(3, orthic.b.x, orthic.b.y)
 
-T2:LabelAngle(1, "2β", { radius = 25 })
-T2:LabelSide(2, "B", { align = true, text_offset = 17 })
+T2:SetSideStyle(1, "hide")
+T2:SetSideStyle(2, "dashed")
+T2:SetSideStyle(3, "hide")
+T2:MarkAngle(3, 1, { angle_offset = .2 })
 
 --
 local T3 = triangle.New()
 
-T3:SetVertexPos(1, CX, CY)
-T3:SetVertexPos(2, x2, y2)
-T3:SetVertexPos(3, x3, y3)
+T3:SetVertexPos(1, x1, y1)
+T3:SetVertexPos(2, orthic.c.x, orthic.c.y)
+T3:SetVertexPos(3, x3, y1)
 
-T3:LabelAngle(1, "2γ", { radius = 25 })
-T3:LabelSide(2, "C", { align = true, text_offset = 17 })
-
---
-for i = 1, 3 do
-	T1:SetSideStyle(i, i == 2 and "normal" or "dashed")
-	T2:SetSideStyle(i, i == 2 and "normal" or "dashed")
-	T3:SetSideStyle(i, i == 2 and "normal" or "hide")
-end
+T3:SetSideStyle(1, "dashed")
+T3:SetSideStyle(2, "hide")
+T3:SetSideStyle(3, "hide")
+T3:MarkAngle(2, 1, { angle_offset = .125 })
 
 --
-A:SetAngles(0, 360)
-A:SetStyle("dashed")
+helpers.Mark(ox, oy)
 
-helpers.Point(x1, y1).path.radius = 6
-helpers.Point(x2, y2).path.radius = 6
-helpers.Point(x3, y3).path.radius = 6
-helpers.Mark(CX, CY)
+--
+return { T = T, T1 = T1, T2 = T2, T3 = T3, orthic = orthic }

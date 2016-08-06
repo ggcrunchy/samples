@@ -167,7 +167,7 @@ function M.Incircle ( px, py, qx, qy, rx, ry, want_contact_triangle )
     local x3, y3 = c1 * rx + c2 * px, c1 * ry + c2 * py
 
     return cx, cy, r, {
-      a = { x = x1, y = x2 }, b = { x = x2, y = y2 }, c = { x = x3, y = y3 }
+      a = { x = x1, y = y1 }, b = { x = x2, y = y2 }, c = { x = x3, y = y3 }
     }
   end
 

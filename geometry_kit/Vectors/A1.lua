@@ -1,4 +1,4 @@
---- Entry point.
+--- Vectors, figure A-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,13 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local helpers = require("helpers")
+local N1 = require("Triangles.N1")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+local x1, y1 = N1.P.x, N1.P.y
+local x2, y2 = N1.Q.x, N1.Q.y
+local dx, dy = x2 - x1, y2 - y1
 
-local Prefix = "Centers"
-local Name = "C4"
-
-require(Prefix .. "." .. Name)
-
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+helpers.Arrow(x1 + dx * .1, y1 + dy * .1, x1 + dx * .925, y1 + dy * .925, { w = 4, is_filled = true }):setStrokeColor(0)
+helpers.Text("v", (x1 + x2) / 2 - 10, (y1 + y2) / 2 - 20, 27).rotation = math.deg(math.atan2(dy, dx))

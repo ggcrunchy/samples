@@ -1,4 +1,4 @@
---- Circles, figure R-1.
+--- Centers, figure B-4.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,43 +24,25 @@
 --
 
 -- Modules --
-local arc = require("arc")
 local helpers = require("helpers")
+local triangle = require("triangle")
+local E2 = require("Circles.E2")
 
 --
-local m1 = helpers.Mark(100, 150)
-local m2 = helpers.Mark(270, 310)
-
---
-local cx, cy = (m1.x + m2.x) / 2, (m1.y + m2.y) / 2
-local dx, dy = cx - m1.x, cy - m1.y
-local len = math.sqrt(dx^2 + dy^2)
-local nx, ny = dy / len, -dx / len
-
---
-local function Angle (mark, x, y)
-	return math.deg(math.atan2(y - mark.y, mark.x - x))
-end
-
-for i, R in ipairs{ 400, 220, 170 } do
-	local ndist = math.sqrt(R^2 - len^2)
-	local x, y = cx - nx * ndist, cy - ny * ndist
-	local a1 = Angle(m2, x, y)
-	local a2 = Angle(m1, x, y)
-
-	--
-	local C = arc.New()
-
-	C:SetCenter(x, y)
-	C:SetRadius(R)
-
-	local L = C:Clone()
-
-	C:SetAngles(a2, a1)
-	L:SetAngles(a1, a2)
-	C:SetStyle("dashed")
+for i = 1, #E2.marks do
+	E2.marks[i]:removeSelf()
 end
 
 --
-m1:toFront()
-m2:toFront()
+E2.T:LabelAngle(1, "2α")
+E2.T:LabelSide(1, "r")
+
+E2.U:LabelAngle(2, "α")
+E2.U:LabelSide(1, nil)
+E2.U:LabelSide(2, "A")
+E2.U:LabelSide(3, "Asinα")
+
+--
+local x2, x3 = E2.U:GetVertexPos(1), E2.U:GetVertexPos(3)
+
+helpers.PutRotatedObjectBetween(E2.U:GetSideLabel(3), x2 - .5, x3)

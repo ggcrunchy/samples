@@ -1,4 +1,4 @@
---- Circles, figure G-6.
+--- Centers, figure B-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,26 +24,54 @@
 --
 
 -- Modules --
+local arc = require("arc")
 local helpers = require("helpers")
 local triangle = require("triangle")
-local G5 = require("Circles.G5")
 
 --
-G5.T1:Remove()
-G5.T2:Remove()
-G5.T3:Remove()
+local A, CX, CY, R = arc.New(), 150, 200, 120
+
+A:SetCenter(CX, CY)
+A:SetRadius(R)
+
+local x3, y3 = A:GetPos(.3)
+
+helpers.Line(x3, y3, CX, CY)
+helpers.Point(x3, y3).path.radius = 6
+
+A:SetAngles(350, 70)
+
+local x1, y1 = A:GetPos(0)
+local x2, y2 = A:GetPos(1)
+local mx, my = (x1 + x2) / 2, (y1 + y2) / 2
 
 --
-local T = triangle.New()
+local T1 = triangle.New()
 
-for i, name in ipairs{ "a", "b", "c" } do
-	local point = G5.orthic[name]
+T1:SetVertexPos(1, CX, CY)
+T1:SetVertexPos(2, x1, y1)
+T1:SetVertexPos(3, mx, my)
 
-	T:SetVertexPos(i, point.x, point.y)
-end
+T1:LabelAngle(1, "α")
+T1:MarkAngle(3, 1)
+
+local T2 = triangle.New()
+
+T2:SetVertexPos(1, CX, CY)
+T2:SetVertexPos(2, mx, my)
+T2:SetVertexPos(3, x2, y2)
 
 for i = 1, 3 do
-	T:SetSideStyle(i, "dashed")
-
-	helpers.Mark(T:GetVertexPos(i))
+	T1:SetSideStyle(i, "dashed")
+	T2:SetSideStyle(i, i == 1 and "hide" or "dashed")
 end
+
+T2:LabelAngle(1, "α")
+
+--
+A:SetAngles(0, 360)
+A:SetStyle("dashed")
+
+helpers.Point(x1, y1).path.radius = 6
+helpers.Point(x2, y2).path.radius = 6
+helpers.Mark(CX, CY)

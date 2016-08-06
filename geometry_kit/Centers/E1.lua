@@ -1,4 +1,4 @@
---- Circles, figure U-1.
+--- Centers, figure E-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining

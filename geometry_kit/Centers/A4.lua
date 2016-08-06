@@ -1,4 +1,4 @@
---- Circles, figure E-2.
+--- Centers, figure A-4.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -26,23 +26,24 @@
 -- Modules --
 local helpers = require("helpers")
 local triangle = require("triangle")
-local E2 = require("Circles.E2")
+local G5 = require("Circles.G5")
 
 --
-for i = 1, #E2.marks do
-	E2.marks[i]:removeSelf()
+G5.T1:Remove()
+G5.T2:Remove()
+G5.T3:Remove()
+
+--
+local T = triangle.New()
+
+for i, name in ipairs{ "a", "b", "c" } do
+	local point = G5.orthic[name]
+
+	T:SetVertexPos(i, point.x, point.y)
 end
 
---
-E2.T:LabelAngle(1, "2α")
-E2.T:LabelSide(1, "r")
+for i = 1, 3 do
+	T:SetSideStyle(i, "dashed")
 
-E2.U:LabelAngle(2, "α")
-E2.U:LabelSide(1, nil)
-E2.U:LabelSide(2, "A")
-E2.U:LabelSide(3, "Asinα")
-
---
-local x2, x3 = E2.U:GetVertexPos(1), E2.U:GetVertexPos(3)
-
-helpers.PutRotatedObjectBetween(E2.U:GetSideLabel(3), x2 - .5, x3)
+	helpers.Mark(T:GetVertexPos(i))
+end

@@ -1,4 +1,4 @@
---- Circles, figure G-3.
+--- Centers, figure A-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
