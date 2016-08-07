@@ -348,7 +348,7 @@ NewProp("align", false)
 
 --
 local function UpdateSideLabel (S, index, label, opts)
-	local cur, text = GetOrRemoveLabel(S, index, "m_side_label", label)
+	local cur, text = GetOrRemoveLabel(S, index, "m_side_label", label, opts)
 
 	if text then
 		local next = S:GetNext(index)
@@ -357,8 +357,12 @@ local function UpdateSideLabel (S, index, label, opts)
 
 		text.x, text.y = x + dx * offset, y + dy * offset
 
-		if GetSetOpt(cur, "align", opts) then
-			text.rotation = deg(atan2(dy, dx)) + 90
+		local align = GetSetOpt(cur, "align", opts)
+
+		if align then
+			local add = align == true and 0 or align
+
+			text.rotation = deg(atan2(dy, dx)) + 90 + add
 		end
 	end
 end
