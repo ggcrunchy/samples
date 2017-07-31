@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangles, figure J-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,13 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local triangle = require("triangle")
+local figure22 = require("Triangles.J1")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
-
-local Prefix = "AddingAngles"
-local Name = "A1"
-
-require(Prefix .. "." .. Name)
-
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+for _, tri in pairs(figure22) do
+	tri:SetSideStyle(2, "normal")
+	tri:LabelSide(2, "z", { align = true, text_offset = 15 })
+	tri:MarkAngle(2, 1, { angle_offset = .2 })
+	tri:MarkAngle(3, 2, { angle_offset = .2, angle_spacing = .1 })
 end

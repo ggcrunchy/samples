@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure A-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,21 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local arc = require("arc")
+local helpers = require("helpers")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local A = arc.New()
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+A:SetCenter(150, 200)
+A:SetRadius(110)
+A:SetStyle("dashed")
 
-require(Prefix .. "." .. Name)
+--
+local x1, y1 = A:GetPos(.025)
+local x2, y2 = A:GetPos(.25)
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+helpers.Line(x1, y1, x2, y2)
+helpers.Mark(x1, y1)
+helpers.Mark(x2, y2)

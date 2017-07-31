@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangles, figure I-5.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,36 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
+-- Modules --
+local triangle = require("triangle")
+
 local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .65 * CH
+local MidY = .4 * CH
+local TopY = .25 * CH
+local LeftX = .05 * CW
+local RightX = .95 * CW
+local MidX = LeftX + (MidY - BottomY) * (RightX - LeftX) / (TopY - BottomY)
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local T = triangle.New()
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+T:SetVertexPos(1, LeftX, BottomY)
+T:SetVertexPos(2, MidX, MidY)
+T:SetVertexPos(3, MidX, BottomY)
 
-require(Prefix .. "." .. Name)
+T:SetSideStyle(2, "dashed")
+T:LabelAngle(1, "D", { angle_time = .45, radius = 47 })
+T:LabelAngle(2, "S", {  })
+T:MarkAngle(3, 1)
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+local U = triangle.New()
+
+U:SetVertexPos(1, MidX, MidY)
+U:SetVertexPos(2, RightX, TopY)
+U:SetVertexPos(3, MidX, BottomY)
+
+U:LabelAngle(1, "A", { radius = 15 })
+U:LabelAngle(2, "B", { angle_time = .55, radius = 60 })
+U:LabelAngle(3, "C", { radius = 55 })
+U:SetSideStyle(3, "hide")

@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure B-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,30 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local arc = require("arc")
+local helpers = require("helpers")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local A = arc.New()
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+A:SetCenter(160, 200)
+A:SetRadius(70)
 
-require(Prefix .. "." .. Name)
+--
+helpers.Point(A:GetCenter()).path.radius = 4
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+--
+for i, text in ipairs{
+	{ "x = +r", "y = 0", 40, 0 },
+	{ "x = 0", "y = -r", 0, 35 },
+	{ "x = -r", "y = 0", -40, 0 },
+	{ "x = 0", "y = +r", 0, -35 }
+} do
+	local x, y = A:GetPos((i - 1) / 4)
+
+	helpers.Text(text[1], x + text[3], y + text[4] - 10, { size = 15 })
+	helpers.Text(text[2], x + text[3], y + text[4] + 10, { size = 15 })
+
+	helpers.Mark(x, y).path.radius = 4
 end

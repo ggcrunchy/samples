@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangles, figure H-5.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,40 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local triangle = require("triangle")
+local A4 = require("Triangles.A4")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+A4.T1:LabelSide(3, "R")
+A4.T2:LabelSide(1, "h", { t = .35, text_offset = 15 })
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+local leftx, topy = A4.T2:GetVertexPos(2)
+local rightx, bottomy = A4.T1:GetVertexPos(3)
 
-require(Prefix .. "." .. Name)
+local UR = triangle.New()
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+UR:SetVertexPos(1, leftx, topy)
+UR:SetVertexPos(2, rightx, topy)
+UR:SetVertexPos(3, rightx, bottomy)
+
+for i = 1, 3 do
+	UR:SetSideStyle(i, "dashed")
 end
+
+UR:LabelSide(1, "w", { text_offset = 30 })
+
+local wbounds = UR:GetSideLabel(1).contentBounds
+local wy = (wbounds.yMin + wbounds.yMax) / 2
+
+local function Segment (x1, y1, x2, y2)
+	local seg = display.newLine(x1, y1, x2 or x1, y2 or y1)
+
+	seg:setStrokeColor(0)
+
+	seg.strokeWidth = 4
+end
+
+Segment(leftx, wy, wbounds.xMin - 20, false)
+Segment(wbounds.xMax + 20, wy, rightx, false)
+Segment(leftx, wy - 10, false, wy + 10)
+Segment(rightx, wy - 10, false, wy + 10)

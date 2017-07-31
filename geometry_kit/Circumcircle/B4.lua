@@ -1,4 +1,4 @@
---- Entry point.
+--- Centers, figure B-4.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,26 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local helpers = require("helpers")
+local triangle = require("triangle")
+local E2 = require("Circles.E2")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
-
-local Prefix = "AddingAngles"
-local Name = "A1"
-
-require(Prefix .. "." .. Name)
-
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+--
+for i = 1, #E2.marks do
+	E2.marks[i]:removeSelf()
 end
+
+--
+E2.T:LabelAngle(1, "2α")
+E2.T:LabelSide(1, "r")
+
+E2.U:LabelAngle(2, "α")
+E2.U:LabelSide(1, nil)
+E2.U:LabelSide(2, "A")
+E2.U:LabelSide(3, "Asinα")
+
+--
+local x2, x3 = E2.U:GetVertexPos(1), E2.U:GetVertexPos(3)
+
+helpers.PutRotatedObjectBetween(E2.U:GetSideLabel(3), x2 - .5, x3)

@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure B-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,63 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local arc = require("arc")
+local helpers = require("helpers")
+local triangle = require("triangle")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local angle = math.rad(30)
+local vx, vy = math.cos(angle), math.sin(angle)
+local CX, CY, R = 70, 200, 160
+local x2, y2 = CX + R * vx, CY - R * vy
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+--
+local T = triangle.New()
 
-require(Prefix .. "." .. Name)
+T:SetVertexPos(1, CX, CY)
+T:SetVertexPos(2, x2, y2)
+T:SetVertexPos(3, x2, 2 * CY - y2)
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+--
+local U = T:Clone()
+
+--
+for i = 1, 3 do
+	T:MarkAngle(i, 1, { angle_offset = .15 })
 end
+
+--
+T:LabelSide(1, "r")
+T:LabelSide(3, "r")
+
+--
+U:SetVertexPos(3, x2, CY)
+
+U:MarkAngle(3, 1, { angle_offset = .1 })
+U:SetSideStyle(1, "hide")
+U:SetSideStyle(2, "hide")
+U:SetSideStyle(3, "dashed")
+
+--
+U:LabelSide(2, "½·r", { text_offset = 65 })
+
+local vline = helpers.VLine(U:GetSideLabel(2).x - 25, CY, y2)
+local marks = {
+	vline,
+	helpers.HLine(vline.x - 10, vline.x + 10, CY),
+	helpers.HLine(vline.x - 10, vline.x + 10, y2)
+}
+
+--
+local A = arc.New()
+
+A:Revolve(T)
+A:SetAngles(0, 90)
+A:SetStyle("dashed")
+
+--
+marks[#marks + 1] = helpers.HLine(x2, CX + R, CY, true)
+
+--
+return { A = A, T = T, U = U, marks = marks }

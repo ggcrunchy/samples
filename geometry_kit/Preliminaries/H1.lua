@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangles, figure H-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,48 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
+-- Modules --
+local triangle = require("triangle")
+
 local CW, CH = display.contentWidth, display.contentHeight
+local Unit = .15 * CW
+local TopY = .25 * CH
+local BottomY = TopY + 3 * Unit
+local LeftX = .2 * CW
+local RightX = LeftX + 4 * Unit
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local T = triangle.New()
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+T:SetVertexPos(1, LeftX, TopY)
+T:SetVertexPos(2, RightX, TopY)
+T:SetVertexPos(3, RightX, BottomY)
 
-require(Prefix .. "." .. Name)
+T:SetSideStyle(3, "hide")
+T:LabelSide(1, "4")
+T:LabelSide(2, "3")
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+local U = triangle.New()
+
+U:SetSideStyle(3, "hide")
+U:SetVertexPos(1, RightX, BottomY)
+U:SetVertexPos(2, LeftX, BottomY)
+U:SetVertexPos(3, LeftX, TopY)
+
+local function Segment (x1, y1, x2, y2)
+	local seg = display.newLine(x1, y1, x2 or x1, y2 or y1)
+
+	seg:setStrokeColor(0)
+
+	seg.strokeWidth = 3
 end
+
+for i = 1, 3 do
+	Segment(LeftX + i * Unit, TopY, false, BottomY)
+end
+
+for j = 1, 2 do
+	Segment(LeftX, TopY + j * Unit, RightX, false)
+end
+
+return { T1 = T, T2 = U } -- reused in figure 17

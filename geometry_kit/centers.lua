@@ -85,18 +85,20 @@ local function DoExcircle ( px, py, qx, qy, rx, ry, circles, contacts, extouch, 
   -- information shared by the excircle. This will give us the radius.
   local L, R = bt * B, (1 - bt) * B 
   local TanA, TanB = h / (C + R), h / (A + L)
-  local r = B / (TanA + TanB)
+  local kr = 1 / (TanA + TanB)
 
   -- From the radius we can find the foot of the center onto the triangle side. Reaching the
   -- center is then simply a matter of walking up the altitude.
-  local Bp, dx, dy = r * TanB, bx / B, by / B
-  local Fx, Fy = px + Bp * dx, py + Bp * dy
+  local Bp = kr * TanB
+  local Fx, Fy = px + Bp * bx, py + Bp * by
 
   -- Given the foot and radius, similar triangles will put us at the center.
-  circles[side] = { x = Fx - r * dy, y = Fy + r * dx, r = r }
+  circles[side] = { x = Fx - kr * by, y = Fy + kr * bx, r = B * kr }
 
   -- If requested, supply the contact triangle and / or one side of the extouch triangle.
   if contacts or extouch then
+    Bp = Bp * B
+
     local at, ct = Bp / A, (B - Bp) / C
 
     if contacts then

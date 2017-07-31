@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure B-4.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,25 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local B3 = require("Circles.B3")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+B3.A:Remove()
+B3.T:Remove()
 
-local Prefix = "AddingAngles"
-local Name = "A1"
-
-require(Prefix .. "." .. Name)
-
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+for i = 1, #B3.marks do
+	B3.marks[i]:removeSelf()
 end
+
+--
+for i = 1, 3 do
+	B3.U:SetSideStyle(i, nil)
+end
+
+B3.U:Scale(1.5)
+B3.U:Translate(20, 0)
+B3.U:LabelAngle(1, "30°", { radius = 65, angle_time = .425 })
+B3.U:LabelAngle(2, "60°", {radius = 45, angle_time = .45 })
+B3.U:LabelSide(1, "1")
+B3.U:LabelSide(2, "½", { text_offset = 25 })

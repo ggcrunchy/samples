@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure D-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,36 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local helpers = require("helpers")
+local triangle = require("triangle")
+local D1 = require("AddingAngles.A1")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local x2, y2 = D1.above:GetVertexPos(3)
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+D1.A:Remove()
+D1.marks[1]:removeSelf()
+D1.below:MarkAngle(3, nil)
+D1.above:Remove()
 
-require(Prefix .. "." .. Name)
+--
+local x1, x3 = D1.below:GetVertexPos(1), D1.below:GetVertexPos(3)
+local scale = (x2 - x1) / (x3 - x1)
+local T = helpers.SimilarTriangleVertex(D1.below, scale, 1)
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+T:LabelSide(1, "cosβ", { align = true, t = .6 })
+T:MarkAngle(1, nil)
+T:MarkAngle(3, 1)
+T:SetSideStyle(1, "hide")
+T:SetSideStyle(2, "dashed")
+T:SetSideStyle(3, "hide")
+
+--
+helpers.PutRotatedObjectBetween(T:GetSideLabel(1), x1, x2)
+
+--
+D1.below:LabelSide(2, "sinα", { align = true, text_offset = 20 })
+D1.below:LabelSide(3, "cosα")
+
+helpers.PutRotatedObjectBetween(D1.below:GetSideLabel(3), x1, x3)

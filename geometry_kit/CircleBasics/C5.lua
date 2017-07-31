@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure C-5.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,11 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local C2 = require("Circles.C2")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+C2.T:LabelSide(1, "A secθ", { align = true })
+C2.T:LabelSide(2, "A tanθ", { text_offset = 50 })
+C2.T:LabelSide(3, "A")
 
-local Prefix = "AddingAngles"
-local Name = "A1"
-
-require(Prefix .. "." .. Name)
-
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+C2.A:Remove()

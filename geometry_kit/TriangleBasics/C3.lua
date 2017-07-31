@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangles, figure C-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,19 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local triangle = require("triangle")
+local figure1 = require("Triangles.A1")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+figure1:LabelAngle(1, nil)
+figure1:LabelAngle(2, nil)
+figure1:LabelSide(1, nil)
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+figure1:Translate(0, -65)
 
-require(Prefix .. "." .. Name)
+local T2 = figure1:Clone()
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+T2:Rotate(125)
+T2:Translate(15, 230)
+
+return { T1 = figure1, T2 = T2 } -- reused in figure 12

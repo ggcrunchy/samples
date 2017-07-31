@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure K-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,63 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local arc = require("arc")
+local helpers = require("helpers")
+local triangle = require("triangle")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local A, CX, CY = arc.New(), 160, 250
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+A:SetCenter(CX, CY)
+A:SetRadius(190)
+A:SetAngles(60, 120)
+A:SetStyle("dashed")
 
-require(Prefix .. "." .. Name)
+--
+local T, x1, y1 = triangle.New(), A:GetPos(0)
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+T:SetVertexPos(1, CX, CY)
+T:SetVertexPos(2, x1, y1)
+T:SetVertexPos(3, A:GetPos(1))
+
+for i = 1, 3 do
+	T:MarkAngle(i, i == 1 and 2, { angle_offset = .2 })
+end
+
+T:SetSideStyle(2, "dashed")
+
+--
+local U = triangle.New()
+
+U:SetVertexPos(1, T:GetVertexPos(2))
+U:SetVertexPos(2, CX, y1)
+U:SetVertexPos(3, CX, CY)
+
+for i = 1, 3 do
+	U:SetSideStyle(i, "hide")
+end
+
+U:MarkAngle(2, 1)
+
+--
+local N1, N2 = triangle.New(), triangle.New()
+
+N1:SetVertexPos(1, x1, y1)
+N1:SetVertexPos(2, A:GetPos(.5))
+N1:SetVertexPos(3, CX, CY)
+
+N2:SetVertexPos(1, A:GetPos(.5))
+N2:SetVertexPos(2, A:GetPos(1))
+N2:SetVertexPos(3, CX, CY)
+
+N2:SetSideStyle(3, "hide")
+
+for i = 1, 2 do
+	local props = { angle_offset = .03 + (3 - i) * .09 }
+
+	N1:MarkAngle(i, 1, props)
+	N2:MarkAngle(i, 1, props)
+	N1:MarkSide(i + 1, i > 1 and 1)
+	N2:MarkSide(i + 1, 1)
 end

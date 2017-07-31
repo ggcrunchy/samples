@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure N-4.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,38 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local arc = require("arc")
+local helpers = require("helpers")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local A1, CX, CY, R1, to = arc.New(), 80, 100, 120, 310
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+A1:SetCenter(CX, CY)
+A1:SetRadius(R1)
+A1:SetAngles(270, to)
 
-require(Prefix .. "." .. Name)
+local A2 = A1:Clone()
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+A2:SetAngles(to, to + 30)
+A2:SetStyle("dashed")
+
+--
+local A3, R2, x, y = arc.New(), 200, A1:GetPos(0)
+local dx, dy = x - CX, y - CY
+local N = (R1 + R2) / math.sqrt(dx^2 + dy^2)
+
+A3:SetCenter(CX + dx * N, CY + dy * N)
+A3:SetRadius(R2)
+
+local join = A3:GetAngleFromPos(x, y)
+
+A3:SetAngles(90, join)
+
+local A4 = A3:Clone()
+
+A4:SetAngles(join, join + 30)
+A4:SetStyle("dashed")
+
+--
+helpers.Mark(x, y)

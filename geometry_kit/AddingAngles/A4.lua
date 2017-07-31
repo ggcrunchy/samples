@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure D-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,45 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local triangle = require("triangle")
+local D3 = require("AddingAngles.A3")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+D3.D1.above:Remove()
+D3.D1.below:Remove()
+D3.D1.A:Remove()
+D3.T1:Remove()
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+for i = 1, 3 do
+	D3.T2:SetSideStyle(i, nil)
+end
 
-require(Prefix .. "." .. Name)
+--
+D3.T2:Scale(1.7)
+D3.T2:Translate(0, 100)
+D3.T2:LabelAngle(2, "α", { radius = 64 })
+D3.T2:LabelSide(2, "sinβ", { align = true })
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+--
+local x2, y2 = D3.T2:GetVertexPos(2)
+local x3, y3 = D3.T2:GetVertexPos(3)
+local T = triangle.New()
+
+T:SetVertexPos(1, x2, y3)
+T:SetVertexPos(2, x2, y2)
+T:SetVertexPos(3, x3, y3)
+
+T:SetSideStyle(1, "hide")
+T:SetSideStyle(2, "hide")
+T:SetSideStyle(3, "dashed")
+T:MarkAngle(1, 1, { angle_offset = .07 })
+
+--
+for i = 1, 2 do
+	local mark = D3.D1.marks[i]
+
+	mark.x, mark.y = D3.T2:GetVertexPos(i + 1)
+
+	mark:toFront()
 end

@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangles, figure L-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,34 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
+-- Modules --
+local triangle = require("triangle")
+
+-- --
 local CW, CH = display.contentWidth, display.contentHeight
+local LeftX = .1 * CW
+local MidX = .6 * CW
+local RightX = .9 * CW
+local BottomY = .75 * CH
+local TopY = .35 * CH
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local T = triangle.New()
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+T:SetVertexPos(1, LeftX, BottomY)
+T:SetVertexPos(2, MidX, TopY)
+T:SetVertexPos(3, MidX, BottomY)
 
-require(Prefix .. "." .. Name)
+T:LabelSide(1, "z")
+T:LabelSide(3, "L")
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+local U = triangle.New()
+
+U:SetVertexPos(1, MidX, BottomY)
+U:SetVertexPos(2, MidX, TopY)
+U:SetVertexPos(3, RightX, BottomY)
+
+U:LabelSide(1, "h", { t = .35, text_offset = 15 })
+U:LabelSide(2, "y")
+U:LabelSide(3, "R")
+U:MarkAngle(1, 1)

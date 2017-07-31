@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure C-4.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,40 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local helpers = require("helpers")
+local C2 = require("Circles.C2")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local yshift = 50
+local x1, y1 = C2.T:GetVertexPos(1)
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+y1 = y1 + yshift
 
-require(Prefix .. "." .. Name)
+C2.A:SetCenter(x1, y1)
+C2.T:Translate(0, yshift)
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+C2.T:LabelSide(1, nil)
+C2.T:LabelSide(2, nil)
+C2.T:LabelSide(3, nil)
+
+local U = C2.T:Clone()
+
+C2.T:MarkAngle(3, nil)
+
+U:LabelAngle(1, nil)
+U:MarkAngle(1, nil)
+U:Scale(1 / math.cos(C2.T:GetAngle(1)))
+
+local x2, y2 = U:GetVertexPos(1)
+
+U:Translate(x1 - x2, y1 - y2)
+
+for i = 1, 3 do
+	U:SetSideStyle(i, "dashed")
 end
+
+U:LabelSide(1, "secθ", { align = true })
+U:LabelSide(2, "tanθ", { align = true, text_offset = 20 })
+
+helpers.PutRotatedObjectBetween(U:GetSideLabel(1), U:GetVertexPos(1), U:GetVertexPos(2), { margin = -4 })

@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure D-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,49 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local triangle = require("triangle")
+local D1 = require("AddingAngles.A1")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+D1.above:LabelAngle(1, nil)
+D1.above:LabelSide(2, nil)
+D1.below:LabelAngle(1, nil)
+D1.below:MarkAngle(3, nil)
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+--
+local x1, y1 = D1.below:GetVertexPos(1)
+local x2, y2 = D1.below:GetVertexPos(2)
+local x3, y3 = D1.above:GetVertexPos(2)
 
-require(Prefix .. "." .. Name)
+--
+local x4, y4 = x3, y1 + (x3 - x1) * (y2 - y1) / (x2 - x1)
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+--
+local T1 = triangle.New()
+
+T1:SetVertexPos(1, x1, y1)
+T1:SetVertexPos(2, x4, y4)
+T1:SetVertexPos(3, x4, y1)
+
+T1:MarkAngle(2, 2, { angle_offset = .3, angle_spacing = .2 })
+T1:MarkAngle(3, 1, { angle_offset = .15 })
+
+T1:SetSideStyle(1, "hide")
+T1:SetSideStyle(2, "dashed")
+T1:SetSideStyle(3, "hide")
+
+--
+local T2 = triangle.New()
+
+T2:SetVertexPos(1, x4, y4)
+T2:SetVertexPos(2, x3, y3)
+T2:SetVertexPos(3, D1.above:GetVertexPos(3))
+
+T2:MarkAngle(1, 2)
+T2:MarkAngle(2, 1, { angle_offset = .2 })
+T2:SetSideStyle(1, "dashed")
+T2:SetSideStyle(2, "hide")
+T2:SetSideStyle(3, "hide")
+
+return { D1 = D1, T1 = T1, T2 = T2 }

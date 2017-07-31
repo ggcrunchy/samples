@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangles, figure N-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,50 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local triangle = require("triangle")
+local figure28 = require("Triangles.N1")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+-- --
+local P, Q = figure28.P, figure28.Q
+local BottomY, TopY = P.y, Q.y
+local LeftX, RightX = P.x, Q.x
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+figure28.StrP:removeSelf()
+figure28.StrQ:removeSelf()
 
-require(Prefix .. "." .. Name)
+--
+local T = triangle.New()
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+T:SetVertexPos(1, LeftX, BottomY)
+T:SetVertexPos(2, RightX, TopY)
+T:SetVertexPos(3, RightX, BottomY)
+
+local U = T:Clone()
+
+U:Scale(.6)
+
+local x, y = U:GetVertexPos(1)
+
+U:Translate(LeftX - x, BottomY - y)
+U:LabelSide(2, "s·dy", { text_offset = 35 })
+U:LabelSide(3, "s·dx")
+U:MarkAngle(3, 1, { angle_offset = .18 })
+
+for i = 2, 3 do
+	local x2, y2 = U:GetVertexPos(i)
+	local mark = display.newCircle(x2, y2, 5)
+
+	mark:setFillColor(.3)
+	mark:setStrokeColor(0)
+
+	mark.strokeWidth = 4
 end
+
+T:SetSideStyle(1, "dashed")
+T:SetSideStyle(2, "dashed")
+T:SetSideStyle(3, "dashed")
+
+T:MarkAngle(3, 1)
+
+-- TODO: second similar triangle, nodes

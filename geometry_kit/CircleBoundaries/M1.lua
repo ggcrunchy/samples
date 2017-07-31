@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure M-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,46 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local arc = require("arc")
+local helpers = require("helpers")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local m1 = helpers.Mark(100, 150)
+local m2 = helpers.Mark(170, 210)
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+--
+local cx, cy = (m1.x + m2.x) / 2, (m1.y + m2.y) / 2
+local dx, dy = cx - m1.x, cy - m1.y
+local len = math.sqrt(dx^2 + dy^2)
+local nx, ny = dy / len, -dx / len
 
-require(Prefix .. "." .. Name)
-
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+--
+local function Angle (mark, x, y)
+	return math.deg(math.atan2(y - mark.y, mark.x - x))
 end
+
+for _, R in ipairs{ 150, 90 } do
+	local ndist = math.sqrt(R^2 - len^2)
+	local x, y = cx - nx * ndist, cy - ny * ndist
+	local a1 = Angle(m2, x, y)
+	local a2 = Angle(m1, x, y)
+
+	--
+	local C = arc.New()
+
+	C:SetCenter(x, y)
+	C:SetRadius(R)
+
+	local L = C:Clone()
+
+	C:SetAngles(a2, a1)
+	L:SetAngles(a1, a2)
+	L:SetStyle("dashed")
+
+	nx, ny, m1, m2 = -nx, -ny, m2, m1
+end
+
+--
+m1:toFront()
+m2:toFront()

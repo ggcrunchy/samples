@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure C-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,19 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local triangle = require("triangle")
+local helpers = require("helpers")
+local C2 = require("Circles.C2")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+C2.T:LabelAngle(1, nil)
+C2.T:LabelSide(1, nil)
+C2.T:LabelSide(2, nil)
+C2.T:LabelSide(3, nil)
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+local x1, y1 = C2.T:GetVertexPos(1)
+local x2, _ = C2.T:GetVertexPos(2)
 
-require(Prefix .. "." .. Name)
-
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+helpers.TextBetween("cosθ", x1, x2, y1 + 20, { margin = 2 })
+helpers.TextBetween("1", x1, x1 + C2.A:GetRadius(), y1 + 50, { margin = 2 })

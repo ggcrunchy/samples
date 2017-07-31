@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure N-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -22,16 +22,3 @@
 --
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
-
-local CW, CH = display.contentWidth, display.contentHeight
-
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
-
-local Prefix = "AddingAngles"
-local Name = "A1"
-
-require(Prefix .. "." .. Name)
-
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end

@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure M-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,43 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local arc = require("arc")
+local helpers = require("helpers")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local x, y, h = 180, 200, 30
+local DXL, DXR = 70, 40
+local y1, y2 = y - h, y + h
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+--
+local AL = arc.New()
 
-require(Prefix .. "." .. Name)
+AL:SetCenter(x - DXL, y)
+AL:SetRadius(math.sqrt(DXL^2 + h^2))
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+local al = AL:GetAngleFromPos(x, y1)
+
+AL:SetAngles(al, 360 - al)
+AL:SetStyle("dashed")
+
+--
+local AR = arc.New()
+
+AR:SetCenter(x + DXR, y)
+AR:SetRadius(math.sqrt(DXR^2 + h^2))
+
+local ar = AR:GetAngleFromPos(x, y2)
+
+AR:SetAngles(ar, 360 - ar)
+AR:SetStyle("dashed")
+
+--
+helpers.Line(x - DXL, y, x, y1)
+helpers.Line(x, y1, x + DXR, y)
+helpers.Line(x, y2, x + DXR, y)
+helpers.Line(x - DXL, y, x, y2)
+
+--
+helpers.Point(x - DXL, y).path.radius = 4
+helpers.Point(x + DXR, y).path.radius = 4

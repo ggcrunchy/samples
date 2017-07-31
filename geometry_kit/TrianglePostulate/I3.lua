@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangles, figure I-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,45 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
+-- Modules --
+local triangle = require("triangle")
+
+-- --
 local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .6 * CH
+local TopY = .25 * CH
+local LeftX = .15 * CW
+local MidX = .5 * CW
+local RightX = .75 * CW
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local L = triangle.New()
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+L:SetVertexPos(1, LeftX, TopY)
+L:SetVertexPos(2, MidX, TopY)
+L:SetVertexPos(3, LeftX, BottomY)
 
-require(Prefix .. "." .. Name)
+L:SetSideStyle(3, "dashed")
+L:LabelAngle(2, "B")
+L:MarkAngle(1, 1, { angle_offset = .15 })
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+--
+local T = triangle.New()
+
+T:SetVertexPos(1, MidX, TopY)
+T:SetVertexPos(2, RightX, BottomY)
+T:SetVertexPos(3, LeftX, BottomY)
+
+T:LabelAngle(1, "A")
+T:LabelAngle(2, "C")
+T:LabelAngle(3, "B")
+
+local R = triangle.New()
+
+R:SetVertexPos(1, MidX, TopY)
+R:SetVertexPos(2, RightX, TopY)
+R:SetVertexPos(3, RightX, BottomY)
+
+R:SetSideStyle(2, "dashed")
+R:LabelAngle(1, "C")
+R:MarkAngle(2, 1, { angle_offset = .1 })

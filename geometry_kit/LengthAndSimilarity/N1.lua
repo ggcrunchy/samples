@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangles, figure N-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,26 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
+-- Modules --
+local triangle = require("triangle")
+
+-- --
 local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .6 * CH
+local LeftX, TopY = .1 * CW, .3 * CH
+local RightX = .8 * CW
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local P = display.newCircle(.1 * CW, .6 * CH, 12)
+local Q = display.newCircle(.8 * CW, .3 * CH, 12)
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+P:setFillColor(0)
+Q:setFillColor(0)
 
-require(Prefix .. "." .. Name)
+local StrP = display.newText("p", P.x - 3, P.y - 35, native.systemFontBold, 22)
+local StrQ = display.newText("q", Q.x + 5, Q.y + 35, native.systemFontBold, 22)
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+StrP:setTextColor(0)
+StrQ:setTextColor(0)
+
+return { P = P, Q = Q, StrP = StrP, StrQ = StrQ } -- for figure 28

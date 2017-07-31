@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure L-4.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,35 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local helpers = require("helpers")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local CX, CY, R = display.contentCenterX, display.contentCenterY, 35
+local TopW = 2 * math.pi * R
+local TopLeftX = CX - TopW / 2
+local TopRightX = TopLeftX + TopW
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+--
+local slope = math.pi
 
-require(Prefix .. "." .. Name)
+for i = 0, 2 do
+	local dy = i * R / 3
+	local trx, y = TopRightX - dy * slope, CY + dy
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+	helpers.HLine(TopLeftX + dy * slope, trx, y + i * .5)
+	helpers.Text("r" .. (3 - i), trx + 5, y + 15, { size = 15 })
 end
+
+--
+helpers.Line(TopLeftX, CY, CX, CY + R)
+helpers.Line(TopRightX, CY, CX, CY + R)
+
+--
+helpers.VLine(TopLeftX - 25, CY, CY + R)
+helpers.HLine(TopLeftX - 35, TopLeftX - 15, CY)
+helpers.HLine(TopLeftX - 35, TopLeftX - 15, CY + R)
+helpers.Text("r", TopLeftX - 10, CY + R / 2)
+
+--
+helpers.TextBetween("2πr", TopLeftX, TopRightX, CY - 15)

@@ -1,4 +1,4 @@
---- Entry point.
+--- Circles, figure D-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,15 +23,36 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local arc = require("arc")
+local helpers = require("helpers")
+local triangle = require("triangle")
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
+--
+local angle = 30
+local above, below = helpers.RotatedRightTriangle(40, 300, 130, 75, angle, {
+	angle_label = "β", radius = 55, show_right_angle = true
+}, {
+	angle_label = "α", angle_marks = 1, angle_offset = .17, radius = 60, angle_time = .6, show_right_angle = true
+})
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+above:LabelSide(2, "sinβ", { align = true, text_offset = 20 })
 
-require(Prefix .. "." .. Name)
+--
+local A = arc.New()
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+A:Revolve(above)
+A:SetAngles(0, 90)
+A:SetStyle("dashed")
+
+--
+local marks = {}
+
+for i = 2, 3 do
+	marks[#marks + 1] = helpers.Mark(above:GetVertexPos(i))
 end
+
+marks[1]:setFillColor(1, 0, 0)
+marks[2]:setFillColor(0, 0, 1)
+
+return { above = above, below = below, marks = marks, A = A }
