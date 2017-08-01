@@ -89,4 +89,4 @@ for i, info in ipairs{
 end
 
 --
-helpers.Mark(cx, cy)
+helpers.Mark(cx, cy):setFillColor(1, 0, 0)

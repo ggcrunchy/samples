@@ -74,7 +74,7 @@ helpers.Line(sx1 - sa * 10, sy1 + ca * 10, sx1 + sa * 10, sy1 - ca * 10)
 helpers.Line(sx2 - sa * 10, sy2 + ca * 10, sx2 + sa * 10, sy2 - ca * 10)
 
 --
-helpers.Mark(mx, my)
-helpers.Mark(cx, cy)
+helpers.Mark(mx, my):setFillColor(0, 0, 1)
+helpers.Mark(cx, cy):setFillColor(1, 0, 0)
 helpers.Point(x1, y1, 7)
 helpers.Text("q", x1 + 5, y1 - 20)

@@ -27,8 +27,8 @@ local CW, CH = display.contentWidth, display.contentHeight
 
 display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
 
-local Prefix = "AddingAngles"
-local Name = "A1"
+local Prefix = "Incircle"
+local Name = "A4"
 
 require(Prefix .. "." .. Name)
 

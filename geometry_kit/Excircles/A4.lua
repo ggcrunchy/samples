@@ -85,7 +85,7 @@ R:SetSideStyle(2, "dashed")
 R:SetSideStyle(3, "hide")
 
 --
-helpers.Mark(circ.x, circ.y)
-helpers.Mark(mx, my)
-helpers.Mark(contact.b.x, contact.b.y)
+helpers.Mark(circ.x, circ.y):setFillColor(1, 0, 0)
+helpers.Mark(mx, my):setFillColor(0, 1, 0)
+helpers.Mark(contact.b.x, contact.b.y):setFillColor(0, 0, 1)
 helpers.Point(rx, ry, 7)

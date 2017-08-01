@@ -97,8 +97,8 @@ L:SetSideStyle(3, "hide")
 L:MarkAngle(2, 1, { angle_offset = .15 })
 
 --
-helpers.Mark(mx, my)
-helpers.Mark(cx, cy)
+helpers.Mark(mx, my):setFillColor(0, 0, 1)
+helpers.Mark(cx, cy):setFillColor(1, 0, 0)
 helpers.Point(x1, y1, 7)
 helpers.Text("m", mx + 18, my + 5, 23)
 helpers.Text("q", x1 + 5, y1 - 20)

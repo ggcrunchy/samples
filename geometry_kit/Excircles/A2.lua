@@ -98,8 +98,8 @@ side3.rotation = side3.rotation + 180
 helpers.PutRotatedObjectBetween(side3, T4:GetVertexPos(1), rx)
 
 --
-helpers.Mark(circ.x, circ.y)
-helpers.Mark(contact.b.x, contact.b.y)
+helpers.Mark(circ.x, circ.y):setFillColor(1, 0, 0)
+helpers.Mark(contact.b.x, contact.b.y):setFillColor(0, 0, 1)
 
 --
 helpers.Point(qx, qy, 6)

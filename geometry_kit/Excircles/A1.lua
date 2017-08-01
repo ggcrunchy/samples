@@ -72,7 +72,7 @@ for i, circ in ipairs(circles) do
 			U:MarkAngle(2, 1, { angle_offset = .25 })
 		end
 
-		helpers.Mark(circ.x, circ.y)
+		helpers.Mark(circ.x, circ.y):setFillColor(1, 0, 0)
 	end
 end
 

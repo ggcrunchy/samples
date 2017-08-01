@@ -66,5 +66,5 @@ U:LabelAngle(1, "2α", { radius = 38, angle_time = .45, size = 22 })
 U:MarkAngle(3, 1, { angle_offset = .15 })
 
 --
-helpers.Mark(contact.b.x, contact.b.y)
+helpers.Mark(contact.b.x, contact.b.y):setFillColor(0, 0, 1)
 helpers.Point(rx, ry, 7)

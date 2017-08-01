@@ -66,7 +66,7 @@ for i = 1, 2 do
 end
 
 --
-helpers.Mark(cx, cy)
+helpers.Mark(cx, cy):setFillColor(1, 0, 0)
 
 --
 local lx, ly = math2d.normalize(contact.c.x - x1, contact.c.y - y1)

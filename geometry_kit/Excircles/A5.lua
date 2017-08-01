@@ -99,9 +99,9 @@ end
 U:MarkAngle(3, 1, { angle_offset = .16 })
 
 --
-helpers.Mark(contact.b.x, contact.b.y)
-helpers.Mark(circ.x, circ.y)
-helpers.Mark(fx, fy)
+helpers.Mark(contact.b.x, contact.b.y):setFillColor(0, 0, 1)
+helpers.Mark(circ.x, circ.y):setFillColor(1, 0, 0)
+helpers.Mark(fx, fy):setFillColor(1, 1, 0)
 
 --
 helpers.Point(px, py, 6)
