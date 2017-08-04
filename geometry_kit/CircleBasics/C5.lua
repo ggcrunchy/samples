@@ -26,8 +26,11 @@
 -- Modules --
 local C2 = require("Circles.C2")
 
-C2.T:LabelSide(1, "A secθ", { align = true })
-C2.T:LabelSide(2, "A tanθ", { text_offset = 50 })
-C2.T:LabelSide(3, "A")
+C2.A:SetRadius(C2.T:GetSideLength(3))
+C2.A:SetColor(.4)
 
-C2.A:Remove()
+C2.A.m_group:toBack()
+
+C2.T:LabelSide(1, "r secθ", { align = true })
+C2.T:LabelSide(2, "r tanθ", { text_offset = 50 })
+C2.T:LabelSide(3, "r")

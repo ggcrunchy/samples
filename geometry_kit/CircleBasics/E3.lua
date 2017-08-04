@@ -1,4 +1,4 @@
---- Circles, figure A-5.
+--- Circle basics, figure E-3.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -24,34 +24,46 @@
 --
 
 -- Modules --
-local arc = require("arc")
-local helpers = require("helpers")
+local triangle = require("triangle")
 
 --
-local A, CX, CY = arc.New(), 150, 200
-
-A:SetCenter(CX, CY)
-A:SetRadius(90)
+local CX, CY = 70, 200
 
 --
-local P = helpers.Point(CX, CY)
+local T = triangle.New()
 
-P.path.radius = 5
+T:SetVertexPos(1, CX, CY)
+T:SetVertexPos(2, CX, CY - 80)
+T:SetVertexPos(3, CX + 200, CY - 80)
 
---
-for _, point in ipairs{
-	{ angle_time = .1, radius = .7 },
-	{ angle_time = -.13, radius = 1.25 }
-} do
-	local pa = arc.New()
+local U = T:Clone()
 
-	pa:SetCenter(CX, CY)
-	pa:SetRadius(point.radius * 90)
-	pa:SetStyle("dashed")
+T:LabelAngle(1, "90° - θ")
+T:LabelSide(1, "sinθ", { align = true })
+T:LabelSide(2, "cosθ")
 
-	local x, y = A:GetPos(point.angle_time)
-	local px, py = CX + (x - CX) * point.radius, CY + (y - CY) * point.radius
+local label = T:GetAngleLabel(1)
+local lx, ly = label.x, label.y
 
-	helpers.Line(CX, CY, px, py, true)
-	helpers.Mark(px, py)
+label.y = ly + 70
+
+local outline = display.newRoundedRect(lx, label.y, label.width + 7, label.height + 9, 12)
+local line = display.newLine(lx, label.y - outline.height / 2, lx - 7, ly + 13)
+
+outline:setFillColor(0, 0)
+
+for _, object in ipairs{ outline, line } do
+	object:setStrokeColor(.3)
+
+	object.strokeWidth = 3
 end
+
+U:SetVertexPos(2, T:GetVertexPos(3))
+U:SetVertexPos(3, T:GetVertexPos(3), CY)
+
+U:SetSideStyle(1, "hide")
+U:SetSideStyle(2, "dashed")
+U:SetSideStyle(3, "dashed")
+U:LabelAngle(1, "θ", { radius = 70 })
+U:MarkAngle(1, 1, { angle_offset = .225 })
+U:MarkAngle(3, 1, { angle_offset = .075 })

@@ -199,6 +199,11 @@ function Arc:SetCenter (cx, cy)
 end
 
 --- DOCME
+function Arc:SetColor (...)
+	self.m_circ:setStrokeColor(...)
+end
+
+--- DOCME
 function Arc:SetRadius (radius)
 	self.m_circ.path.radius = radius
 end

@@ -25,12 +25,15 @@
 
 local CW, CH = display.contentWidth, display.contentHeight
 
-display.newRect(CW / 2, CH / 2, CW, CH):setFillColor(.7)
-
-local Prefix = "Incircle"
-local Name = "A4"
+local Prefix = "CircleBasics"
+local Name = "E3"
 
 require(Prefix .. "." .. Name)
+
+local background = display.newRect(CW / 2, CH / 2, CW, CH)
+
+background:setFillColor(.7)
+background:toBack()
 
 if false then
 	display.save(display.getCurrentStage(), Name .. ".png")

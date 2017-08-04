@@ -60,4 +60,4 @@ end
 CommonSupp(Supp1, -ToSide)
 CommonSupp(Supp2, ToSide)
 
-return { RA1 = RA1, RA2 = RA2, Supp1 = Supp1, Supp2 = Supp2 } -- reused by figure 7
+return { RA1 = RA1, RA2 = RA2, Supp1 = Supp1, Supp2 = Supp2 } -- reused

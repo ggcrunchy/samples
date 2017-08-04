@@ -25,15 +25,15 @@
 
 -- Modules --
 local triangle = require("triangle")
-local figure6 = require("Triangles.B2")
+local figure = require("TrianglePostulate.B3")
 
 --
-figure6.RA1:Remove()
-figure6.RA2:Remove()
+figure.RA1:Remove()
+figure.RA2:Remove()
 
 local CW, CH = display.contentWidth, display.contentHeight
-local MidX, MidY = figure6.Supp1:GetVertexPos(3)
-local ToSide = figure6.Supp2:GetVertexPos(1) - MidX
+local MidX, MidY = figure.Supp1:GetVertexPos(3)
+local ToSide = figure.Supp2:GetVertexPos(1) - MidX
 
 local Vert1, Vert2 = triangle.New(), triangle.New()
 

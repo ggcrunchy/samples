@@ -24,7 +24,7 @@
 --
 
 -- Modules --
-local B3 = require("Circles.B3")
+local B3 = require("CircleBasics.B3")
 
 --
 B3.A:Remove()
@@ -42,6 +42,6 @@ end
 B3.U:Scale(1.5)
 B3.U:Translate(20, 0)
 B3.U:LabelAngle(1, "30°", { radius = 65, angle_time = .425 })
-B3.U:LabelAngle(2, "60°", {radius = 45, angle_time = .45 })
+B3.U:LabelAngle(2, "60°", { radius = 45, angle_time = .45 })
 B3.U:LabelSide(1, "1")
 B3.U:LabelSide(2, "½", { text_offset = 25 })

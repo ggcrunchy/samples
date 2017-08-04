@@ -161,6 +161,13 @@ function Shape:GetSideLabel (index)
 	return AuxGetLabel(self, index, "m_side_label")
 end
 
+--- DOCME
+function Shape:GetSideLength (index)
+	local vcur, vnext = self[index], self:GetNext(index)
+
+	return math2d.length(math2d.diff(vcur, vnext, true))
+end
+
 --- Get a vertex's position.
 -- @int vertex
 -- @treturn number X
