@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangle area, figure A-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,18 +23,32 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
+-- Modules --
+local triangle = require("triangle")
+
+--
 local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .5 * CH
+local MidY = .375 * CH
+local TopY = .25 * CH
+local LeftX = .1 * CW
+local RightX = .4 * CW
 
-local Prefix = "TriangleArea"
-local Name = "A1"
+local U = triangle.New()
 
-require(Prefix .. "." .. Name)
+U:SetVertexPos(1, LeftX, MidY)
+U:SetVertexPos(2, RightX, MidY)
+U:SetVertexPos(3, RightX, TopY)
+U:MarkSide(2, 2)
+U:MarkSide(3, 1)
+U:SetSideStyle(1, "dashed")
 
-local background = display.newRect(CW / 2, CH / 2, CW, CH)
+U:MarkAngle(1, 1, { angle_offset = .2 })
+U:MarkAngle(3, 2, { angle_offset = .1 })
 
-background:setFillColor(.7)
-background:toBack()
+local T = U:Clone()
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+T:Translate(RightX - LeftX, TopY - MidY)
+
+T:SetSideStyle(1, "dashed")
+U:MarkAngle(2, 1, { angle_offset = .15 })

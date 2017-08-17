@@ -1,4 +1,4 @@
---- Entry point.
+--- Triangle area, figure A-2.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,18 +23,38 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
+-- Modules --
+local triangle = require("triangle")
+
+--
 local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .75 * CH
+local MidY = .5 * CH
+local TopY = .25 * CH
+local LeftX = .2 * CW
+local RightX = .8 * CW
 
-local Prefix = "TriangleArea"
-local Name = "A1"
+local U = triangle.New()
 
-require(Prefix .. "." .. Name)
+U:SetVertexPos(1, LeftX, MidY)
+U:SetVertexPos(2, RightX, MidY)
+U:SetVertexPos(3, RightX, TopY)
+U:MarkSide(1, 1)
+U:MarkSide(2, 2)
 
-local background = display.newRect(CW / 2, CH / 2, CW, CH)
+U:MarkAngle(1, 1, { angle_offset = .2 })
+U:MarkAngle(2, 1, { angle_offset = .15 })
+U:MarkAngle(3, 2, { angle_offset = .1 })
 
-background:setFillColor(.7)
-background:toBack()
+local T = triangle.New()
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+T:SetVertexPos(1, LeftX, MidY)
+T:SetVertexPos(2, RightX, TopY)
+T:SetVertexPos(3, LeftX, TopY)
+
+T:MarkAngle(1, 2, { angle_offset = .1 })
+T:MarkAngle(2, 1, { angle_offset = .2 })
+T:MarkAngle(3, 1, { angle_offset = .15 })
+T:MarkSide(2, 1)
+T:MarkSide(3, 2)
+T:SetSideStyle(1, "hide")
