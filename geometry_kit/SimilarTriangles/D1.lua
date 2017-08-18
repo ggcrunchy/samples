@@ -1,4 +1,4 @@
---- Entry point.
+--- Similar triangles, figure D-1.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,18 +23,36 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
+-- Modules --
+local triangle = require("triangle")
+local helpers = require("helpers")
+
+--
 local CW, CH = display.contentWidth, display.contentHeight
+local BottomY = .75 * CH
+local MidY = .5 * CH
+local TopY = .25 * CH
+local LeftX = .1 * CW
+local RightX = .7 * CW
 
-local Prefix = "SimilarTriangles"
-local Name = "D4"
+local T = triangle.New()
 
-require(Prefix .. "." .. Name)
+T:SetVertexPos(1, LeftX, MidY)
+T:SetVertexPos(2, RightX, MidY)
+T:SetVertexPos(3, RightX, BottomY)
+T:MarkAngle(3, 1)
+T:MarkSide(2, 1)
+T:SetSideStyle(1, "hide")
 
-local background = display.newRect(CW / 2, CH / 2, CW, CH)
+local U = triangle.New()
 
-background:setFillColor(.7)
-background:toBack()
+U:SetVertexPos(1, LeftX, MidY)
+U:SetVertexPos(2, RightX, MidY)
+U:SetVertexPos(3, RightX, TopY)
+U:MarkAngle(3, 1)
+U:MarkSide(2, 1)
+U:SetSideStyle(1, "hide")
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
-end
+local m = helpers.Mark(RightX, MidY)
+
+return { T = T, U = U, m = m }

@@ -1,4 +1,4 @@
---- Entry point.
+--- Similar triangles, figure D-4.
 
 --
 -- Permission is hereby granted, free of charge, to any person obtaining
@@ -23,18 +23,28 @@
 -- [ MIT license: http://www.opensource.org/licenses/mit-license.php ]
 --
 
-local CW, CH = display.contentWidth, display.contentHeight
+-- Modules --
+local triangle = require("triangle")
+local D3 = require("SimilarTriangles.D3")
 
-local Prefix = "SimilarTriangles"
-local Name = "D4"
+--
+D3.U:SetSideStyle(2, "hide")
 
-require(Prefix .. "." .. Name)
+for _, k in ipairs{ "L", "U" } do
+	D3[k]:SetSideStyle(2, "hide")
 
-local background = display.newRect(CW / 2, CH / 2, CW, CH)
+	for i = 1, 3 do
+		D3[k]:MarkAngle(i, nil)
+	end
 
-background:setFillColor(.7)
-background:toBack()
+	for i = 1, 2 do
+		D3.D2[k]:MarkAngle(i, nil)
+	end
 
-if false then
-	display.save(display.getCurrentStage(), Name .. ".png")
+	D3.D2[k]:SetSideStyle(1, "hide")
+	D3.D2[k]:MarkSide(1, nil)
+
+	D3.D2.D1[k == "L" and "T" or "U"]:MarkSide(2, nil)
 end
+
+D3.D2.D1.m:removeSelf()
